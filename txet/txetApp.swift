@@ -12,6 +12,10 @@ struct txetApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+            .onOpenURL { url in
+              print("Opening URL: \(url)")
+              UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
         }
     }
 }
