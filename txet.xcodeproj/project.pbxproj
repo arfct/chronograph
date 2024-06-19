@@ -183,11 +183,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C0EFA3C2C226BA200012A78 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */,
+				2C6BA3792C1C99C700F22C21 /* Formatters.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2C0EFA3D2C226BB900012A78 /* Experiments */ = {
+			isa = PBXGroup;
+			children = (
+				2C6BA37E2C1CF13900F22C21 /* AudioReflector.swift */,
+				2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */,
+				2C6BA3322C1B6ABB00F22C21 /* LiveActivity.swift */,
+				2C6BA3362C1B6ABB00F22C21 /* Control.swift */,
+			);
+			path = Experiments;
+			sourceTree = "<group>";
+		};
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
 				2C6BA2EC2C1B6A4F00F22C21 /* txet */,
 				2C6BA2FE2C1B6A5000F22C21 /* txet-watch */,
+				2C0EFA3C2C226BA200012A78 /* Extensions */,
+				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
 				2C6BA2EB2C1B6A4F00F22C21 /* Products */,
 			);
@@ -269,16 +291,10 @@
 			isa = PBXGroup;
 			children = (
 				2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */,
-				2C6BA3322C1B6ABB00F22C21 /* LiveActivity.swift */,
-				2C6BA3362C1B6ABB00F22C21 /* Control.swift */,
-				2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */,
 				2C6BA3382C1B6ABB00F22C21 /* Widget.swift */,
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
 				2C6BA33A2C1B6ABB00F22C21 /* AppIntent.swift */,
 				2C6BA3642C1BB93A00F22C21 /* CalendarEntity.swift */,
-				2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */,
-				2C6BA3792C1C99C700F22C21 /* Formatters.swift */,
-				2C6BA37E2C1CF13900F22C21 /* AudioReflector.swift */,
 				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
 				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
 			);
