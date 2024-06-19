@@ -2,6 +2,7 @@ import EventKit
 
 struct EventEntry: Identifiable, Hashable {
   var id: String
+  var type: String?
   var header: String?
   var date: Date?
   var item: EKCalendarItem?
@@ -53,7 +54,6 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
     let startDate = Date()
     let endDate = calendar.date(byAdding: .day, value: 4, to: startDate)!
     
-    
     var calendars: [EKCalendar] = []
     
     //var defaultCalendar = eventStore.defaultCalendarForNewEvents
@@ -64,6 +64,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
         }
       }
     }
+    print("Fetching events for \(calendars)")
     
     let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
     
@@ -104,7 +105,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
                                 allDayItems: []
                                    )
             
-            items.append(EventEntry(id:"spacer"))
+            items.append(EventEntry(id:"spacer", type:"spacer"))
             headerIndex = items.count
             items.append(header)
           }

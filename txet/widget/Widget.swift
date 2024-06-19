@@ -17,18 +17,16 @@ struct Provider: AppIntentTimelineProvider {
   
   
   func placeholder(in context: Context) -> CalendarTimelineEntry {
-    CalendarTimelineEntry(date: Date(), configuration: ConfigurationAppIntent(), items: [])
+    CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), items: [])
   }
   
-  func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> CalendarTimelineEntry {
+  func snapshot(for configuration: ConfigurationIntent, in context: Context) async -> CalendarTimelineEntry {
     CalendarTimelineEntry(date: Date(), configuration: configuration, items: [])
   }
   
-  
-  
-  func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<CalendarTimelineEntry> {
+  func timeline(for configuration: ConfigurationIntent, in context: Context) async -> Timeline<CalendarTimelineEntry> {
     
-    let ids = [configuration.source1.id, configuration.source2.id]
+    let ids = configuration.calendars.map({ $0.id })
     
     let items = kind == "reminders" ? await fetchReminders()! : await fetchEvents(calendarIDs: ids)!
     
@@ -47,9 +45,11 @@ struct Provider: AppIntentTimelineProvider {
     
   }
   
-  func recommendations() -> [AppIntentRecommendation<ConfigurationAppIntent>] {
+  func recommendations() -> [AppIntentRecommendation<ConfigurationIntent>] {
     // Create an array with all the preconfigured widgets to show.
-    [AppIntentRecommendation(intent: ConfigurationAppIntent(), description: "Example Widget")]
+    [
+      AppIntentRecommendation(intent: ConfigurationIntent(), description: kind)
+    ]
   }
   
   //    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
@@ -59,7 +59,7 @@ struct Provider: AppIntentTimelineProvider {
 
 struct CalendarTimelineEntry: TimelineEntry {
   let date: Date
-  let configuration: ConfigurationAppIntent
+  let configuration: ConfigurationIntent
   let state: Bool = false
   let items: [EventEntry]
 }
@@ -126,17 +126,30 @@ struct TextWidgetView : View {
     return (hourString, minuteString)
   }
   
+  func designForFontStyle(_ style: FontStyle) -> Font.Design {
+    switch style {
+    case .rounded: return .rounded
+    case .monospace: return .monospaced
+    case .serif: return  .serif
+    default: return .default
+    }
+  }
   
   var body: some View {
     
     let backgroundColor = entry.configuration.backgroundColor.count > 0 ?
     Color.withHex(entry.configuration.backgroundColor) : .clear;
     
-    let accessory = (widgetFamily == .accessoryRectangular)
 #if os(watchOS)
-    let smallWidth = true
+    let accessory = true
+    let heightIsLimited = true
+    let widthIsLimited = true
+    let isHuge = false
 #else
-    let smallWidth = accessory || (widgetFamily == .systemSmall)
+    let accessory = (widgetFamily == .accessoryRectangular) || (widgetFamily == .systemSmall && !showsWidgetContainerBackground)
+    let heightIsLimited = accessory
+    let widthIsLimited = accessory || (widgetFamily == .systemSmall)
+    let isHuge = widgetFamily == .systemExtraLarge
 #endif
     
     let isDark = backgroundColor == .clear ? colorScheme == .dark : backgroundColor.isDark()
@@ -149,17 +162,39 @@ struct TextWidgetView : View {
       let vPadding = accessory ? margins.top / 3 : margins.top / 2
       let height = frame.size.height - vPadding * 2
       
-      let minLineHeight = widgetFamily == .accessoryRectangular ? 18.0 : 24.0
+      let minLineHeight = accessory ? 18.0 : isHuge ? 48.0 : 24.0
       let lineHeight = height / ceil(height / minLineHeight)
       
-      let keyline = smallWidth ? 0 : 32.0
-      let fontSize = accessory ? 13.0 : 16.0
+      let fontSize = accessory ? 12.0 : (isHuge ? 32.0 : 16.0)
+      let keyline = widthIsLimited ? 0 : fontSize * 2
       
-      let font = Font.system(size: fontSize).width(.standard)
-      let smallFont = Font.system(size: fontSize * 0.66).weight(.semibold)
+
+      let design = designForFontStyle(entry.configuration.fontStyle)
+      var font = Font.system(size: fontSize, design: design).width(.standard)
+      var smallFont = Font.system(size: fontSize * 0.66, design: design).weight(.semibold)
+
+      
+
+      switch entry.configuration.fontStyle {
+      case .compressed:
+        let _ = font = font.width(.compressed)
+        let _ = smallFont = smallFont.width(.compressed)
+      case .condensed:
+        let _ = font = font.width(.compressed)
+        let _ = smallFont = smallFont.width(.compressed)
+      default:
+        let _ = font = font.width(.standard)
+      }
+    
       let visibleItemCount = frame.size.height > 0 ? Int((frame.size.height - vPadding) / lineHeight) : 4
       
       let realLineHeight = lineHeight //(frame.size.height - verticalPadding) / CGFloat(visibleItemCount)
+      
+      let removeSpacers = heightIsLimited
+      let items = entry.items.filter { item in
+        removeSpacers ? item.type != "spacer" : true
+      }
+      
       VStack(spacing: 0) {
         
         //#if os(iOS)
@@ -174,7 +209,7 @@ struct TextWidgetView : View {
         //#endif
         
         
-        ForEach(entry.items.prefix(visibleItemCount), id: \.self) { row in
+        ForEach(items.prefix(visibleItemCount), id: \.self) { row in
           
           let item = row.item
           if let event = item as? EKEvent {
@@ -183,7 +218,7 @@ struct TextWidgetView : View {
             // MARK: Events
             HStack {
               if event.isAllDay {
-                if !smallWidth {
+                if !widthIsLimited {
                   Text("")
                     .font(.system(size: fontSize))
                     .frame(minWidth:keyline)
@@ -219,7 +254,7 @@ struct TextWidgetView : View {
                 //                    .frame(maxWidth:.infinity)
                 
               }
-              if (!event.isAllDay && !accessory) {
+              if (!event.isAllDay && !widthIsLimited) {
                 let duration = event.endDate.timeIntervalSince(event.startDate)
                 let durationString = duration >= 3600
                 ? String(format: "%.0fh", duration / 3600)
@@ -312,15 +347,13 @@ struct TextWidgetView : View {
 }
 
 
-#if os(watchOS)
-@main
-#endif
+
 struct widgetReminders: Widget {
   let kind: String = "reminders"
   
   var body: some WidgetConfiguration {
     
-    AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider(kind: kind)) { entry in
+    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider(kind: kind)) { entry in
       TextWidgetView(entry: entry)
         .containerBackground(.clear, for: .widget)
     }
@@ -343,7 +376,7 @@ struct widgetCalendar: Widget {
   
   var body: some WidgetConfiguration {
     
-    AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider(kind:kind)) { entry in
+    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider(kind:kind)) { entry in
       TextWidgetView(entry: entry)
         .containerBackground(.clear, for: .widget)
     }
@@ -355,21 +388,21 @@ struct widgetCalendar: Widget {
     .supportedFamilies([.accessoryRectangular, .accessoryInline])
 #else
     .supportedFamilies([.accessoryRectangular, .accessoryInline,
-                        .systemSmall, .systemMedium, .systemLarge])
+                        .systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
 #endif
     
   }
 }
 
-extension ConfigurationAppIntent {
-  fileprivate static var smiley: ConfigurationAppIntent {
-    let intent = ConfigurationAppIntent()
+extension ConfigurationIntent {
+  fileprivate static var smiley: ConfigurationIntent {
+    let intent = ConfigurationIntent()
     intent.fullBleed = false
     return intent
   }
   
-  fileprivate static var starEyes: ConfigurationAppIntent {
-    let intent = ConfigurationAppIntent()
+  fileprivate static var starEyes: ConfigurationIntent {
+    let intent = ConfigurationIntent()
     intent.fullBleed = true
     return intent
   }

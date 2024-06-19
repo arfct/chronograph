@@ -11,6 +11,7 @@
 		2C0EFA382C21CDE200012A78 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2C0EFA392C21CDE200012A78 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2C0EFA3B2C226ABE00012A78 /* WidgetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA3A2C226ABE00012A78 /* WidgetRow.swift */; };
+		2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
 		2C6BA2EE2C1B6A4F00F22C21 /* txetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2ED2C1B6A4F00F22C21 /* txetApp.swift */; };
 		2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
 		2C6BA2F22C1B6A5000F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */; };
@@ -30,13 +31,13 @@
 		2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
 		2C6BA3372C1B6ABB00F22C21 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3362C1B6ABB00F22C21 /* Control.swift */; };
 		2C6BA3392C1B6ABB00F22C21 /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
-		2C6BA33B2C1B6ABB00F22C21 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* AppIntent.swift */; };
+		2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
 		2C6BA33D2C1B6ABC00F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */; };
 		2C6BA3412C1B6ABC00F22C21 /* Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C6BA32E2C1B6ABB00F22C21 /* Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2C6BA3472C1B6D4800F22C21 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* AppIntent.swift */; };
+		2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
 		2C6BA3482C1B6F6900F22C21 /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
-		2C6BA3672C1BBACD00F22C21 /* CalendarEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarEntity.swift */; };
-		2C6BA3682C1BBACD00F22C21 /* CalendarEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarEntity.swift */; };
+		2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
+		2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
 		2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
 		2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
 		2C6BA36D2C1C8AEF00F22C21 /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
@@ -135,12 +136,12 @@
 		2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		2C6BA3362C1B6ABB00F22C21 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		2C6BA3382C1B6ABB00F22C21 /* Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
-		2C6BA33A2C1B6ABB00F22C21 /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationIntent.swift; sourceTree = "<group>"; };
 		2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6BA33E2C1B6ABC00F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6BA3462C1B6AF600F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2C6BA3492C1B769D00F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2C6BA3642C1BB93A00F22C21 /* CalendarEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEntity.swift; sourceTree = "<group>"; };
+		2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarSelectionEntity.swift; sourceTree = "<group>"; };
 		2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Utils.swift"; sourceTree = "<group>"; };
 		2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEntries.swift; sourceTree = "<group>"; };
 		2C6BA3792C1C99C700F22C21 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
@@ -293,8 +294,8 @@
 				2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */,
 				2C6BA3382C1B6ABB00F22C21 /* Widget.swift */,
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
-				2C6BA33A2C1B6ABB00F22C21 /* AppIntent.swift */,
-				2C6BA3642C1BB93A00F22C21 /* CalendarEntity.swift */,
+				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
+				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
 				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
 				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
 			);
@@ -490,8 +491,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C6BA3472C1B6D4800F22C21 /* AppIntent.swift in Sources */,
-				2C6BA3682C1BBACD00F22C21 /* CalendarEntity.swift in Sources */,
+				2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */,
+				2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */,
+				2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3482C1B6F6900F22C21 /* Widget.swift in Sources */,
 				2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */,
 				2C0EFA392C21CDE200012A78 /* AppIntentPerform.swift in Sources */,
@@ -508,10 +510,10 @@
 				2C6BA3802C1CF13E00F22C21 /* AudioReflector.swift in Sources */,
 				2C6BA3372C1B6ABB00F22C21 /* Control.swift in Sources */,
 				2C6BA3332C1B6ABB00F22C21 /* LiveActivity.swift in Sources */,
-				2C6BA33B2C1B6ABB00F22C21 /* AppIntent.swift in Sources */,
+				2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */,
 				2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
-				2C6BA3672C1BBACD00F22C21 /* CalendarEntity.swift in Sources */,
+				2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3392C1B6ABB00F22C21 /* Widget.swift in Sources */,
 				2C6BA37A2C1C99C900F22C21 /* Formatters.swift in Sources */,
 				2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */,

@@ -75,12 +75,21 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
+            BlueprintIdentifier = "2C6BA3142C1B6A9600F22C21"
+            BuildableName = "Watch Widget.appex"
+            BlueprintName = "Watch Widget"
+            ReferencedContainer = "container:txet.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
             BuildableName = "txet-watch.app"
             BlueprintName = "txet-watch"
             ReferencedContainer = "container:txet.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCWidgetKind"

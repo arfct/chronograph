@@ -46,25 +46,32 @@ struct ContentView: View {
   
   var body: some View {
     NavigationStack {
-      Button {
-        let recorderPlayer = AudioRecorderPlayer()
-        recorderPlayer.startRecordingAndPlaying()
+//      Button {
+//        let recorderPlayer = AudioRecorderPlayer()
+//        recorderPlayer.startRecordingAndPlaying()
+//
+//      } label: {
+//        Label {
+//          Text("hi")
+//        } icon: {
+//          Image(systemName: "microphone")
+//        }
+//
+//      }
 
-      } label: {
-        Label {
-          Text("hi")
-        } icon: {
-          Image(systemName: "microphone")
-        }
-
-      }
-
+      VStack(alignment: .leading) {
+        Text("txet").font(.largeTitle)
+        Text("txet provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.")
+      }.frame(alignment:.leading)
+        .padding(30)
       List {
         if let reminders = reminders {
           Section(header: Text("Reminders")) {
             ForEach(reminders.prefix(10)) { reminder in
               Text(reminder.item?.title ?? reminder.header ?? "Error")
+                .lineLimit(1)
             }
+            .listRowBackground(Color.clear)
           }
         }
         
@@ -80,8 +87,8 @@ struct ContentView: View {
             }
           }
         }
+        .listRowBackground(Color.clear)
       }
-      .navigationTitle("Reminders & Events")
       .task {
         await requestAccess()
       }

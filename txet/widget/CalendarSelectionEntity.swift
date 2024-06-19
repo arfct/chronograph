@@ -9,7 +9,7 @@ import WidgetKit
 @preconcurrency import EventKit
 import AppIntents
 
-struct CalendarEntity: AppEntity {
+struct CalendarSelectionEntity: AppEntity {
   let id: String
   let title: String
   
@@ -25,23 +25,23 @@ struct CalendarEntity: AppEntity {
 struct CalendarQuery: EntityQuery {
   let eventStore = EKEventStore()
   
-  func entities(for identifiers: [CalendarEntity.ID]) async throws -> [CalendarEntity] {
+  func entities(for identifiers: [CalendarSelectionEntity.ID]) async throws -> [CalendarSelectionEntity] {
 
     let entities = try? await suggestedEntities().filter { identifiers.contains($0.id)}
     return entities ?? []
   }
   
-  func suggestedEntities() async throws -> [CalendarEntity] {
+  func suggestedEntities() async throws -> [CalendarSelectionEntity] {
     let calendars = eventStore.calendars(for: .event)
     
-    var entities: [CalendarEntity] = [
-      CalendarEntity(id: "*", title: "All Calendars")
+    var entities: [CalendarSelectionEntity] = [
+      CalendarSelectionEntity(id: "*", title: "All Calendars")
     ]
     
     // Step 4: Create an array of names and IDs
     var calendarInfoArray: [(name: String, id: String)] = []
     for calendar in calendars {
-      entities.append(CalendarEntity(id:calendar.calendarIdentifier, title:calendar.title))
+      entities.append(CalendarSelectionEntity(id:calendar.calendarIdentifier, title:calendar.title))
       let calendarInfo = (name: calendar.title, id: calendar.calendarIdentifier)
       calendarInfoArray.append(calendarInfo)
     }
@@ -49,7 +49,7 @@ struct CalendarQuery: EntityQuery {
     return entities
   }
   
-  func defaultResult() async -> CalendarEntity? {
-    return CalendarEntity(id: "*", title: "All Calendars")
+  func defaultResult() async -> CalendarSelectionEntity? {
+    return nil
   }
 }

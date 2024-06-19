@@ -13,7 +13,11 @@ struct widgetBundle: WidgetBundle {
   var body: some Widget {
     widgetReminders()
     widgetCalendar()
+#if os(watchOS)
+#else
     widgetControl()
     widgetLiveActivity()
+#endif
+    
   }
 }
