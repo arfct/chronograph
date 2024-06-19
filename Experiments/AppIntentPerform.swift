@@ -7,8 +7,8 @@ import SwiftUI
 struct StartRecording: AudioPlaybackIntent {
   
   @AppStorage("state") private var state = false
-  static var title: LocalizedStringResource = "Emoji Ranger SuperCharger"
-  static var description = IntentDescription("All heroes get instant 100% health.")
+  static var title: LocalizedStringResource = "App Intent"
+  static var description = IntentDescription("Description")
   
   func perform() async throws -> some IntentResult {
     
