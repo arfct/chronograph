@@ -61,21 +61,21 @@ struct ContentView: View {
 
       VStack(alignment: .leading) {
         Text("txet").font(.largeTitle)
-        Text("txet provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.")
+        Text("provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.\n\nBelow are the items that will be shown (requires permission)")
       }.frame(alignment:.leading)
         .padding(30)
       List {
         if let reminders = reminders {
-          Section(header: Text("Reminders")) {
+          VStack(alignment: .leading) {
             ForEach(reminders.prefix(10)) { reminder in
               Text(reminder.item?.title ?? reminder.header ?? "Error")
                 .lineLimit(1)
             }
-            .listRowBackground(Color.clear)
           }
+          .listRowBackground(Color.clear)
         }
         
-        Section(header: Text("Events")) {
+        VStack (alignment:.leading){
           if let events = events {
             ForEach(events.prefix(10)) { row in
               
