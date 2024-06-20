@@ -50,7 +50,7 @@ struct ContentView: View {
   var body: some View {
     NavigationStack {
       VStack(alignment: .leading) {
-        Text("txet").font(.largeTitle)
+        Text("Chronograph").font(.system(size: 24, design:.monospaced).weight(.semibold).width(.condensed)).padding(.bottom, 10)
         Text("provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.\n\nPreview the items that will be displayed below — each widget can customize the visible calendars and style.")
     
         

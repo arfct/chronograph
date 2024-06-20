@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
-               BuildableName = "txet-watch.app"
-               BlueprintName = "txet-watch"
+               BuildableName = "Chronograph-watch.app"
+               BlueprintName = "Chronograph-watch"
                ReferencedContainer = "container:txet.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,8 +30,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-               BuildableName = "txet.app"
-               BlueprintName = "txet"
+               BuildableName = "Chronograph.app"
+               BlueprintName = "Chronograph"
                ReferencedContainer = "container:txet.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -59,8 +59,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
-            BuildableName = "txet-watch.app"
-            BlueprintName = "txet-watch"
+            BuildableName = "Chronograph-watch.app"
+            BlueprintName = "Chronograph-watch"
             ReferencedContainer = "container:txet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -76,8 +76,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
-            BuildableName = "txet-watch.app"
-            BlueprintName = "txet-watch"
+            BuildableName = "Chronograph-watch.app"
+            BlueprintName = "Chronograph-watch"
             ReferencedContainer = "container:txet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

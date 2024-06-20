@@ -31,8 +31,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-               BuildableName = "txet.app"
-               BlueprintName = "txet"
+               BuildableName = "Chronograph.app"
+               BlueprintName = "Chronograph"
                ReferencedContainer = "container:txet.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -72,8 +72,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-            BuildableName = "txet.app"
-            BlueprintName = "txet"
+            BuildableName = "Chronograph.app"
+            BlueprintName = "Chronograph"
             ReferencedContainer = "container:txet.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -108,8 +108,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-            BuildableName = "txet.app"
-            BlueprintName = "txet"
+            BuildableName = "Chronograph.app"
+            BlueprintName = "Chronograph"
             ReferencedContainer = "container:txet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
