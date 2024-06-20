@@ -202,8 +202,8 @@
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
-				2C6BA2EC2C1B6A4F00F22C21 /* txet */,
-				2C6BA2FE2C1B6A5000F22C21 /* txet-watch */,
+				2C6BA2EC2C1B6A4F00F22C21 /* iOS */,
+				2C6BA2FE2C1B6A5000F22C21 /* Watch */,
 				2C0EFA3C2C226BA200012A78 /* Extensions */,
 				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
@@ -222,18 +222,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2C6BA2EC2C1B6A4F00F22C21 /* txet */ = {
+		2C6BA2EC2C1B6A4F00F22C21 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				2C6BA2ED2C1B6A4F00F22C21 /* txetApp.swift */,
 				2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */,
 				2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */,
-				2C6BA3312C1B6ABB00F22C21 /* widget */,
+				2C6BA3312C1B6ABB00F22C21 /* Widget */,
 				2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */,
 				2C6BA3462C1B6AF600F22C21 /* Info.plist */,
 				2C6BA2F32C1B6A5000F22C21 /* Preview Content */,
 			);
-			path = txet;
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		2C6BA2F32C1B6A5000F22C21 /* Preview Content */ = {
@@ -244,17 +244,17 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		2C6BA2FE2C1B6A5000F22C21 /* txet-watch */ = {
+		2C6BA2FE2C1B6A5000F22C21 /* Watch */ = {
 			isa = PBXGroup;
 			children = (
 				2C6BA3492C1B769D00F22C21 /* Info.plist */,
 				2C6BA2FF2C1B6A5000F22C21 /* txetApp.swift */,
 				2C6BA3012C1B6A5000F22C21 /* ContentView.swift */,
-				2C6BA31B2C1B6A9600F22C21 /* widget */,
+				2C6BA31B2C1B6A9600F22C21 /* Widget */,
 				2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */,
 				2C6BA3052C1B6A5100F22C21 /* Preview Content */,
 			);
-			path = "txet-watch";
+			path = Watch;
 			sourceTree = "<group>";
 		};
 		2C6BA3052C1B6A5100F22C21 /* Preview Content */ = {
@@ -274,16 +274,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2C6BA31B2C1B6A9600F22C21 /* widget */ = {
+		2C6BA31B2C1B6A9600F22C21 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
 				2C6BA3202C1B6A9700F22C21 /* Assets.xcassets */,
 				2C6BA3222C1B6A9700F22C21 /* Info.plist */,
 			);
-			path = widget;
+			path = Widget;
 			sourceTree = "<group>";
 		};
-		2C6BA3312C1B6ABB00F22C21 /* widget */ = {
+		2C6BA3312C1B6ABB00F22C21 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
 				2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */,
@@ -294,7 +294,7 @@
 				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
 				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
 			);
-			path = widget;
+			path = Widget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -398,7 +398,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2C6BA2E52C1B6A4F00F22C21 /* Build configuration list for PBXProject "txet" */;
+			buildConfigurationList = 2C6BA2E52C1B6A4F00F22C21 /* Build configuration list for PBXProject "Chronograph" */;
 			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -659,11 +659,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"txet-watch/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Watch/Preview Content\"";
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "txet-watch/Info.plist";
+				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = txet;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.blacktree.txet;
@@ -691,11 +691,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"txet-watch/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Watch/Preview Content\"";
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "txet-watch/Info.plist";
+				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = txet;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.blacktree.txet;
@@ -724,11 +724,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"txet/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = txet/Info.plist;
+				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record new reminders and events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -759,11 +759,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"txet/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = txet/Info.plist;
+				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record new reminders and events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -797,7 +797,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "txet-watch/widget/Info.plist";
+				INFOPLIST_FILE = Watch/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -828,7 +828,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "txet-watch/widget/Info.plist";
+				INFOPLIST_FILE = Watch/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -860,7 +860,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = txet/widget/Info.plist;
+				INFOPLIST_FILE = iOS/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -890,7 +890,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = txet/widget/Info.plist;
+				INFOPLIST_FILE = iOS/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = widget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -915,7 +915,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2C6BA2E52C1B6A4F00F22C21 /* Build configuration list for PBXProject "txet" */ = {
+		2C6BA2E52C1B6A4F00F22C21 /* Build configuration list for PBXProject "Chronograph" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6BA3082C1B6A5100F22C21 /* Debug */,

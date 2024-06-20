@@ -15,24 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
-               BuildableName = "Chronograph-watch.app"
-               BlueprintName = "Chronograph-watch"
-               ReferencedContainer = "container:txet.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
                BuildableName = "Chronograph.app"
                BlueprintName = "Chronograph"
-               ReferencedContainer = "container:txet.xcodeproj">
+               ReferencedContainer = "container:Chronograph.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -58,10 +44,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
-            BuildableName = "Chronograph-watch.app"
-            BlueprintName = "Chronograph-watch"
-            ReferencedContainer = "container:txet.xcodeproj">
+            BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
+            BuildableName = "Chronograph.app"
+            BlueprintName = "Chronograph"
+            ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -75,10 +61,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
-            BuildableName = "Chronograph-watch.app"
-            BlueprintName = "Chronograph-watch"
-            ReferencedContainer = "container:txet.xcodeproj">
+            BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
+            BuildableName = "Chronograph.app"
+            BlueprintName = "Chronograph"
+            ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
