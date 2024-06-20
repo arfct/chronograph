@@ -175,10 +175,10 @@ struct TextWidgetView : View {
       let vPadding = accessory ? margins.top / 3 : margins.top / 2
       let height = frame.size.height - vPadding * 2
       
-      let minLineHeight = accessory ? 18.0 : isHuge ? 48.0 : 24.0
+      let minLineHeight = widthIsLimited ? 18.0 : isHuge ? 48.0 : 24.0
       let lineHeight = height / ceil(height / minLineHeight)
       
-      let fontSize = accessory ? 12.0 : (isHuge ? 32.0 : 16.0)
+      let fontSize = widthIsLimited ? 12.0 : (isHuge ? 32.0 : 16.0)
       let keyline = widthIsLimited ? 0 : fontSize * 2
       
 

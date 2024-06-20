@@ -54,7 +54,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
   return await withCheckedContinuation { continuation in
     let calendar = Calendar.current
     let startDate = Date()
-    let endDate = calendar.date(byAdding: .day, value: 4, to: startDate)!
+    let endDate = calendar.date(byAdding: .day, value: 14, to: startDate)!
     
     var calendars: [EKCalendar] = []
     
@@ -82,7 +82,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
     var previousItem: EKEvent? = nil
     let now = Date()
     var headerIndex = 0
-    items.append(EventEntry(id:"today", header:"NOW", allDayItems: []))
+    items.append(EventEntry(id:"today", header:"", allDayItems: []))
     for event in fetchedEvents {
       let item = EventEntry(id: event.eventIdentifier, item: event)
       
