@@ -5,12 +5,14 @@ struct EventEntry: Identifiable, Hashable {
   var type: String?
   var header: String?
   var date: Date?
+  var url: URL?
   var item: EKCalendarItem?
   var allDayItems: [EventEntry]?
 }
 
 func fetchReminders() async -> [EventEntry]? {
   let eventStore = EKEventStore()
+  
   return await withCheckedContinuation { continuation in
     
     let predicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)

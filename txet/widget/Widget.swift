@@ -11,7 +11,7 @@ import EventKit
 
 
 
-struct Provider: AppIntentTimelineProvider {
+struct TXTimelineProvider: AppIntentTimelineProvider {
   let kind: String
   @AppStorage("state") private var state = false
   
@@ -25,23 +25,37 @@ struct Provider: AppIntentTimelineProvider {
   }
   
   func timeline(for configuration: ConfigurationIntent, in context: Context) async -> Timeline<CalendarTimelineEntry> {
-    
-    let ids = configuration.calendars.map({ $0.id })
-    
-    let items = kind == "reminders" ? await fetchReminders()! : await fetchEvents(calendarIDs: ids)!
+    return await timeline(for: configuration)
+  }
+  
+  func timeline(for configuration: ConfigurationIntent) async -> Timeline<CalendarTimelineEntry> {
+    let getReminders = kind == "reminders"
+    let authorized = EKEventStore.authorizationStatus(for: getReminders ? .reminder : .event) == .fullAccess
     
     let now = Date()
-    let entry = CalendarTimelineEntry(date: now,
-                                      configuration: configuration,
-                                      items: items)
-    
-    let entries = [entry]
-    
     let reloadDate = Calendar.current.date(byAdding: .minute,
                                            value: 15,
                                            to: now)!
-    
-    return Timeline(entries: entries, policy: .after(reloadDate))
+    if (authorized) {
+      let ids = configuration.calendars.map({ $0.id })
+      
+      let items = getReminders
+      ? await fetchReminders()!
+      : await fetchEvents(calendarIDs: ids)!
+      
+      let entry = CalendarTimelineEntry(date: now,
+                                        configuration: configuration,
+                                        items: items)
+      
+      let entries = [entry]
+
+      return Timeline(entries: entries, policy: .after(reloadDate))
+    } else {
+      return Timeline(entries: [
+        CalendarTimelineEntry(date: now, configuration: configuration, items: [EventEntry(id: "error", header: "Enable \(kind) access in settings", url: URL(string: "settings:"))])
+        
+      ], policy: .after(reloadDate))
+    }
     
   }
   
@@ -72,10 +86,9 @@ struct TextWidgetView : View {
   @Environment(\.widgetFamily) var widgetFamily
   @AppStorage("state") private var state = false
   
+  var entry: TXTimelineProvider.Entry = CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), items:[])
   
-  var entry: Provider.Entry
-  
-  init(entry: Provider.Entry) {
+  init(entry: TXTimelineProvider.Entry) {
     self.entry = entry
   }
   
@@ -291,6 +304,7 @@ struct TextWidgetView : View {
                 Text(reminder.title ?? "No Title")
                   .font(font)
                   .lineLimit(1)
+                  .foregroundColor(.primary)
                   .multilineTextAlignment(.leading)
                   .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -310,15 +324,20 @@ struct TextWidgetView : View {
             
             HStack {
               
-              Text(row.header ?? "———")
-                .font(font)
-                .textCase(.uppercase)
-                .monospaced()
-                .foregroundColor(.secondary)
-                .widgetAccentable()
-              
-                .frame(minWidth:keyline, alignment:.trailing)
-              
+              if row.id == "error", let destination = row.url {
+                Link(destination: destination){
+                  Text(row.header ?? "Error")
+                }
+              } else {
+                Text(row.header ?? "———")
+                  .font(font)
+                  .textCase(.uppercase)
+                  .monospaced()
+                  .foregroundColor(.secondary)
+                  .widgetAccentable()
+                
+                  .frame(minWidth:keyline, alignment:.trailing)
+              }
               ForEach(row.allDayItems ?? []) { item in
                 if let title = item.item?.title {
                   Text(title)
@@ -353,7 +372,7 @@ struct widgetReminders: Widget {
   
   var body: some WidgetConfiguration {
     
-    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider(kind: kind)) { entry in
+    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TXTimelineProvider(kind: kind)) { entry in
       TextWidgetView(entry: entry)
         .containerBackground(.clear, for: .widget)
     }
@@ -376,7 +395,7 @@ struct widgetCalendar: Widget {
   
   var body: some WidgetConfiguration {
     
-    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider(kind:kind)) { entry in
+    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TXTimelineProvider(kind:kind)) { entry in
       TextWidgetView(entry: entry)
         .containerBackground(.clear, for: .widget)
     }

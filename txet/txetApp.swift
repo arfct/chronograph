@@ -13,8 +13,14 @@ struct txetApp: App {
         WindowGroup {
             ContentView()
             .onOpenURL { url in
-              print("Opening URL: \(url)")
-              UIApplication.shared.open(url, options: [:], completionHandler: nil)
+              var urlToOpen = url
+              if urlToOpen.absoluteString.starts(with:"settings:") {
+                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                  urlToOpen = appSettings
+                }
+              }
+              print("Opening URL: \(urlToOpen)")
+              UIApplication.shared.open(urlToOpen, options: [:], completionHandler: nil)
             }
         }
     }

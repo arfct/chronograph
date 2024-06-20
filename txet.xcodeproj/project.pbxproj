@@ -10,7 +10,6 @@
 		2C0EFA362C21C58700012A78 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2C0EFA382C21CDE200012A78 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2C0EFA392C21CDE200012A78 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
-		2C0EFA3B2C226ABE00012A78 /* WidgetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA3A2C226ABE00012A78 /* WidgetRow.swift */; };
 		2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
 		2C6BA2EE2C1B6A4F00F22C21 /* txetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2ED2C1B6A4F00F22C21 /* txetApp.swift */; };
 		2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
@@ -49,6 +48,16 @@
 		2C6BA37F2C1CF13E00F22C21 /* AudioReflector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA37E2C1CF13900F22C21 /* AudioReflector.swift */; };
 		2C6BA3802C1CF13E00F22C21 /* AudioReflector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA37E2C1CF13900F22C21 /* AudioReflector.swift */; };
 		2C6BA3812C1CF28800F22C21 /* AudioReflector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA37E2C1CF13900F22C21 /* AudioReflector.swift */; };
+		2CB314F62C2474FE0064BF6C /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
+		2CB314F72C2474FE0064BF6C /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
+		2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
+		2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
+		2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
+		2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
+		2CB314FC2C2475AE0064BF6C /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
+		2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
+		2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
+		2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,7 +122,6 @@
 
 /* Begin PBXFileReference section */
 		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
-		2C0EFA3A2C226ABE00012A78 /* WidgetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetRow.swift; sourceTree = "<group>"; };
 		2C6BA2EA2C1B6A4F00F22C21 /* txet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = txet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA2ED2C1B6A4F00F22C21 /* txetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = txetApp.swift; sourceTree = "<group>"; };
 		2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -142,6 +150,7 @@
 		2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEntries.swift; sourceTree = "<group>"; };
 		2C6BA3792C1C99C700F22C21 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		2C6BA37E2C1CF13900F22C21 /* AudioReflector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioReflector.swift; sourceTree = "<group>"; };
+		2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,7 +235,7 @@
 			children = (
 				2C6BA2ED2C1B6A4F00F22C21 /* txetApp.swift */,
 				2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */,
-				2C0EFA3A2C226ABE00012A78 /* WidgetRow.swift */,
+				2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */,
 				2C6BA3312C1B6ABB00F22C21 /* widget */,
 				2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */,
 				2C6BA3462C1B6AF600F22C21 /* Info.plist */,
@@ -461,10 +470,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C6BA36F2C1C8B3700F22C21 /* EventEntries.swift in Sources */,
-				2C0EFA3B2C226ABE00012A78 /* WidgetRow.swift in Sources */,
+				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */,
+				2CB314F62C2474FE0064BF6C /* Widget.swift in Sources */,
 				2C6BA3812C1CF28800F22C21 /* AudioReflector.swift in Sources */,
 				2C0EFA362C21C58700012A78 /* AppIntentPerform.swift in Sources */,
+				2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
+				2CB314FC2C2475AE0064BF6C /* Color+Utils.swift in Sources */,
+				2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA37C2C1C99F900F22C21 /* Formatters.swift in Sources */,
 				2C6BA2EE2C1B6A4F00F22C21 /* txetApp.swift in Sources */,
 			);
@@ -475,9 +488,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C6BA3702C1C8B3700F22C21 /* EventEntries.swift in Sources */,
+				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */,
+				2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
+				2CB314F72C2474FE0064BF6C /* Widget.swift in Sources */,
 				2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */,
 				2C6BA3002C1B6A5000F22C21 /* txetApp.swift in Sources */,
+				2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
+				2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  txet
-//
-//  Created by Nicholas Jitkoff on 1/4/24.
-//
-
 import SwiftUI
 import EventKit
 
@@ -17,82 +10,85 @@ struct Event: Identifiable {
   var id: String
   var event: EKEvent
 }
+
 struct ContentView: View {
   
   let eventStore = EKEventStore()
   @State var reminders: [EventEntry]? = []
   @State var events: [EventEntry]? = []
+  @State var remindersAccessGranted: Bool = false
+  @State var eventsAccessGranted: Bool = false
   
-  
-  
-  private func requestAccess() async {
+  private func checkRemindersAccess() async {
     do {
-      if try await eventStore.requestFullAccessToReminders() {
+      remindersAccessGranted = try await eventStore.requestFullAccessToReminders()
+      if remindersAccessGranted {
         reminders = await fetchReminders()
       }
     } catch {
       print("Access to reminders denied: \(String(describing: error.localizedDescription))")
     }
-    
+  }
+  
+  private func checkEventsAccess() async {
     do {
-      if try await eventStore.requestFullAccessToEvents() {
+      eventsAccessGranted = try await eventStore.requestFullAccessToEvents()
+      if eventsAccessGranted {
         events = await fetchEvents(calendarIDs: [])
       }
     } catch {
       print("Access to events denied: \(String(describing: error.localizedDescription))")
     }
-    
+  }
+  
+  private func openAppSettings() {
+    if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+      UIApplication.shared.open(appSettings)
+    }
   }
   
   var body: some View {
     NavigationStack {
-//      Button {
-//        let recorderPlayer = AudioRecorderPlayer()
-//        recorderPlayer.startRecordingAndPlaying()
-//
-//      } label: {
-//        Label {
-//          Text("hi")
-//        } icon: {
-//          Image(systemName: "microphone")
-//        }
-//
-//      }
-
       VStack(alignment: .leading) {
         Text("txet").font(.largeTitle)
-        Text("provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.\n\nBelow are the items that will be shown (requires permission)")
-      }.frame(alignment:.leading)
-        .padding(30)
-      List {
-        if let reminders = reminders {
-          VStack(alignment: .leading) {
-            ForEach(reminders.prefix(10)) { reminder in
-              Text(reminder.item?.title ?? reminder.header ?? "Error")
-                .lineLimit(1)
-            }
-          }
-          .listRowBackground(Color.clear)
-        }
+        Text("provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.\n\nPreview the items that will be displayed below — each widget can customize the visible calendars and style.")
+    
         
-        VStack (alignment:.leading){
-          if let events = events {
-            ForEach(events.prefix(10)) { row in
-              
-              if row.item is EKEvent {
-                EventEntryRow(entry: row)
-              } else {
-                Text(row.header ?? "–")
-              }
+      }.padding()
+      List {
+        Section("Reminders") {
+          if EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+            WidgetPreviewView(kind: "reminders")
+              .frame(minHeight: 200)
+          } else {
+            Button(action: {
+              openAppSettings()
+            }) {
+              Label("Enable Reminders Access", systemImage: "lock")
             }
           }
+          
         }
-        .listRowBackground(Color.clear)
-      }
-      .task {
-        await requestAccess()
+        Section("Calendar") {
+          if EKEventStore.authorizationStatus(for: .event) == .fullAccess {
+            WidgetPreviewView(kind: "calendar")
+              .frame(minHeight: 200)
+          } else {
+            Button(action: {
+              openAppSettings()
+            }) {
+              Label("Enable Calendar Access", systemImage: "lock")
+            }
+          }
+          
+        }
       }
     }
+    .task {
+      await checkRemindersAccess()
+      await checkEventsAccess()
+    }
+    
   }
 }
 

@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct txet_Watch_AppApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+struct TXWatchApp: App {
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
     }
+  }
 }

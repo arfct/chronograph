@@ -59,7 +59,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
       Case(DisplayedContent.reminders) {
         Summary {
           \.$content
-          \.$reminders
+//          \.$reminders
           \.$fontStyle
           \.$backgroundColor
           \.$fullBleed
@@ -69,7 +69,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
         Summary {
           \.$content
           \.$calendars
-          \.$reminders
+//          \.$reminders
           \.$fontStyle
           \.$backgroundColor
           \.$fullBleed
