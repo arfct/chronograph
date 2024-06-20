@@ -15,6 +15,7 @@ struct txetApp: App {
             .onOpenURL { url in
               var urlToOpen = url
               if urlToOpen.absoluteString.starts(with:"settings:") {
+                // TODO: allow prompting for permission before opening settings
                 if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                   urlToOpen = appSettings
                 }

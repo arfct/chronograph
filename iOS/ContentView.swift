@@ -19,22 +19,28 @@ struct ContentView: View {
   @State var remindersAccessGranted: Bool = false
   @State var eventsAccessGranted: Bool = false
   
-  private func checkRemindersAccess() async {
+  private func checkRemindersAccess(interactive: Bool = false) async {
     do {
       remindersAccessGranted = try await eventStore.requestFullAccessToReminders()
       if remindersAccessGranted {
         reminders = await fetchReminders()
+      } else if interactive {
+        openAppSettings()
       }
     } catch {
       print("Access to reminders denied: \(String(describing: error.localizedDescription))")
+        
+
     }
   }
   
-  private func checkEventsAccess() async {
+  private func checkEventsAccess(interactive: Bool = false) async {
     do {
       eventsAccessGranted = try await eventStore.requestFullAccessToEvents()
       if eventsAccessGranted {
         events = await fetchEvents(calendarIDs: [])
+      } else if interactive {
+        openAppSettings()
       }
     } catch {
       print("Access to events denied: \(String(describing: error.localizedDescription))")
@@ -52,17 +58,21 @@ struct ContentView: View {
       VStack(alignment: .leading) {
         Text("Chronograph").font(.system(size: 24, design:.monospaced).weight(.semibold).width(.condensed)).padding(.bottom, 10)
         Text("provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.\n\nPreview the items that will be displayed below — each widget can customize the visible calendars and style.")
-    
+        
         
       }.padding()
+      
       List {
         Section("Reminders") {
-          if EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+          if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
             WidgetPreviewView(kind: "reminders")
               .frame(minHeight: 200)
           } else {
             Button(action: {
-              openAppSettings()
+              Task {
+                await checkRemindersAccess(interactive: true)
+                remindersAccessGranted = true
+              }
             }) {
               Label("Enable Reminders Access", systemImage: "lock")
             }
@@ -70,23 +80,26 @@ struct ContentView: View {
           
         }
         Section("Calendar") {
-          if EKEventStore.authorizationStatus(for: .event) == .fullAccess {
+          if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
             WidgetPreviewView(kind: "calendar")
               .frame(minHeight: 200)
           } else {
             Button(action: {
-              openAppSettings()
+              Task {
+                await checkEventsAccess(interactive: true)
+                
+                eventsAccessGranted = true
+              }
             }) {
               Label("Enable Calendar Access", systemImage: "lock")
             }
           }
-          
         }
       }
     }
     .task {
-      await checkRemindersAccess()
-      await checkEventsAccess()
+//      await checkRemindersAccess()
+//      await checkEventsAccess()
     }
     
   }
