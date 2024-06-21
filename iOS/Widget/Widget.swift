@@ -159,7 +159,9 @@ struct TextWidgetView : View {
     let widthIsLimited = true
     let isHuge = false
 #else
-    let accessory = (widgetFamily == .accessoryRectangular) || (widgetFamily == .systemSmall && !showsWidgetContainerBackground)
+    let accessory =
+    (widgetFamily == .accessoryRectangular) ||
+    (widgetFamily == .systemSmall && !showsWidgetContainerBackground)
     let heightIsLimited = accessory
     let widthIsLimited = accessory || (widgetFamily == .systemSmall)
     let isHuge = widgetFamily == .systemExtraLarge
@@ -168,10 +170,12 @@ struct TextWidgetView : View {
     let isDark = backgroundColor == .clear ? colorScheme == .dark : backgroundColor.isDark()
     
     GeometryReader { frame in
-      let fullBleed = widgetFamily == .accessoryRectangular  || !showsWidgetContainerBackground ? true : entry.configuration.fullBleed
+      let fullBleed = 
+      widgetFamily == .accessoryRectangular  ||
+      !showsWidgetContainerBackground ? true : entry.configuration.fullBleed
       
       //      let isStandBy = !showsWidgetContainerBackground && (widgetFamily != .accessoryRectangular)
-      let hPadding = fullBleed ? margins.top / 3 : margins.leading
+      var hPadding = fullBleed ? margins.top / 3 : margins.leading
       let vPadding = accessory ? margins.top / 3 : margins.top / 2
       let height = frame.size.height - vPadding * 2
       
@@ -179,15 +183,17 @@ struct TextWidgetView : View {
       let lineHeight = height / ceil(height / minLineHeight)
       
       let fontSize = widthIsLimited ? 12.0 : (isHuge ? 32.0 : 16.0)
-      let keyline = widthIsLimited ? 0 : fontSize * 2
+      let keyline = fontSize * 2
       
-
       let design = designForFontStyle(entry.configuration.fontStyle)
       var font = Font.system(size: fontSize, design: design).width(.standard)
       var smallFont = Font.system(size: fontSize * 0.66, design: design).weight(.semibold)
-
       
-
+      let insets = EdgeInsets(top: vPadding,
+                              leading: min(hPadding, fontSize / 2),
+                              bottom: vPadding,
+                              trailing: hPadding)
+      
       switch entry.configuration.fontStyle {
       case .compressed:
         let _ = font = font.width(.compressed)
@@ -207,6 +213,7 @@ struct TextWidgetView : View {
       let items = entry.items.filter { item in
         removeSpacers ? item.type != "spacer" : true
       }
+      
       
       VStack(spacing: 0) {
         
@@ -298,7 +305,7 @@ struct TextWidgetView : View {
                   .font(font)
                   .foregroundColor(.secondary)
                   .widgetAccentable()
-              }.frame(minWidth:keyline, alignment: .trailing)
+              }.frame(minWidth:keyline, alignment: .center)
               Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
                 
                 Text(reminder.title ?? "No Title")
@@ -320,8 +327,7 @@ struct TextWidgetView : View {
             }.frame(maxWidth:.infinity, alignment: .leading)
               .frame(height: realLineHeight)
           } else {
-            
-            
+
             HStack {
               
               if row.id == "error", let destination = row.url {
@@ -329,20 +335,26 @@ struct TextWidgetView : View {
                   Text(row.header ?? "Error")
                 }
               } else {
-                Text(row.header ?? "———")
-                  .font(font)
-                  .textCase(.uppercase)
-                  .monospaced()
-                  .foregroundColor(.secondary)
-                  .widgetAccentable()
-                
-                  .frame(minWidth:keyline, alignment:.trailing)
-              }
-              ForEach(row.allDayItems ?? []) { item in
-                if let title = item.item?.title {
-                  Text(title)
+                if let header = row.header  {
+                  Text(header)
                     .font(font)
-                    .foregroundColor(Color.secondary)
+                    .textCase(.uppercase)
+                    .monospaced()
+                    .foregroundColor(.secondary)
+                    .widgetAccentable()
+                  
+                    .frame(minWidth:keyline, alignment:.trailing)
+                }
+              }
+              if let allDayItems = row.allDayItems {
+                let visibleItems =
+                    widthIsLimited ? allDayItems : allDayItems
+                ForEach(visibleItems) { item in
+                  if let title = item.item?.title {
+                    Text(title)
+                      .font(font)
+                      .foregroundColor(Color.secondary)
+                  }
                 }
               }
               
@@ -356,8 +368,10 @@ struct TextWidgetView : View {
       }//.border(.gray)
       .frame(maxHeight: .infinity, alignment: .top)
       .frame(maxWidth: .infinity, alignment: .top)
-      .padding(.vertical, vPadding)
-      .padding(.horizontal, hPadding)
+      .padding(.top, insets.top)
+      .padding(.bottom, insets.bottom)
+      .padding(.leading, insets.leading)
+      .padding(.trailing, insets.trailing)
       
     }//.border(.red)
     .environment(\.colorScheme, isDark ?  .dark : .light)
@@ -381,7 +395,14 @@ struct widgetReminders: Widget {
     .description("A text listing of your reminders")
     
 #if os(watchOS)
-    .supportedFamilies([.accessoryRectangular, .accessoryInline])
+    .supportedFamilies([
+      .accessoryRectangular, .accessoryInline
+    ])
+    
+#elseif os(macOS)
+    .supportedFamilies([
+      .systemSmall, .systemMedium, .systemLarge,
+      .systemExtraLarge])
 #else
     .supportedFamilies([.accessoryRectangular, .accessoryInline,
                         .systemSmall, .systemMedium, .systemLarge])
@@ -404,11 +425,26 @@ struct widgetCalendar: Widget {
     .description("A text listing of your calendar")
     
 #if os(watchOS)
-    .supportedFamilies([.accessoryRectangular, .accessoryInline])
-#else
-    .supportedFamilies([.accessoryRectangular, .accessoryInline,
-                        .systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
+    .supportedFamilies([
+      .accessoryRectangular
+    ])
+#elseif os(iOS)
+    .supportedFamilies([
+      .accessoryRectangular,
+      .systemSmall,
+      .systemMedium,
+      .systemLarge,
+      .systemExtraLarge
+    ])
+#elseif os(macOS)
+    .supportedFamilies([
+      .systemSmall,
+      .systemMedium,
+      .systemLarge,
+      .systemExtraLarge
+    ])
 #endif
+    
     
   }
 }
@@ -427,9 +463,9 @@ extension ConfigurationIntent {
   }
 }
 
-#Preview(as: .accessoryRectangular) {
-  widgetReminders()
-} timeline: {
-  CalendarTimelineEntry(date: .now, configuration: .smiley, items:[])
-  CalendarTimelineEntry(date: .now, configuration: .starEyes, items:[])
-}
+//#Preview(as: .systemSmall) {
+//  widgetReminders()
+//} timeline: {
+//  CalendarTimelineEntry(date: .now, configuration: .smiley, items:[])
+//  CalendarTimelineEntry(date: .now, configuration: .starEyes, items:[])
+//}

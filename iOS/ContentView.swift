@@ -47,10 +47,15 @@ struct ContentView: View {
     }
   }
   
+  
   private func openAppSettings() {
+#if os(iOS)
     if let appSettings = URL(string: UIApplication.openSettingsURLString) {
       UIApplication.shared.open(appSettings)
     }
+#elseif os(macOS)
+    
+#endif
   }
   
   var body: some View {

@@ -2,7 +2,12 @@ import SwiftUI
 
 extension Color {
   func toHex() -> String? {
+    #if os(macOS)
+    let uic = NSColor(self)
+    #else
+
       let uic = UIColor(self)
+    #endif
       guard let components = uic.cgColor.components, components.count >= 3 else {
           return nil
       }
@@ -88,8 +93,14 @@ extension Color {
   func isDark() -> Bool {
     // Extract the RGB components
     
-    let components = UIColor(self).cgColor.components
+#if os(macOS)
+let uic = NSColor(self)
+#else
+  let uic = UIColor(self)
+#endif
     
+
+    let components = uic.cgColor.components
     
     
     let red = components?[0] ?? 0

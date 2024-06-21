@@ -8,6 +8,8 @@ struct EventEntry: Identifiable, Hashable {
   var url: URL?
   var item: EKCalendarItem?
   var allDayItems: [EventEntry]?
+  var canBeWidowed: Bool = false
+  
 }
 
 func fetchReminders() async -> [EventEntry]? {
@@ -78,11 +80,14 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
       return order == .orderedAscending
     }
     
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEE"
+    
     var items: [EventEntry] = []
     var previousItem: EKEvent? = nil
     let now = Date()
     var headerIndex = 0
-    items.append(EventEntry(id:"today", header:"", allDayItems: []))
+    items.append(EventEntry(id:"today", header:dateFormatter.string(from: now), allDayItems: []))
     for event in fetchedEvents {
       let item = EventEntry(id: event.eventIdentifier, item: event)
       
@@ -98,8 +103,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
            let thisDate = now > event.startDate ? now : event.startDate {
           // Insert header entries between subsequent days
           if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "EEE"
+
             let header = EventEntry(id: "", header:
 //                                      calendar.isDateInTomorrow(event.startDate) ? "Tomorrow" :
                                       dateFormatter.string(from: event.startDate),
@@ -115,13 +119,16 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
       }
       
       if event.isAllDay {
-        items[headerIndex].allDayItems?.append(item)
+        items[headerIndex].allDayItems?.insert(item, at:0)
       } else {
         items.append(item)
       }
       previousItem = event
     }
     
+    if items.first?.allDayItems?.count == 0 {
+      items.removeFirst()
+    }
     continuation.resume(returning: items)
   }
 }

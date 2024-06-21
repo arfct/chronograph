@@ -12,7 +12,7 @@
 		2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
 		2C6BA2F22C1B6A5000F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */; };
 		2C6BA2F52C1B6A5000F22C21 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F42C1B6A5000F22C21 /* Preview Assets.xcassets */; };
-		2C6BA2FB2C1B6A5000F22C21 /* Chronograph-watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2C6BA2FB2C1B6A5000F22C21 /* Chronograph-watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2C6BA3002C1B6A5000F22C21 /* ChronographApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2FF2C1B6A5000F22C21 /* ChronographApp.swift */; };
 		2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3012C1B6A5000F22C21 /* ContentView.swift */; };
 		2C6BA3042C1B6A5100F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */; };
@@ -144,6 +144,8 @@
 		2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEntries.swift; sourceTree = "<group>"; };
 		2C6BA3792C1C99C700F22C21 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreviewView.swift; sourceTree = "<group>"; };
+		2CF51FB92C25B82700955300 /* Chronograph.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chronograph.entitlements; sourceTree = "<group>"; };
+		2CF51FBA2C25B82700955300 /* Widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Widget.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +204,8 @@
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
+				2CF51FBA2C25B82700955300 /* Widget.entitlements */,
+				2CF51FB92C25B82700955300 /* Chronograph.entitlements */,
 				2C6BA2EC2C1B6A4F00F22C21 /* iOS */,
 				2C6BA2FE2C1B6A5000F22C21 /* Watch */,
 				2C0EFA3C2C226BA200012A78 /* Extensions */,
@@ -522,6 +526,7 @@
 /* Begin PBXTargetDependency section */
 		2C6BA2FD2C1B6A5000F22C21 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 2C6BA2F92C1B6A5000F22C21 /* Chronograph-watch */;
 			targetProxy = 2C6BA2FC2C1B6A5000F22C21 /* PBXContainerItemProxy */;
 		};
@@ -722,6 +727,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Chronograph.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
@@ -730,7 +736,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record new reminders and events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -745,6 +750,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -757,6 +765,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Chronograph.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
@@ -765,7 +774,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record new reminders and events";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -780,6 +788,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -856,6 +867,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
@@ -874,6 +886,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -886,6 +901,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
@@ -904,6 +920,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
