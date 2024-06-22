@@ -90,6 +90,18 @@ extension Color {
     return isDark() ? .white : .black
   }
   
+  func forScheme(scheme: ColorScheme) -> Color {
+    let uiColor = UIColor(self)
+
+    // Get the hue component
+    var hue: CGFloat = 0
+    var saturation: CGFloat = 0
+    var brightness: CGFloat = 0
+    var alpha: CGFloat = 0
+
+    uiColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+    return Color(hue: hue, saturation: saturation, brightness: scheme == .dark ? 0.8 : 0.6 )
+  }
   func isDark() -> Bool {
     // Extract the RGB components
     

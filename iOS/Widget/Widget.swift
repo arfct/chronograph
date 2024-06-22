@@ -48,7 +48,7 @@ struct TXTimelineProvider: AppIntentTimelineProvider {
                                         items: items)
       
       let entries = [entry]
-
+      
       return Timeline(entries: entries, policy: .after(reloadDate))
     } else {
       return Timeline(entries: [
@@ -60,15 +60,28 @@ struct TXTimelineProvider: AppIntentTimelineProvider {
   }
   
   func recommendations() -> [AppIntentRecommendation<ConfigurationIntent>] {
-    // Create an array with all the preconfigured widgets to show.
-    [
-      AppIntentRecommendation(intent: ConfigurationIntent(), description: kind)
+    
+    let standard = ConfigurationIntent()
+    standard.showColors = true
+    
+    let page2 = ConfigurationIntent()
+    page2.showColors = true
+    page2.pageOffset = 1
+    
+    return [
+      AppIntentRecommendation(intent:standard, description: kind),
+      AppIntentRecommendation(intent: page2, description: kind + " 2")
     ]
   }
   
-  //    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
-  //        // Generate a list containing the contexts this widget is relevant in.
-  //    }
+
+//    func relevances() async -> WidgetRelevances<ConfigurationIntent> {
+//      // Generate a list containing the contexts this widget is relevant in.
+//      WidgetRelevances([
+//        WidgetRelevance(context: ., weight: 1),
+//      ])
+//    }
+//  
 }
 
 struct CalendarTimelineEntry: TimelineEntry {
@@ -170,12 +183,12 @@ struct TextWidgetView : View {
     let isDark = backgroundColor == .clear ? colorScheme == .dark : backgroundColor.isDark()
     
     GeometryReader { frame in
-      let fullBleed = 
+      let fullBleed =
       widgetFamily == .accessoryRectangular  ||
       !showsWidgetContainerBackground ? true : entry.configuration.fullBleed
       
       //      let isStandBy = !showsWidgetContainerBackground && (widgetFamily != .accessoryRectangular)
-      var hPadding = fullBleed ? margins.top / 3 : margins.leading
+      let hPadding = fullBleed ? margins.top / 3 : margins.leading
       let vPadding = accessory ? margins.top / 3 : margins.top / 2
       let height = frame.size.height - vPadding * 2
       
@@ -183,7 +196,7 @@ struct TextWidgetView : View {
       let lineHeight = height / ceil(height / minLineHeight)
       
       let fontSize = widthIsLimited ? 12.0 : (isHuge ? 32.0 : 16.0)
-      let keyline = fontSize * 2
+      let keyline = fontSize * 2.2
       
       let design = designForFontStyle(entry.configuration.fontStyle)
       var font = Font.system(size: fontSize, design: design).width(.standard)
@@ -204,7 +217,7 @@ struct TextWidgetView : View {
       default:
         let _ = font = font.width(.standard)
       }
-    
+      
       let visibleItemCount = frame.size.height > 0 ? Int((frame.size.height - vPadding) / lineHeight) : 4
       
       let realLineHeight = lineHeight //(frame.size.height - verticalPadding) / CGFloat(visibleItemCount)
@@ -214,24 +227,21 @@ struct TextWidgetView : View {
         removeSpacers ? item.type != "spacer" : true
       }
       
+      let offsetCount = entry.configuration.pageOffset * visibleItemCount
+      let visibleItems = items[offsetCount ..< offsetCount + visibleItemCount]
+      
       
       VStack(spacing: 0) {
         
-        //#if os(iOS)
-        //                if #available(iOSApplicationExtension 17.0, *) {
-        //                  if widgetFamily == .systemMedium {
-        //                    Button(intent: StartRecording()) {
-        //                      Text(state ? "Start" : "Stop")
-        //                        .lineLimit(1)
-        //                    }
-        //                  }
-        //                }
-        //#endif
-        
-        
-        ForEach(items.prefix(visibleItemCount), id: \.self) { row in
+        ForEach(visibleItems, id: \.self) { row in
           
           let item = row.item
+          
+          let cgColor = item?.calendar?.cgColor
+          let color = entry.configuration.showColors 
+          ? cgColor != nil ? Color(cgColor: cgColor!).forScheme(scheme: colorScheme) : nil
+          : .secondary
+          
           if let event = item as? EKEvent {
             
             
@@ -256,6 +266,7 @@ struct TextWidgetView : View {
                 //                Text(convertToSuperscript(time: timeString))
                 //                  .font(font.monospacedDigit())
                 //
+                .foregroundColor(color ?? .secondary)
                 .widgetAccentable(true)
                 .frame(minWidth:keyline, alignment: .trailing)
               }
@@ -271,18 +282,23 @@ struct TextWidgetView : View {
                   .lineLimit(1)
                   .foregroundColor(event.isAllDay ? .secondary : .primary)
                   .italic(event.isAllDay)
-                //                    .frame(maxWidth:.infinity)
+                
+//                  .frame(maxWidth:.infinity, alignment: .leading)
                 
               }
-              if (!event.isAllDay && !widthIsLimited) {
-                let duration = event.endDate.timeIntervalSince(event.startDate)
-                let durationString = duration >= 3600
-                ? String(format: "%.0fh", duration / 3600)
-                : String(format: "%.0fm", duration / 60)
-                Text(durationString)
-                  .foregroundColor(.secondary)
-                  .font(font)
-              }
+//              if let suffix = row.suffix {
+//                Text(suffix)
+//                  .font(font)
+//              }
+//              if (!event.isAllDay && !widthIsLimited) {
+//                let duration = event.endDate.timeIntervalSince(event.startDate)
+//                let durationString = duration >= 3600
+//                ? String(format: "%.0fh", duration / 3600)
+//                : String(format: "%.0fm", duration / 60)
+//                Text(durationString)
+//                  .foregroundColor(.secondary)
+//                  .font(font)
+//              }
               
             }
             //            .mask(LinearGradient(gradient: Gradient(colors: [.black, .black, .black, .clear]), startPoint:.leading, endPoint: .trailing))
@@ -327,28 +343,40 @@ struct TextWidgetView : View {
             }.frame(maxWidth:.infinity, alignment: .leading)
               .frame(height: realLineHeight)
           } else {
-
+            
             HStack {
               
               if row.id == "error", let destination = row.url {
                 Link(destination: destination){
                   Text(row.header ?? "Error")
                 }
+              } else if row.id == "location" {
+                if let location = row.header {
+                  Text("")
+                    .frame(minWidth:keyline, alignment:.trailing)
+                  Text(location)
+                    .font(font)
+                    .foregroundColor(.secondary)
+                }
               } else {
                 if let header = row.header  {
+//                  if (!widthIsLimited) {
+//                    Text("")
+//                      .font(font)
+//                      .frame(minWidth:keyline, alignment:.trailing)
+//                  }
                   Text(header)
                     .font(font)
                     .textCase(.uppercase)
                     .monospaced()
                     .foregroundColor(.secondary)
                     .widgetAccentable()
-                  
                     .frame(minWidth:keyline, alignment:.trailing)
                 }
               }
               if let allDayItems = row.allDayItems {
                 let visibleItems =
-                    widthIsLimited ? allDayItems : allDayItems
+                widthIsLimited ? allDayItems : allDayItems
                 ForEach(visibleItems) { item in
                   if let title = item.item?.title {
                     Text(title)

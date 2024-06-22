@@ -48,11 +48,17 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Font Style", default: .normal)
    var fontStyle: FontStyle
   
-  @Parameter(title: "Background Color", default: "")
+  @Parameter(title: "Background (Hex)", default: "")
   var backgroundColor: String
+  
+  @Parameter(title: "Show Item Colors", default: false)
+  var showColors: Bool
   
   @Parameter(title: "Draw to Edges", default: false)
   var fullBleed: Bool
+  
+  @Parameter(title: "Skip Pages", default: 0)
+  var pageOffset: Int
   
   static var parameterSummary: some ParameterSummary {
     Switch(\.$content) {

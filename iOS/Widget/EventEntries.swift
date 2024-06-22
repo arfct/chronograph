@@ -6,6 +6,7 @@ struct EventEntry: Identifiable, Hashable {
   var header: String?
   var date: Date?
   var url: URL?
+  var suffix: String?
   var item: EKCalendarItem?
   var allDayItems: [EventEntry]?
   var canBeWidowed: Bool = false
@@ -84,44 +85,51 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
     dateFormatter.dateFormat = "EEE"
     
     var items: [EventEntry] = []
-    var previousItem: EKEvent? = nil
+    var previousItem: EKEvent = EKEvent.init(eventStore: eventStore)
+    previousItem.startDate = .distantPast
     let now = Date()
     var headerIndex = 0
     items.append(EventEntry(id:"today", header:dateFormatter.string(from: now), allDayItems: []))
     for event in fetchedEvents {
-      let item = EventEntry(id: event.eventIdentifier, item: event)
+      var item = EventEntry(id: event.eventIdentifier, item: event)
+    
+      // Ignore duplicates
+      if event.title == previousItem.title &&
+          calendar.isDate(event.startDate, equalTo: previousItem.startDate, toGranularity: .hour) { continue }
       
-      if let previousItem {
+      if event.calendar != previousItem.calendar {
+        item.suffix = String(event.calendar.title.prefix(1))
         
+      }
+      // Insert day names on any change
+      if let lastDate = now > previousItem.startDate ? now : previousItem.startDate,
+         let thisDate = now > event.startDate ? now : event.startDate {
         
-        // Ignore duplicates
-        if event.title == previousItem.title &&
-            calendar.isDate(event.startDate, equalTo: previousItem.startDate, toGranularity: .hour) { continue }
-        
-        // Insert day names on any change
-        if let lastDate = now > previousItem.startDate ? now : previousItem.startDate,
-           let thisDate = now > event.startDate ? now : event.startDate {
-          // Insert header entries between subsequent days
-          if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
+        // Insert header entries between subsequent days
+        if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
+          item.suffix = dateFormatter.string(from: event.startDate)
 
-            let header = EventEntry(id: "", header:
-//                                      calendar.isDateInTomorrow(event.startDate) ? "Tomorrow" :
-                                      dateFormatter.string(from: event.startDate),
-                                    date:calendar.startOfDay(for: event.startDate),
-                                allDayItems: []
-                                   )
-            
-            items.append(EventEntry(id:"spacer", type:"spacer"))
-            headerIndex = items.count
-            items.append(header)
-          }
+          let header = EventEntry(id: "", header:
+                                    dateFormatter.string(from: event.startDate),
+                                  date:calendar.startOfDay(for: event.startDate),
+                                  allDayItems: []
+          )
+          
+          items.append(EventEntry(id:"spacer", type:"spacer"))
+          headerIndex = items.count
+          items.append(header)
         }
       }
+      
       
       if event.isAllDay {
         items[headerIndex].allDayItems?.insert(item, at:0)
       } else {
         items.append(item)
+        
+          if let location = event.location {
+          items.append(EventEntry(id: "location", header:location))
+        }
       }
       previousItem = event
     }
