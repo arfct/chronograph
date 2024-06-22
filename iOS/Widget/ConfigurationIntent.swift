@@ -78,6 +78,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
 //          \.$reminders
           \.$fontStyle
           \.$backgroundColor
+          \.$showColors
           \.$fullBleed
         }
       }
@@ -87,6 +88,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$calendars
           \.$fontStyle
           \.$backgroundColor
+          \.$showColors
           \.$fullBleed
         }
       }
