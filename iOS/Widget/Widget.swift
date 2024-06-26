@@ -148,8 +148,10 @@ struct TextWidgetView : View {
       }
       
       let offsetCount = entry.configuration.pageOffset * visibleItemCount
-      let visibleItems: [EventEntry] = Array(items[offsetCount ..< offsetCount + visibleItemCount])
-//        .removeAllFromEnd { $0.entry.canBeWidowed }
+      let clippedItems: [EventEntry] = Array(items[offsetCount ..< offsetCount + visibleItemCount])
+      let index = clippedItems.lastIndex { $0.canBeWidowed == true}
+      let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
+      //        .removeAllFromEnd { $0.entry.canBeWidowed }
       
 
       
