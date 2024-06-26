@@ -2,6 +2,15 @@ import WidgetKit
 import SwiftUI
 import EventKit
 
+
+extension Array {
+    mutating func removeAllFromEnd(where predicate: (Element) -> Bool) {
+        while let last = self.last, predicate(last) {
+            self.removeLast()
+        }
+    }
+}
+
 struct TextWidgetView : View {
   @Environment(\.colorScheme) var colorScheme
   @Environment(\.widgetContentMargins) var margins
@@ -139,8 +148,10 @@ struct TextWidgetView : View {
       }
       
       let offsetCount = entry.configuration.pageOffset * visibleItemCount
-      let visibleItems = items[offsetCount ..< offsetCount + visibleItemCount]
+      let visibleItems: [EventEntry] = Array(items[offsetCount ..< offsetCount + visibleItemCount])
+//        .removeAllFromEnd { $0.entry.canBeWidowed }
       
+
       
       VStack(spacing: 0) {
         

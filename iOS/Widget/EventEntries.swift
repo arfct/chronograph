@@ -13,6 +13,19 @@ struct EventEntry: Identifiable, Hashable {
   
 }
 
+func clean(location input: String) -> String {
+    // Removing parentheticals and brackets
+    let pattern = "\\(.*?\\)|\\[.*?\\]"
+    let regex = try! NSRegularExpression(pattern: pattern, options: [])
+    var modifiedString = regex.stringByReplacingMatches(in: input, options: [], range: NSRange(location: 0, length: input.utf16.count), withTemplate: "")
+
+    // Removing multiple spaces
+    modifiedString = modifiedString.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression, range: nil)
+
+    // Trimming leading and trailing spaces
+    return modifiedString.trimmingCharacters(in: .whitespacesAndNewlines)
+}
+
 func fetchReminders() async -> [EventEntry]? {
   let eventStore = EKEventStore()
   
@@ -20,12 +33,12 @@ func fetchReminders() async -> [EventEntry]? {
     
     let predicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
     eventStore.fetchReminders(matching: predicate) { fetchedReminders in
-
+      
       guard let fetchedReminders = fetchedReminders else {
         continuation.resume(returning: nil)
         return
       }
-
+      
       let sortedReminders = fetchedReminders.sorted { (reminder1, reminder2) -> Bool in
         // Sort by due date, putting those with nil due date at the end
         if let dueDate1 = reminder1.dueDateComponents?.date, let dueDate2 = reminder2.dueDateComponents?.date {
@@ -37,7 +50,7 @@ func fetchReminders() async -> [EventEntry]? {
         } else if reminder2.dueDateComponents?.date != nil {
           return false
         }
-
+        
         // If due dates are the same or both nil, compare by creation date
         if let creationDate1 = reminder1.creationDate, let creationDate2 = reminder2.creationDate {
           return creationDate1 > creationDate2
@@ -45,7 +58,7 @@ func fetchReminders() async -> [EventEntry]? {
         // If both dates are nil or equal, consider them equal (or define another rule)
         return false
       }
-
+      
       let items = sortedReminders.map { EventEntry(id: $0.calendarItemIdentifier, item: $0) }
       continuation.resume(returning: items)
     }
@@ -92,7 +105,11 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
     items.append(EventEntry(id:"today", header:dateFormatter.string(from: now), allDayItems: []))
     for event in fetchedEvents {
       var item = EventEntry(id: event.eventIdentifier, item: event)
-    
+      
+      let isHappening = now >= event.startDate && now <= event.endDate
+      let isNext = now >= calendar.date(byAdding: .hour, value: 1, to: event.startDate)!
+      
+      
       // Ignore duplicates
       if event.title == previousItem.title &&
           calendar.isDate(event.startDate, equalTo: previousItem.startDate, toGranularity: .hour) { continue }
@@ -108,7 +125,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
         // Insert header entries between subsequent days
         if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
           item.suffix = dateFormatter.string(from: event.startDate)
-
+          
           let header = EventEntry(id: "", header:
                                     dateFormatter.string(from: event.startDate),
                                   date:calendar.startOfDay(for: event.startDate),
@@ -123,12 +140,14 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
       
       
       if event.isAllDay {
-        items[headerIndex].allDayItems?.insert(item, at:0)
+        if calendar.isDateInToday(event.startDate) {
+          items[headerIndex].allDayItems?.insert(item, at:0)
+        }
       } else {
         items.append(item)
         
-          if let location = event.location {
-          items.append(EventEntry(id: "location", header:location))
+        if isHappening || isNext, let location = event.location {
+          items.append(EventEntry(id: "location", header:clean(location:location)))
         }
       }
       previousItem = event

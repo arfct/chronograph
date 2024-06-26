@@ -51,6 +51,9 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Background (Hex)", default: "")
   var backgroundColor: String
   
+  @Parameter(title: "Show All Day Events", default: false)
+  var showAllDay: Bool
+  
   @Parameter(title: "Show Item Colors", default: false)
   var showColors: Bool
   

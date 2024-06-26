@@ -12,6 +12,7 @@ struct Event: Identifiable {
 }
 
 struct ContentView: View {
+  @Environment(\.horizontalSizeClass) var horizontalSizeClass
   
   let eventStore = EKEventStore()
   @State var reminders: [EventEntry]? = []
@@ -60,6 +61,7 @@ struct ContentView: View {
   
   var body: some View {
     NavigationStack {
+      
       VStack(alignment: .leading) {
         Text("Chronograph").font(.system(size: 24, design:.monospaced).weight(.semibold).width(.condensed)).padding(.bottom, 10)
         Text("provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.\n\nPreview the items that will be displayed below — each widget can customize the visible calendars and style.")
@@ -67,40 +69,56 @@ struct ContentView: View {
         
       }.padding()
       
-      List {
-        Section("Reminders") {
-          if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
-            WidgetPreviewView(kind: "reminders")
-              .frame(minHeight: 200)
-          } else {
-            Button(action: {
-              Task {
-                await checkRemindersAccess(interactive: true)
-                remindersAccessGranted = true
+      ScrollView {
+        let previews = Group {
+          VStack {
+            if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+              WidgetPreviewView(kind: "reminders")
+                .frame(minHeight: 200)
+            } else {
+              Button(action: {
+                Task {
+                  await checkRemindersAccess(interactive: true)
+                  remindersAccessGranted = true
+                }
+              }) {
+                Label("Enable Reminders Access", systemImage: "lock")
               }
-            }) {
-              Label("Enable Reminders Access", systemImage: "lock")
+            }
+            
+          }
+          VStack {
+            if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
+              WidgetPreviewView(kind: "calendar")
+                .frame(minHeight: 200)
+            } else {
+              Button(action: {
+                Task {
+                  await checkEventsAccess(interactive: true)
+                  
+                  eventsAccessGranted = true
+                }
+              }) {
+                Label("Enable Calendar Access", systemImage: "lock")
+              }
             }
           }
-          
+        }.padding()
+          .background(.background)
+          .cornerRadius(20)
+        if horizontalSizeClass == .compact {
+          VStack(spacing:20) {
+            previews
+          }.padding()
+        } else {
+          HStack(spacing:20) {
+            previews
+          }.padding()
         }
-        Section("Calendar") {
-          if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-            WidgetPreviewView(kind: "calendar")
-              .frame(minHeight: 200)
-          } else {
-            Button(action: {
-              Task {
-                await checkEventsAccess(interactive: true)
-                
-                eventsAccessGranted = true
-              }
-            }) {
-              Label("Enable Calendar Access", systemImage: "lock")
-            }
-          }
-        }
+        
+    
       }
+      .background(.gray.opacity(0.1))
     }
     .task {
 //      await checkRemindersAccess()
