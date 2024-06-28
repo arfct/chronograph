@@ -63,17 +63,46 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Skip Pages", default: 0)
   var pageOffset: Int
   
+  static var calendarConfig: ConfigurationIntent {
+    let config = ConfigurationIntent()
+    config.content = .calendar
+    config.calendars = []
+    config.fontStyle = .normal
+    config.backgroundColor = ""
+    config.fullBleed = false
+    return config
+  }
+  
+  static var calendar2Config: ConfigurationIntent {
+    let config = calendarConfig
+    config.pageOffset = 1
+    return config
+  }
+  
+  static var remindersConfig: ConfigurationIntent {
+    let config = ConfigurationIntent()
+    config.content = .reminders
+    config.calendars = []
+    config.fontStyle = .normal
+    config.backgroundColor = ""
+    config.fullBleed = false
+    return config
+  }
+  
   static var parameterSummary: some ParameterSummary {
     Switch(\.$content) {
-      Case(DisplayedContent.reminders) {
+      Case(DisplayedContent.calendar) {
         Summary {
           \.$content
-//          \.$reminders
+          \.$calendars
           \.$fontStyle
           \.$backgroundColor
+          \.$showColors
+          \.$showAllDay
           \.$fullBleed
         }
       }
+      
       Case(DisplayedContent.both) {
         Summary {
           \.$content
@@ -85,16 +114,17 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$fullBleed
         }
       }
-      Case(DisplayedContent.calendar) {
+      
+      Case(DisplayedContent.reminders) {
         Summary {
           \.$content
-          \.$calendars
+//          \.$reminders
           \.$fontStyle
           \.$backgroundColor
-          \.$showColors
           \.$fullBleed
         }
       }
+
       DefaultCase {
         Summary {
           \.$content

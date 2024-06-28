@@ -148,15 +148,13 @@ struct TextWidgetView : View {
       }
       
       let offsetCount = entry.configuration.pageOffset * visibleItemCount
-      let clippedItems: [EventEntry] = Array(items[offsetCount ..< offsetCount + visibleItemCount])
-      let index = clippedItems.lastIndex { $0.canBeWidowed == true}
-      let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
-      //        .removeAllFromEnd { $0.entry.canBeWidowed }
       
-
+      let clippedItems: [EventEntry] = Array(items[min(items.count, offsetCount) ..< min(items.count, offsetCount + visibleItemCount)])
+      let index = clippedItems.lastIndex { $0.canBeWidowed != true}
+    
+      let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
       
       VStack(spacing: 0) {
-        
         ForEach(visibleItems, id: \.self) { row in
           
           let item = row.item
@@ -171,6 +169,7 @@ struct TextWidgetView : View {
             
             // MARK: Events
             HStack {
+         
               if event.isAllDay {
                 if !widthIsLimited {
                   Text("")
@@ -230,7 +229,6 @@ struct TextWidgetView : View {
             .frame(height: realLineHeight)
             
           } else if let reminder = item as? EKReminder { // MARK: Reminders
-            
             HStack(alignment:.center) {
               HStack(spacing:0) {
                 if (reminder.priority > 0) {
@@ -268,7 +266,7 @@ struct TextWidgetView : View {
               .frame(height: realLineHeight)
           } else {
             
-            HStack {
+            HStack(alignment: .bottom) {
               
               if row.id == "error", let destination = row.url {
                 Link(destination: destination){
@@ -283,35 +281,47 @@ struct TextWidgetView : View {
                     .foregroundColor(.secondary)
                 }
               } else {
-                if let header = row.header  {
-//                  if (!widthIsLimited) {
-//                    Text("")
-//                      .font(font)
-//                      .frame(minWidth:keyline, alignment:.trailing)
-//                  }
-                  Text(header)
-                    .font(font)
-                    .textCase(.uppercase)
-                    .monospaced()
-                    .foregroundColor(.secondary)
-                    .widgetAccentable()
-                    .frame(minWidth:keyline, alignment:.trailing)
+                HStack(alignment: .bottom) {
+                  if let header = row.header  {
+                    if (!widthIsLimited) {
+                      Text("")
+                        .font(font)
+                        .frame(minWidth:keyline, alignment:.trailing)
+                    }
+                    Text(header)
+                      .font(smallFont)
+                      .textCase(.uppercase)
+                      .kerning(1)
+                      .monospaced()
+                      .foregroundColor(.secondary)
+                      .widgetAccentable()
+                      .frame(minWidth:widthIsLimited ? keyline : 0, alignment:.bottomTrailing)
+                      .padding(.top, 8)
+                    
+                  }
                 }
-              }
-              if let allDayItems = row.allDayItems {
-                let visibleItems =
-                widthIsLimited ? allDayItems : allDayItems
-                ForEach(visibleItems) { item in
-                  if let title = item.item?.title {
-                    Text(title)
-                      .font(font)
-                      .foregroundColor(Color.secondary)
+                if let allDayItems = row.allDayItems {
+                  let visibleItems =
+                  widthIsLimited ? allDayItems : allDayItems
+                  ForEach(visibleItems) { item in
+                    if let title = item.item?.title {
+                      Text(title)
+                        .font(smallFont)
+                        .foregroundColor(Color.secondary)
+                  
+//                        .mask(
+//                            LinearGradient(gradient: Gradient(stops: [
+//                                .init(color: .black, location: 0),
+//                                .init(color: .black, location: 0.7),
+//                                .init(color: .clear, location: 1)
+//                            ]), startPoint: .leading, endPoint: .trailing)
+//                        )
+                    }
                   }
                 }
               }
               
-              
-            }.frame(maxWidth:.infinity, alignment: .leading)
+            }.frame(maxWidth:.infinity, alignment: .bottomLeading)
               .frame(height: realLineHeight)
             
             
@@ -332,49 +342,49 @@ struct TextWidgetView : View {
 }
 
 
-
-struct widgetReminders: Widget {
-  let kind: String = "reminders"
-  
-  var body: some WidgetConfiguration {
-    
-    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TXTimelineProvider(kind: kind)) { entry in
-      TextWidgetView(entry: entry)
-        .containerBackground(.clear, for: .widget)
-    }
-    .contentMarginsDisabled()
-    .configurationDisplayName("Reminders")
-    .description("A text listing of your reminders")
-    
-#if os(watchOS)
-    .supportedFamilies([
-      .accessoryRectangular, .accessoryInline
-    ])
-    
-#elseif os(macOS)
-    .supportedFamilies([
-      .systemSmall, .systemMedium, .systemLarge,
-      .systemExtraLarge])
-#else
-    .supportedFamilies([.accessoryRectangular, .accessoryInline,
-                        .systemSmall, .systemMedium, .systemLarge])
-#endif
-    
-    
-  }
-}
+//
+//struct widgetReminders: Widget {
+//  let kind: String = "reminders"
+//  
+//  var body: some WidgetConfiguration {
+//    
+//    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TXTimelineProvider(kind: kind)) { entry in
+//      TextWidgetView(entry: entry)
+//        .containerBackground(.clear, for: .widget)
+//    }
+//    .contentMarginsDisabled()
+//    .configurationDisplayName("Reminders")
+//    .description("A text listing of your reminders")
+//    
+//#if os(watchOS)
+//    .supportedFamilies([
+//      .accessoryRectangular, .accessoryInline
+//    ])
+//    
+//#elseif os(macOS)
+//    .supportedFamilies([
+//      .systemSmall, .systemMedium, .systemLarge,
+//      .systemExtraLarge])
+//#else
+//    .supportedFamilies([.accessoryRectangular, .accessoryInline,
+//                        .systemSmall, .systemMedium, .systemLarge])
+//#endif
+//    
+//    
+//  }
+//}
 struct widgetCalendar: Widget {
   let kind: String = "calendar"
   
   var body: some WidgetConfiguration {
     
-    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TXTimelineProvider(kind:kind)) { entry in
+    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TXTimelineProvider()) { entry in
       TextWidgetView(entry: entry)
         .containerBackground(.clear, for: .widget)
     }
     .contentMarginsDisabled()
-    .configurationDisplayName("Calendar")
-    .description("A text listing of your calendar")
+    .configurationDisplayName("Events + Reminders")
+    .description("A text view of events or reminders")
     
 #if os(watchOS)
     .supportedFamilies([

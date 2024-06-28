@@ -73,7 +73,7 @@ struct ContentView: View {
         let previews = Group {
           VStack {
             if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
-              WidgetPreviewView(kind: "reminders")
+              WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
                 .frame(minHeight: 230)
             } else {
               Button(action: {
@@ -89,7 +89,7 @@ struct ContentView: View {
           }
           VStack {
             if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-              WidgetPreviewView(kind: "calendar")
+              WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
                 .frame(minHeight: 230)
             } else {
               Button(action: {

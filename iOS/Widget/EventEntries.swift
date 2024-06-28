@@ -26,7 +26,7 @@ func clean(location input: String) -> String {
     return modifiedString.trimmingCharacters(in: .whitespacesAndNewlines)
 }
 
-func fetchReminders() async -> [EventEntry]? {
+func fetchReminders(configuration: ConfigurationIntent? = nil) async -> [EventEntry]? {
   let eventStore = EKEventStore()
   
   return await withCheckedContinuation { continuation in
@@ -64,7 +64,7 @@ func fetchReminders() async -> [EventEntry]? {
     }
   }
 }
-func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
+func fetchEvents(calendarIDs: [String]?, configuration: ConfigurationIntent? = nil) async -> [EventEntry]? {
   let eventStore = EKEventStore()
   
   return await withCheckedContinuation { continuation in
@@ -72,6 +72,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
     let startDate = Date()
     let endDate = calendar.date(byAdding: .day, value: 14, to: startDate)!
     
+    let showAllDay = configuration?.showAllDay ?? false
     var calendars: [EKCalendar] = []
     
     //var defaultCalendar = eventStore.defaultCalendarForNewEvents
@@ -129,10 +130,11 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
           let header = EventEntry(id: "", header:
                                     dateFormatter.string(from: event.startDate),
                                   date:calendar.startOfDay(for: event.startDate),
-                                  allDayItems: []
+                                  allDayItems: [],
+                                  canBeWidowed: true
           )
           
-          items.append(EventEntry(id:"spacer", type:"spacer"))
+//          items.append(EventEntry( id:"spacer", type:"spacer", canBeWidowed: true))
           headerIndex = items.count
           items.append(header)
         }
@@ -142,6 +144,7 @@ func fetchEvents(calendarIDs: [String]?) async -> [EventEntry]? {
       if event.isAllDay {
         if calendar.isDateInToday(event.startDate) {
           items[headerIndex].allDayItems?.insert(item, at:0)
+          items[headerIndex].canBeWidowed = false
         }
       } else {
         items.append(item)

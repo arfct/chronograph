@@ -17,7 +17,7 @@ struct ContentView: View {
             Text("txet provides a large widget for your watch's main screen in layouts like modular compact.")
             
             if EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-              WidgetPreviewView(kind: "calendar")
+              WidgetPreviewView(config:ConfigurationIntent.calendarConfig)
                 .frame(minHeight: 100)
             } else {
               Button(action: {
@@ -29,7 +29,7 @@ struct ContentView: View {
             
             if EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
               
-              WidgetPreviewView(kind: "reminders")
+              WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
                 .frame(minHeight: 100)
             } else {
               Button(action: {

@@ -1,16 +1,10 @@
-//
-//  WidgetPreviewView.swift
-//  txet
-//
-//  Created by Nicholas Jitkoff on 6/20/24.
-//
-
 import SwiftUI
 import WidgetKit
 import AppIntents
 
 struct WidgetPreviewView: View {
-  var kind: String?
+  var config: ConfigurationIntent
+  
   @State private var timeline: Timeline<CalendarTimelineEntry>?
     var body: some View {
       VStack {
@@ -22,20 +16,24 @@ struct WidgetPreviewView: View {
       }
       .padding(.vertical, 10)
       .task {
-        let config = ConfigurationIntent()
-        config.content = .both
-        config.calendars = []
-        config.fontStyle = .normal
-        config.backgroundColor = ""
-        config.fullBleed = false
+        
 
         // let context = TimelineProviderContext()
-        timeline = await TXTimelineProvider(kind: kind ?? "calendar").timeline(for: config)
+        timeline = await TXTimelineProvider().timeline(for: config)
       }
      
     }
 }
 
 #Preview {
-    WidgetPreviewView()
+  let config = ConfigurationIntent()
+  let _ = {
+    config.content = .both
+    config.calendars = []
+    config.fontStyle = .normal
+    config.backgroundColor = ""
+    config.fullBleed = false
+  }
+  
+  WidgetPreviewView(config: config)
 }

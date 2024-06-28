@@ -3,7 +3,7 @@ import SwiftUI
 import EventKit
 
 struct TXTimelineProvider: AppIntentTimelineProvider {
-  let kind: String
+
   @AppStorage("state") private var state = false
   
   
@@ -20,49 +20,72 @@ struct TXTimelineProvider: AppIntentTimelineProvider {
   }
   
   func timeline(for configuration: ConfigurationIntent) async -> Timeline<CalendarTimelineEntry> {
-    let getReminders = kind == "reminders"
-    let authorized = EKEventStore.authorizationStatus(for: getReminders ? .reminder : .event) == .fullAccess
     
+    var error: String?
+    let content = configuration.content
     let now = Date()
     let reloadDate = Calendar.current.date(byAdding: .minute,
                                            value: 15,
                                            to: now)!
-    if (authorized) {
-      let ids = configuration.calendars.map({ $0.id })
-      
-      let items = getReminders
-      ? await fetchReminders()!
-      : await fetchEvents(calendarIDs: ids)!
-      
-      let entry = CalendarTimelineEntry(date: now,
-                                        configuration: configuration,
-                                        items: items)
-      
-      let entries = [entry]
-      
-      return Timeline(entries: entries, policy: .after(reloadDate))
-    } else {
+    
+    let ids = configuration.calendars.map({ $0.id })
+    var items: [EventEntry] = []
+    
+    if (content == .reminders || content == .both) {
+      if EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+        items.append(contentsOf: await fetchReminders(configuration:configuration)!)
+      } else {
+        error = "Reminders access denied"
+      }
+    }
+    
+    if (content == .calendar || content == .both) {
+      if EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+        items.append(contentsOf: await fetchEvents(calendarIDs: ids, configuration: configuration)!)
+      } else {
+        error = "Calendar access denied"
+      }
+    }
+    
+    if (error != nil) {
       return Timeline(entries: [
-        CalendarTimelineEntry(date: now, configuration: configuration, items: [EventEntry(id: "error", header: "Enable \(kind) access in settings", url: URL(string: "settings:"))])
-        
+        CalendarTimelineEntry(date: now, configuration: configuration, items: [EventEntry(id: "error", header: "Enable access in settings", url: URL(string: "settings:"))])
       ], policy: .after(reloadDate))
     }
     
-  }
+    let entry = CalendarTimelineEntry(date: now,
+                                      configuration: configuration,
+                                      items: items)
+    let entries = [entry]
+    return Timeline(entries: entries, policy: .after(reloadDate))
+    
+    
+    }
+    
+  
   
   func recommendations() -> [AppIntentRecommendation<ConfigurationIntent>] {
     
-    let standard = ConfigurationIntent()
-    standard.showColors = true
+    var recommendations: [AppIntentRecommendation<ConfigurationIntent>]  = []
     
-    let page2 = ConfigurationIntent()
-    page2.showColors = true
-    page2.pageOffset = 1
+    let calendar = ConfigurationIntent()
+    calendar.showColors = true
+    calendar.content = .calendar
+    recommendations.append(AppIntentRecommendation(intent:calendar, description: "Events"))
     
-    return [
-      AppIntentRecommendation(intent:standard, description: kind),
-      AppIntentRecommendation(intent: page2, description: kind + " 2")
-    ]
+    let calendar2 = ConfigurationIntent()
+    calendar2.showColors = true
+    calendar2.content = .reminders
+    calendar2.pageOffset = 1
+    recommendations.append(AppIntentRecommendation(intent:calendar2, description: "Events page 2"))
+
+    let reminders = ConfigurationIntent()
+    reminders.showColors = true
+    reminders.pageOffset = 1
+    recommendations.append(AppIntentRecommendation(intent:reminders, description: "Reminders"))
+
+    
+    return recommendations
   }
   
 
