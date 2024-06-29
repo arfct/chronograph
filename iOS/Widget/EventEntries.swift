@@ -97,6 +97,7 @@ func fetchEvents(calendarIDs: [String]?, configuration: ConfigurationIntent? = n
     
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "EEE"
+//    dateFormatter.doesRelativeDateFormatting = true
     
     var items: [EventEntry] = []
     var previousItem: EKEvent = EKEvent.init(eventStore: eventStore)

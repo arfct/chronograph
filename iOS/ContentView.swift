@@ -86,7 +86,7 @@ struct ContentView: View {
               }
             }
             
-          }
+          }.frame(maxWidth:400)
           VStack {
             if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
               WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
@@ -102,7 +102,7 @@ struct ContentView: View {
                 Label("Enable Calendar Access", systemImage: "lock")
               }
             }
-          }
+          }.frame(maxWidth:400)
         }.padding()
           .background(.background)
           .cornerRadius(20)

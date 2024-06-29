@@ -8,15 +8,31 @@ struct TXTimelineProvider: AppIntentTimelineProvider {
   
   
   func placeholder(in context: Context) -> CalendarTimelineEntry {
-    CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), items: [])
+    
+    let config = ConfigurationIntent()
+    config.content = .calendar
+    config.calendars = []
+
+//    let timeline =  timeline(for:config)
+    let item = EKEvent()
+    item.title = "Calendar Event"
+    item.startDate = Date()
+    
+    return CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), items: [
+      
+      EventEntry(id: "", header: "Today"),
+      
+      EventEntry(id: "", item: item)
+    ])
   }
   
   func snapshot(for configuration: ConfigurationIntent, in context: Context) async -> CalendarTimelineEntry {
-    CalendarTimelineEntry(date: Date(), configuration: configuration, items: [])
+    let timeline = await timeline(for:configuration)
+    return timeline.entries[0]
   }
   
   func timeline(for configuration: ConfigurationIntent, in context: Context) async -> Timeline<CalendarTimelineEntry> {
-    return await timeline(for: configuration)
+    return await timeline(for:configuration)
   }
   
   func timeline(for configuration: ConfigurationIntent) async -> Timeline<CalendarTimelineEntry> {

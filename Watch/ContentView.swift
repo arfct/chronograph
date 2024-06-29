@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  txet Watch App
-//
-//  Created by Nicholas Jitkoff on 6/13/24.
-//
-
 import SwiftUI
 import WidgetKit
 import AppIntents
@@ -14,8 +7,9 @@ struct ContentView: View {
     var body: some View {
 
           List {
-            Text("txet provides a large widget for your watch's main screen in layouts like modular compact.")
-            
+            Text("Chronograph provides a large widget for your watch's modular layout.")
+                .listRowBackground(Color.clear)
+                .font(.footnote)
             if EKEventStore.authorizationStatus(for: .event) == .fullAccess {
               WidgetPreviewView(config:ConfigurationIntent.calendarConfig)
                 .frame(minHeight: 100)

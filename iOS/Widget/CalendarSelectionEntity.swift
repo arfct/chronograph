@@ -1,10 +1,3 @@
-//
-//  calendarEntity.swift
-//  txet
-//
-//  Created by Nicholas Jitkoff on 6/13/24.
-//
-
 import WidgetKit
 @preconcurrency import EventKit
 import AppIntents

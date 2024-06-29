@@ -34,7 +34,7 @@ enum DisplayedContent: String, AppEnum {
 
 struct ConfigurationIntent: WidgetConfigurationIntent {
   static var title: LocalizedStringResource = "Configuration"
-  static var description = IntentDescription("Txet Widget")
+  static var description = IntentDescription("Chronograph")
   
   @Parameter(title: "Show", default: .calendar)
    var content: DisplayedContent

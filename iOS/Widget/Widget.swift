@@ -184,11 +184,8 @@ struct TextWidgetView : View {
                   Text(hour).font(font)
                   Text(minute).font(smallFont.monospacedDigit())
                     .baselineOffset(fontSize * 0.2)
-                  //                    .foregroundColor(minute == "00" ? .secondary : .primary)
                 }
-                //                Text(convertToSuperscript(time: timeString))
-                //                  .font(font.monospacedDigit())
-                //
+
                 .foregroundColor(color ?? .secondary)
                 .widgetAccentable(true)
                 .frame(minWidth:keyline, alignment: .trailing)
@@ -300,7 +297,7 @@ struct TextWidgetView : View {
                     
                   }
                 }
-                if let allDayItems = row.allDayItems {
+                if let allDayItems = row.allDayItems?.prefix(widthIsLimited ? 2: 3) {
                   let visibleItems =
                   widthIsLimited ? allDayItems : allDayItems
                   ForEach(visibleItems) { item in
