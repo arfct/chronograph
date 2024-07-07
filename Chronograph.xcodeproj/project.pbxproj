@@ -13,12 +13,16 @@
 		2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
 		2C0EA2E52C272A5800177026 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */; };
 		2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
+		2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
+		2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
+		2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
+		2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
 		2C6BA2EE2C1B6A4F00F22C21 /* ChronographApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */; };
 		2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
 		2C6BA2F22C1B6A5000F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */; };
 		2C6BA2F52C1B6A5000F22C21 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F42C1B6A5000F22C21 /* Preview Assets.xcassets */; };
 		2C6BA2FB2C1B6A5000F22C21 /* Chronograph-watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2C6BA3002C1B6A5000F22C21 /* ChronographApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2FF2C1B6A5000F22C21 /* ChronographApp.swift */; };
+		2C6BA3002C1B6A5000F22C21 /* ChronographWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2FF2C1B6A5000F22C21 /* ChronographWatchApp.swift */; };
 		2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3012C1B6A5000F22C21 /* ContentView.swift */; };
 		2C6BA3042C1B6A5100F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */; };
 		2C6BA3072C1B6A5100F22C21 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA3062C1B6A5100F22C21 /* Preview Assets.xcassets */; };
@@ -123,13 +127,14 @@
 		2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTimeline.swift; sourceTree = "<group>"; };
 		2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
+		2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventKit+Async.swift"; sourceTree = "<group>"; };
 		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographApp.swift; sourceTree = "<group>"; };
 		2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6BA2F42C1B6A5000F22C21 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C6BA2FF2C1B6A5000F22C21 /* ChronographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographApp.swift; sourceTree = "<group>"; };
+		2C6BA2FF2C1B6A5000F22C21 /* ChronographWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographWatchApp.swift; sourceTree = "<group>"; };
 		2C6BA3012C1B6A5000F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6BA3062C1B6A5100F22C21 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -260,7 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				2C6BA3492C1B769D00F22C21 /* Info.plist */,
-				2C6BA2FF2C1B6A5000F22C21 /* ChronographApp.swift */,
+				2C6BA2FF2C1B6A5000F22C21 /* ChronographWatchApp.swift */,
 				2C6BA3012C1B6A5000F22C21 /* ContentView.swift */,
 				2C6BA31B2C1B6A9600F22C21 /* Widget */,
 				2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */,
@@ -304,6 +309,7 @@
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
 				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
 				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
+				2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */,
 				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
 				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
 			);
@@ -477,6 +483,7 @@
 			files = (
 				2C0EA2DF2C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA36F2C1C8B3700F22C21 /* EventEntries.swift in Sources */,
+				2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */,
 				2CB314F62C2474FE0064BF6C /* Widget.swift in Sources */,
@@ -494,12 +501,13 @@
 			files = (
 				2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA3702C1C8B3700F22C21 /* EventEntries.swift in Sources */,
+				2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */,
 				2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2CB314F72C2474FE0064BF6C /* Widget.swift in Sources */,
 				2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */,
-				2C6BA3002C1B6A5000F22C21 /* ChronographApp.swift in Sources */,
+				2C6BA3002C1B6A5000F22C21 /* ChronographWatchApp.swift in Sources */,
 				2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
 				2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */,
 			);
@@ -511,6 +519,7 @@
 			files = (
 				2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */,
+				2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3482C1B6F6900F22C21 /* Widget.swift in Sources */,
@@ -526,6 +535,7 @@
 			files = (
 				2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */,
+				2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
 				2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,

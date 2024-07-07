@@ -62,69 +62,73 @@ struct ContentView: View {
   var body: some View {
     NavigationStack {
       
-      VStack(alignment: .leading) {
-        Text("Chronograph").font(.system(size: 24, design:.monospaced).weight(.semibold).width(.condensed)).padding(.bottom, 10)
-        Text("provides a pair of simple text-based widgets for reminders and calendars. Add widgets from the home screen.\n\nPreview the items that will be displayed below — each widget can customize the visible calendars and style.")
-        
-        
-      }.padding()
-      
-      ScrollView {
-        let previews = Group {
-          VStack {
-            if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
-              WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
-                .frame(minHeight: 230)
-            } else {
-              Button(action: {
-                Task {
-                  await checkRemindersAccess(interactive: true)
-                  remindersAccessGranted = true
-                }
-              }) {
-                Label("Enable Reminders Access", systemImage: "lock")
-              }
-            }
-            
-          }.frame(maxWidth:400)
-          VStack {
-            if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-              WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
-                .frame(minHeight: 230)
-            } else {
-              Button(action: {
-                Task {
-                  await checkEventsAccess(interactive: true)
-                  
-                  eventsAccessGranted = true
-                }
-              }) {
-                Label("Enable Calendar Access", systemImage: "lock")
-              }
-            }
-          }.frame(maxWidth:400)
-        }.padding()
-          .background(.background)
-          .cornerRadius(20)
-        if horizontalSizeClass == .compact {
-          VStack(spacing:20) {
-            previews
-          }.padding()
-        } else {
-          HStack(spacing:20) {
-            previews
-          }.padding()
+      VStack {
+        VStack(alignment: .leading, spacing:10) {
+          Image("Wordmark")
+          Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed below. Add widgets from the home screen.")
+            .foregroundStyle(.secondary)
         }
+        .padding(.top,40)
+        .padding(.leading, 36)
+        .padding(.bottom, 10)
+        .padding()
         
-    
+        ScrollView {
+          let previews = Group {
+            VStack {
+              if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+                WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+                  .frame(minHeight: 230)
+              } else {
+                Button(action: {
+                  Task {
+                    await checkRemindersAccess(interactive: true)
+                    remindersAccessGranted = true
+                  }
+                }) {
+                  Label("Enable Reminders Access", systemImage: "lock")
+                }
+              }
+            }.frame(maxWidth:400)
+            
+            Divider()
+              .padding(.vertical, 20)
+              .padding(.leading, 36)
+            
+            VStack {
+              if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
+                WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
+                  .frame(minHeight: 230)
+              } else {
+                Button(action: {
+                  Task {
+                    await checkEventsAccess(interactive: true)
+                    eventsAccessGranted = true
+                  }
+                }) {
+                  Label("Enable Calendar Access", systemImage: "lock")
+                }
+              }
+            }.frame(maxWidth:400)
+          }
+            .background(.background)
+          //          .cornerRadius(20)
+          if horizontalSizeClass == .compact {
+            VStack(spacing:0) {
+              previews
+            }.padding()
+          } else {
+            HStack(spacing:0) {
+              previews
+            }.padding()
+          }
+          
+        }
+        .background(.background)
       }
-      .background(.gray.opacity(0.1))
+      
+      .background(.regularMaterial)
     }
-    .task {
-//      await checkRemindersAccess()
-//      await checkEventsAccess()
-    }
-    
   }
 }
 

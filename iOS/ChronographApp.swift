@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct txetApp: App {
+struct ChronographApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

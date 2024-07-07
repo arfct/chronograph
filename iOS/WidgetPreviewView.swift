@@ -14,12 +14,8 @@ struct WidgetPreviewView: View {
           Text("Loading...")
         }
       }
-      .padding(.vertical, 10)
       .task {
-        
-
-        // let context = TimelineProviderContext()
-        timeline = await TXTimelineProvider().timeline(for: config)
+        timeline = await TimelineProvider().timeline(for: config)
       }
      
     }
@@ -32,7 +28,7 @@ struct WidgetPreviewView: View {
     config.calendars = []
     config.fontStyle = .normal
     config.backgroundColor = ""
-    config.fullBleed = false
+    config.fullBleed = true
   }
   
   WidgetPreviewView(config: config)

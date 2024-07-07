@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct TXWatchApp: App {
+struct ChronographWatchApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()

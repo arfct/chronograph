@@ -68,14 +68,9 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.content = .calendar
     config.calendars = []
     config.fontStyle = .normal
+    config.showColors = true
     config.backgroundColor = ""
     config.fullBleed = false
-    return config
-  }
-  
-  static var calendar2Config: ConfigurationIntent {
-    let config = calendarConfig
-    config.pageOffset = 1
     return config
   }
   
@@ -84,8 +79,26 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.content = .reminders
     config.calendars = []
     config.fontStyle = .normal
+    config.showColors = true
     config.backgroundColor = ""
     config.fullBleed = false
+    return config
+  }
+  
+  static var comboConfig: ConfigurationIntent {
+    let config = ConfigurationIntent()
+    config.content = .both
+    config.calendars = []
+    config.fontStyle = .normal
+    config.showColors = true
+    config.backgroundColor = ""
+    config.fullBleed = false
+    return config
+  }
+  
+  static var combo2Config: ConfigurationIntent {
+    let config = comboConfig
+    config.pageOffset = 1
     return config
   }
   
