@@ -15,23 +15,24 @@ struct ContentView: View {
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
   
   let eventStore = EKEventStore()
-  @State var reminders: [EventEntry]? = []
-  @State var events: [EventEntry]? = []
+  //  @State var reminders: [EventEntry]? = []
+  //  @State var events: [EventEntry]? = []
   @State var remindersAccessGranted: Bool = false
   @State var eventsAccessGranted: Bool = false
+  @State var reloadDate: Date = Date()
   
   private func checkRemindersAccess(interactive: Bool = false) async {
     do {
       remindersAccessGranted = try await eventStore.requestFullAccessToReminders()
       if remindersAccessGranted {
-        reminders = await fetchReminders()
+        //        reminders = await fetchReminders()
       } else if interactive {
         openAppSettings()
       }
     } catch {
       print("Access to reminders denied: \(String(describing: error.localizedDescription))")
-        
-
+      
+      
     }
   }
   
@@ -39,7 +40,7 @@ struct ContentView: View {
     do {
       eventsAccessGranted = try await eventStore.requestFullAccessToEvents()
       if eventsAccessGranted {
-        events = await fetchEvents(calendarIDs: [])
+        //        events = await fetchEvents(calendarIDs: [])
       } else if interactive {
         openAppSettings()
       }
@@ -124,9 +125,15 @@ struct ContentView: View {
           }
           
         }
+        
+        .frame(maxWidth: .infinity)
+        .refreshable {
+          print("refresh")
+          reloadDate = Date()
+        }
         .background(.background)
       }
-      
+      .frame(maxWidth: .infinity)
       .background(.regularMaterial)
     }
   }

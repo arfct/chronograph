@@ -51,6 +51,9 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Background (Hex)", default: "")
   var backgroundColor: String
   
+  @Parameter(title: "Accent (Hex)", default: "")
+  var accentColor: String
+  
   @Parameter(title: "Show All Day Events", default: false)
   var showAllDay: Bool
   
@@ -69,7 +72,6 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.calendars = []
     config.fontStyle = .normal
     config.showColors = true
-    config.backgroundColor = ""
     config.fullBleed = false
     return config
   }
@@ -80,7 +82,6 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.calendars = []
     config.fontStyle = .normal
     config.showColors = true
-    config.backgroundColor = ""
     config.fullBleed = false
     return config
   }
@@ -91,7 +92,6 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.calendars = []
     config.fontStyle = .normal
     config.showColors = true
-    config.backgroundColor = ""
     config.fullBleed = false
     return config
   }
@@ -110,6 +110,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$calendars
           \.$fontStyle
           \.$backgroundColor
+          \.$accentColor
           \.$showColors
           \.$showAllDay
           \.$fullBleed
@@ -123,6 +124,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
 //          \.$reminders
           \.$fontStyle
           \.$backgroundColor
+          \.$accentColor
           \.$showColors
           \.$fullBleed
         }
@@ -134,6 +136,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
 //          \.$reminders
           \.$fontStyle
           \.$backgroundColor
+          \.$accentColor
           \.$fullBleed
         }
       }

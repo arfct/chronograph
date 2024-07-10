@@ -4,11 +4,11 @@ import EventKit
 
 
 extension Array {
-    mutating func removeAllFromEnd(where predicate: (Element) -> Bool) {
-        while let last = self.last, predicate(last) {
-            self.removeLast()
-        }
+  mutating func removeAllFromEnd(where predicate: (Element) -> Bool) {
+    while let last = self.last, predicate(last) {
+      self.removeLast()
     }
+  }
 }
 
 struct TextWidgetView : View {
@@ -20,47 +20,6 @@ struct TextWidgetView : View {
   @AppStorage("state") private var state = false
   
   var entry: TimelineProvider.Entry = CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), reminders:[], events:[])
-
-  
-  private var timeFormatter: DateFormatter {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "H:mm"
-    return formatter
-  }
-  
-  
-  private var relativeDateFormatter: RelativeDateTimeFormatter {
-    let formatter = RelativeDateTimeFormatter()
-    formatter.dateTimeStyle = .named
-    formatter.unitsStyle = .abbreviated
-    return formatter
-  }
-  
-  private var relativeDateFormatterDay: DateFormatter {
-    let formatter = DateFormatter()
-    
-    formatter.dateStyle = .short
-    formatter.timeStyle = .none
-    formatter.doesRelativeDateFormatting = true
-    return formatter
-  }
-  
-  private func convertToSuperscript(time: String) -> String {
-    let superscriptDigits = ["0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹"]
-    let regex = try! NSRegularExpression(pattern: "([0-9]+):([0-9]{2})")
-    let range = NSRange(location: 0, length: time.utf16.count)
-    
-    let matches = regex.matches(in: time, options: [], range: range)
-    guard let match = matches.first else { return time }
-    
-    let hourRange = Range(match.range(at: 1), in: time)!
-    let minuteRange = Range(match.range(at: 2), in: time)!
-    
-    let hour = String(time[hourRange])
-    let minute = String(time[minuteRange]).compactMap { superscriptDigits[String($0)] }.joined()
-    
-    return hour + minute
-  }
   
   private func getComponents(_ date: Date) -> (hour: String, minute: String) {
     
@@ -95,6 +54,9 @@ struct TextWidgetView : View {
     
     let backgroundColor = entry.configuration.backgroundColor.count > 0 ?
     Color.withHex(entry.configuration.backgroundColor) : .clear;
+    
+    let accentColor = entry.configuration.accentColor.count > 0 ?
+    Color.withHex(entry.configuration.accentColor) : .secondary;
     
 #if os(watchOS)
     let accessory = true
@@ -170,7 +132,7 @@ struct TextWidgetView : View {
       
       let clippedItems: [EventEntry] = Array(items[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
       let index = clippedItems.lastIndex { $0.removeIfOrphaned != true}
-    
+      
       let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
       
       VStack(spacing: 0) {
@@ -181,10 +143,11 @@ struct TextWidgetView : View {
           let cgColor = item?.calendar?.cgColor
           let color = entry.configuration.showColors
           ? cgColor != nil ? Color(cgColor: cgColor!).forScheme(scheme: colorScheme) : nil
-          : .secondary
+          : accentColor
           
-
+          
           if let item = row.item {
+            let opacity = max(0.5, pow(1.0 - Double(item.start?.timeIntervalSince(entry.date) ?? 0.0) / 60.0 / 60.0 / 24.0, 0.33))
             
             let (hour, minute) = getComponents(item.date)
             
@@ -211,6 +174,7 @@ struct TextWidgetView : View {
                   .italic(event.isAllDay)
               }
                 .buttonStyle(.plain)
+                .opacity(opacity)
               
               // MARK: Events
               HStack(alignment: .firstTextBaseline) {
@@ -231,7 +195,7 @@ struct TextWidgetView : View {
                   
                   titleString
                   if event.calendar != defaultCalendar,
-                    let initial = event.calendar.title.first {
+                     let initial = event.calendar?.title.first {
                     Image(systemName: "\(String(initial).lowercased()).square")
                       .imageScale(.small)
                       .font(font)
@@ -261,7 +225,7 @@ struct TextWidgetView : View {
                 //                  .foregroundColor(.secondary)
                 //                  .font(font)
                 //              }
-  
+                
               }
               //            .mask(LinearGradient(gradient: Gradient(colors: [.black, .black, .black, .clear]), startPoint:.leading, endPoint: .trailing))
               .frame(maxWidth:.infinity, alignment: .bottomLeading)
@@ -270,15 +234,15 @@ struct TextWidgetView : View {
               
               
             } else if let reminder = item as? EKReminder { // MARK: Reminders
-             
+              
               
               // TODO: For some reason calendar is nil here for reminders
-
+              
               HStack(alignment:.center) {
-//                if content == .calendar {
-//                  timeString
-//                    .frame(minWidth:keyline, alignment: .trailing)
-//                }
+                //                if content == .calendar {
+                //                  timeString
+                //                    .frame(minWidth:keyline, alignment: .trailing)
+                //                }
                 HStack() {
                   Image(systemName: "circle")
                     .imageScale(.small)
@@ -287,7 +251,7 @@ struct TextWidgetView : View {
                     .widgetAccentable()
                   
                 }
-                                .frame(minWidth:keyline, alignment: .trailing)
+                .frame(minWidth:keyline, alignment: .trailing)
                 Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
                   
                   Text(reminder.title ?? "No Title")
@@ -295,10 +259,11 @@ struct TextWidgetView : View {
                     .lineLimit(1)
                     .foregroundColor(.primary)
                     .multilineTextAlignment(.leading)
-//                    .frame(maxWidth: content == .reminders ? .infinity : nil, alignment: .leading)
+                  //                    .frame(maxWidth: content == .reminders ? .infinity : nil, alignment: .leading)
                   
                 }
                 .buttonStyle(.plain)
+                .opacity(opacity)
                 
                 if let components = reminder.dueDateComponents {
                   let dueDate = components.date
@@ -315,18 +280,18 @@ struct TextWidgetView : View {
                   }
                 }
                 if (reminder.priority > 0) {
-//                  Text(reminder.priority > 0 ? "\(String(repeating:"!", count:4 - reminder.priority/3))" : "")
-//                  
-//                    .font(font)
-//                    .foregroundColor(.secondary)
-//                    .widgetAccentable()
+                  //                  Text(reminder.priority > 0 ? "\(String(repeating:"!", count:4 - reminder.priority/3))" : "")
+                  //
+                  //                    .font(font)
+                  //                    .foregroundColor(.secondary)
+                  //                    .widgetAccentable()
                   Image(systemName: "exclamationmark.square")
                     .imageScale(.small)
                     .foregroundColor(color ?? .primary)
                     .widgetAccentable()
                 }
                 if reminder.calendar != defaultRemindersList,
-                  let initial = reminder.calendar?.title.first {
+                   let initial = reminder.calendar?.title.first {
                   Image(systemName: "\(String(initial).lowercased()).circle.fill")
                     .imageScale(.small)
                     .foregroundColor(color ?? .red)
@@ -334,8 +299,9 @@ struct TextWidgetView : View {
                 }
                 
                 
-              }.frame(maxWidth:.infinity, alignment: .leading)
-                .frame(height: realLineHeight)
+              }
+              .frame(maxWidth:.infinity, alignment: .leading)
+              .frame(height: realLineHeight)
             }
           } else {
             
@@ -381,26 +347,30 @@ struct TextWidgetView : View {
                       Text(title)
                         .font(smallFont)
                         .foregroundColor(Color.secondary)
-                  
-//                        .mask(
-//                            LinearGradient(gradient: Gradient(stops: [
-//                                .init(color: .black, location: 0),
-//                                .init(color: .black, location: 0.7),
-//                                .init(color: .clear, location: 1)
-//                            ]), startPoint: .leading, endPoint: .trailing)
-//                        )
+                      
+                      //                        .mask(
+                      //                            LinearGradient(gradient: Gradient(stops: [
+                      //                                .init(color: .black, location: 0),
+                      //                                .init(color: .black, location: 0.7),
+                      //                                .init(color: .clear, location: 1)
+                      //                            ]), startPoint: .leading, endPoint: .trailing)
+                      //                        )
                     }
                   }
                 }
               }
               
-            }.frame(maxWidth:.infinity, alignment: .bottomLeading)
-              .frame(height: realLineHeight)
+            }
+            .frame(maxWidth:.infinity, alignment: .bottomLeading)
+            .frame(height: realLineHeight)
+            
             
             
           }
         }
+        
       }//.border(.gray)
+      
       .frame(maxHeight: .infinity, alignment: .top)
       .frame(maxWidth: .infinity, alignment: .top)
       .padding(.top, insets.top)
@@ -418,9 +388,9 @@ struct TextWidgetView : View {
 //
 //struct widgetReminders: Widget {
 //  let kind: String = "reminders"
-//  
+//
 //  var body: some WidgetConfiguration {
-//    
+//
 //    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TimelineProvider(kind: kind)) { entry in
 //      TextWidgetView(entry: entry)
 //        .containerBackground(.clear, for: .widget)
@@ -428,12 +398,12 @@ struct TextWidgetView : View {
 //    .contentMarginsDisabled()
 //    .configurationDisplayName("Reminders")
 //    .description("A text listing of your reminders")
-//    
+//
 //#if os(watchOS)
 //    .supportedFamilies([
 //      .accessoryRectangular, .accessoryInline
 //    ])
-//    
+//
 //#elseif os(macOS)
 //    .supportedFamilies([
 //      .systemSmall, .systemMedium, .systemLarge,
@@ -442,8 +412,8 @@ struct TextWidgetView : View {
 //    .supportedFamilies([.accessoryRectangular, .accessoryInline,
 //                        .systemSmall, .systemMedium, .systemLarge])
 //#endif
-//    
-//    
+//
+//
 //  }
 //}
 struct widgetCalendar: Widget {

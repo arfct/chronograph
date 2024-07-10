@@ -73,6 +73,13 @@ struct TimelineProvider: AppIntentTimelineProvider {
     let remindersError = (content == .reminders || content == .both) && EKEventStore.authorizationStatus(for: .reminder) != .fullAccess
     let eventsError = (content == .calendar || content == .both) && EKEventStore.authorizationStatus(for: .event) != .fullAccess
     
+    if (remindersError) {
+      errors.append("Enable access to reminders in settings")
+    }
+    
+    if (eventsError) {
+      errors.append("Enable access to calendar in settings")
+    }
     
     // MARK: Reminders
     if (content == .reminders) {
@@ -111,36 +118,49 @@ struct TimelineProvider: AppIntentTimelineProvider {
     if (errors.count > 0 ) {
       return Timeline(entries: [
         CalendarTimelineEntry(date: now, configuration: configuration,
-                              events: [EventEntry(id: "error", title: "Enable access in settings", url: URL(string: "settings:"))])
+                              events: errors.map({ error in
+                                EventEntry(id: error, title: error, url: URL(string: "settings:"))
+                              }))
       ], policy: .after(reloadDate))
     }
     
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "EEE"
     
+    
+    let timeFormatter = DateFormatter()
+    timeFormatter.timeStyle = .short
+    timeFormatter.dateStyle = .short
     // MARK: Creating timeline entries
     
+    let debug = false
     var timelineEntries: [CalendarTimelineEntry] = []
     for minuteOffset in 0 ..< 15 {
-      let entryDate = Calendar.current.date(byAdding: .minute, value: minuteOffset, to: now)!
+      let renderDate = Calendar.current.date(byAdding: .minute, value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: now)!
+      let entryDate = Calendar.current.date(byAdding: debug ? .second : .minute, value: minuteOffset, to: now)!
       
       var calendarEntries: [EventEntry] = []
+      
+      
+      //      calendarEntries.append(EventEntry(id: "DEBUG", title:"Debug \((timeFormatter.string(from:renderDate)))"))
       let distantPastEvent = EKEvent.init(eventStore: eventStore)
       distantPastEvent.startDate = .distantPast
       var previousItem: EKCalendarItem = distantPastEvent
-
       var headerIndex = 0
-      calendarEntries.append(EventEntry(id:"today", title:dateFormatter.string(from: now), allDayItems: []))
-      for item in eventItems {
+      
+      var futureEventItems = eventItems.filter { $0.valid(at: renderDate) }
+      
+      calendarEntries.append(EventEntry(id:"today", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: []))
+      for (index, item) in futureEventItems.enumerated() {
         var entry = EventEntry(id: item.calendarItemIdentifier, item: item)
-  
+        
         // Insert day names on any change
-        let lastDate = now > previousItem.date ? now : previousItem.date
-        let thisDate = now > item.date ? now : item.date
+        let lastDate = renderDate > previousItem.date ? renderDate : previousItem.date
+        let thisDate = renderDate > item.date ? renderDate : item.date
         
         // Insert header entries between subsequent days
         if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
-          entry.suffix = dateFormatter.string(from: item.date)
+          entry.suffix = relativeDateFormatterDay.string(from: item.date)
           
           let header = EventEntry(id: "", title:
                                     dateFormatter.string(from: item.date),
@@ -155,10 +175,27 @@ struct TimelineProvider: AppIntentTimelineProvider {
           
         }
         
+        if let thisDate = entry.date {
+          let lastDate = previousItem.date
+         
+          let components = calendar.dateComponents([.hour, .minute], from: thisDate, to: lastDate)
+          if let duration = relativeTimeFormatter.string(from: components) {
+            calendarEntries.append(EventEntry(id: "startsIn", title:"in \(duration)"))
+          }
+        }
+
+        
         if let event = item as? EKEvent {
-          let isHappening = now >= event.startDate && now <= event.endDate
+          
+          let isHappening = renderDate >= event.startDate && now <= event.endDate
           let isNext = now >= calendar.date(byAdding: .hour, value: 1, to: event.startDate)!
           
+//          if (index == 0) {
+//            let components = calendar.dateComponents([.hour, .minute], from: renderDate, to: event.startDate)
+//            if let downtime = relativeTimeFormatter.string(from: components) {
+//              calendarEntries.append(EventEntry(id: "startsIn", title:"in \(downtime)"))
+//            }
+//          }
           // Ignore duplicates
           if event.title == previousItem.title &&
               calendar.isDate(event.startDate, equalTo: previousItem.date, toGranularity: .hour) { continue }

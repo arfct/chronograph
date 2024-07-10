@@ -17,24 +17,40 @@ extension EKEventStore {
 
 extension EKReminder {
   var dueDate: Date? {
-      guard let components = self.dueDateComponents else { return nil }
-      return Calendar.current.date(from: components)
+    guard let components = self.dueDateComponents else { return nil }
+    return components.date
   }
   var primaryDate: Date? {
     return dueDate
   }
 }
 
+
 extension EKCalendarItem {
-//  var identifier: String? {
-//    if let reminder = self as? EKReminder {
-//      return reminder.dueDate;
-//    } else if let event = self as? EKEvent {
-//      return event.eventIdentifier;
-//    }
-//    return nil
-//  }
-//  
+
+  
+  func valid(at date: Date) -> Bool{
+    if let end = end {
+      if allDay, let earlyEnd = Calendar.current.date(byAdding: .minute, value: -6, to: end) {
+        return earlyEnd > date
+      } else {
+        return end > date
+      }
+    }
+    return allDay
+  }
+  
+  var allDay: Bool {
+    if let reminder = self as? EKReminder,
+       let components = reminder.dueDateComponents,
+       components.hour == nil {
+        return true
+    } else if let event = self as? EKEvent {
+      return event.isAllDay;
+    }
+    return false
+  }
+  
   
   var date: Date {
     if let reminder = self as? EKReminder {
@@ -47,11 +63,23 @@ extension EKCalendarItem {
   
   var start: Date? {
     if let reminder = self as? EKReminder {
-      
-      guard let components = reminder.startDateComponents else { return nil }
-      return Calendar.current.date(from: components)
+      guard let components = reminder.dueDateComponents else { return nil }
+      return components.date
     } else if let event = self as? EKEvent {
       return event.startDate;
+    }
+    return nil
+  }
+  
+  var end: Date? {
+    if let reminder = self as? EKReminder {
+      guard let components = reminder.dueDateComponents else { return nil }
+      if allDay { return components.date}
+      if let date = components.date {
+        return Calendar.current.date(byAdding: .minute, value: 25, to: date)
+      }
+    } else if let event = self as? EKEvent {
+      return event.endDate;
     }
     return nil
   }
@@ -59,6 +87,8 @@ extension EKCalendarItem {
   func compareDate(with: EKCalendarItem) -> Bool {
     return self.date < with.date
   }
+  
+  
 }
 
 func compareReminders(_ reminder1: EKReminder, _ reminder2: EKReminder) -> Bool {

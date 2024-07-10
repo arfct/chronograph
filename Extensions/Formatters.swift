@@ -17,3 +17,42 @@ func convertToSuperscript(time: String) -> String {
   
   return hour + minute
 }
+
+
+
+
+private var timeFormatter: DateFormatter {
+  let formatter = DateFormatter()
+  formatter.dateFormat = "H:mm"
+  return formatter
+}
+
+
+var relativeDateFormatter: RelativeDateTimeFormatter {
+  let formatter = RelativeDateTimeFormatter()
+  formatter.dateTimeStyle = .named
+  formatter.unitsStyle = .abbreviated
+  return formatter
+}
+
+
+var relativeDateFormatterDay: DateFormatter {
+  let formatter = DateFormatter()
+  
+  formatter.dateStyle = .short
+  formatter.timeStyle = .none
+  
+  formatter.doesRelativeDateFormatting = true
+  return formatter
+}
+
+
+
+var relativeTimeFormatter: DateComponentsFormatter {
+
+  let formatter = DateComponentsFormatter()
+
+  formatter.unitsStyle = .abbreviated
+  formatter.allowedUnits = [.hour, .minute]
+return formatter
+}

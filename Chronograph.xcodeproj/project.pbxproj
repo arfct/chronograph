@@ -199,6 +199,7 @@
 		2C0EFA3C2C226BA200012A78 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */,
 				2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */,
 				2C6BA3792C1C99C700F22C21 /* Formatters.swift */,
 			);
@@ -309,7 +310,6 @@
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
 				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
 				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
-				2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */,
 				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
 				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
 			);
