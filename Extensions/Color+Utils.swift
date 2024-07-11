@@ -1,30 +1,30 @@
 import SwiftUI
 
+
 extension Color {
   func toHex() -> String? {
-    #if os(macOS)
+#if os(macOS)
     let uic = NSColor(self)
-    #else
-
-      let uic = UIColor(self)
-    #endif
-      guard let components = uic.cgColor.components, components.count >= 3 else {
-          return nil
-      }
-      let r = Float(components[0])
-      let g = Float(components[1])
-      let b = Float(components[2])
-      var a = Float(1.0)
-
-      if components.count >= 4 {
-          a = Float(components[3])
-      }
-
-      if a != Float(1.0) {
-          return String(format: "%02lX%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255), lroundf(a * 255))
-      } else {
-          return String(format: "%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
-      }
+#else
+    let uic = UIColor(self)
+#endif
+    guard let components = uic.cgColor.components, components.count >= 3 else {
+      return nil
+    }
+    let r = Float(components[0])
+    let g = Float(components[1])
+    let b = Float(components[2])
+    var a = Float(1.0)
+    
+    if components.count >= 4 {
+      a = Float(components[3])
+    }
+    
+    if a != Float(1.0) {
+      return String(format: "%02lX%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255), lroundf(a * 255))
+    } else {
+      return String(format: "%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
+    }
   }
   
   static func withHex(_ hex: String) -> Color{
@@ -91,14 +91,19 @@ extension Color {
   }
   
   func forScheme(scheme: ColorScheme) -> Color {
+    
+#if os(macOS)
+    let uiColor = NSColor(self)
+#else
     let uiColor = UIColor(self)
-
+#endif
+    
     // Get the hue component
     var hue: CGFloat = 0
     var saturation: CGFloat = 0
     var brightness: CGFloat = 0
     var alpha: CGFloat = 0
-
+    
     uiColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
     return Color(hue: hue, saturation: saturation, brightness: scheme == .dark ? 0.8 : 0.6 )
   }
@@ -106,12 +111,12 @@ extension Color {
     // Extract the RGB components
     
 #if os(macOS)
-let uic = NSColor(self)
+    let uic = NSColor(self)
 #else
-  let uic = UIColor(self)
+    let uic = UIColor(self)
 #endif
     
-
+    
     let components = uic.cgColor.components
     
     
@@ -121,7 +126,7 @@ let uic = NSColor(self)
     
     // Calculate luminance
     let luminance = (0.299 * red + 0.587 * green + 0.114 * blue)
-
+    
     // Return black or white based on luminance
     return luminance < 0.5
   }

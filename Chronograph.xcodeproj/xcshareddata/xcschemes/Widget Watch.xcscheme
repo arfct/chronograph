@@ -16,9 +16,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C6BA32D2C1B6ABB00F22C21"
-               BuildableName = "Widget.appex"
-               BlueprintName = "Widget"
+               BlueprintIdentifier = "2C6BA3142C1B6A9600F22C21"
+               BuildableName = "Widget-watch.appex"
+               BlueprintName = "Widget-watch"
+               ReferencedContainer = "container:Chronograph.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
+               BuildableName = "Chronograph-watch.app"
+               BlueprintName = "Chronograph-watch"
                ReferencedContainer = "container:Chronograph.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -31,8 +45,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-               BuildableName = "Chronograph.app"
-               BlueprintName = "Chronograph"
+               BuildableName = "Chronograph-ios.app"
+               BlueprintName = "Chronograph-ios"
                ReferencedContainer = "container:Chronograph.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -57,30 +71,29 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.springboard">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2C6BA32D2C1B6ABB00F22C21"
-            BuildableName = "Widget.appex"
-            BlueprintName = "Widget"
+            BlueprintIdentifier = "2C6BA3142C1B6A9600F22C21"
+            BuildableName = "Widget-watch.appex"
+            BlueprintName = "Widget-watch"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
+      </BuildableProductRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-            BuildableName = "Chronograph.app"
-            BlueprintName = "Chronograph"
+            BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
+            BuildableName = "Chronograph-watch.app"
+            BlueprintName = "Chronograph-watch"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCWidgetKind"
-            value = "calendar"
+            value = ""
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -90,7 +103,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "_XCWidgetFamily"
-            value = "systemLarge"
+            value = "systemMedium"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -100,16 +113,14 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      debugDocumentVersioning = "YES"
-      askForAppToLaunch = "Yes"
-      launchAutomaticallySubstyle = "2">
+      debugDocumentVersioning = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-            BuildableName = "Chronograph.app"
-            BlueprintName = "Chronograph"
+            BlueprintIdentifier = "2C6BA3142C1B6A9600F22C21"
+            BuildableName = "Widget-watch.appex"
+            BlueprintName = "Widget-watch"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

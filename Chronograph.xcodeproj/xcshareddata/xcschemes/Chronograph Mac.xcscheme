@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-               BuildableName = "Chronograph.app"
-               BlueprintName = "Chronograph"
+               BlueprintIdentifier = "2C72C05D2C3F854800AB3A1A"
+               BuildableName = "Chronograph-mac.app"
+               BlueprintName = "Chronograph-mac"
                ReferencedContainer = "container:Chronograph.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-            BuildableName = "Chronograph.app"
-            BlueprintName = "Chronograph"
+            BlueprintIdentifier = "2C72C05D2C3F854800AB3A1A"
+            BuildableName = "Chronograph-mac.app"
+            BlueprintName = "Chronograph-mac"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-            BuildableName = "Chronograph.app"
-            BlueprintName = "Chronograph"
+            BlueprintIdentifier = "2C72C05D2C3F854800AB3A1A"
+            BuildableName = "Chronograph-mac.app"
+            BlueprintName = "Chronograph-mac"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -10,6 +10,7 @@ struct EventEntry: Identifiable, Hashable {
   var item: EKCalendarItem?
   var allDayItems: [EventEntry]?
   var removeIfOrphaned: Bool = false
+  var height: CGFloat = 1
 }
 
 func clean(location input: String) -> String {

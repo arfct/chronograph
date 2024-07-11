@@ -29,16 +29,16 @@
 		2C6BA3182C1B6A9600F22C21 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */; };
 		2C6BA31A2C1B6A9600F22C21 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */; };
 		2C6BA3212C1B6A9700F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA3202C1B6A9700F22C21 /* Assets.xcassets */; };
-		2C6BA3252C1B6A9700F22C21 /* Watch Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C6BA3152C1B6A9600F22C21 /* Watch Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2C6BA3252C1B6A9700F22C21 /* Widget-watch.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2C6BA32F2C1B6ABB00F22C21 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */; };
 		2C6BA3302C1B6ABB00F22C21 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */; };
 		2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
-		2C6BA3392C1B6ABB00F22C21 /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
+		2C6BA3392C1B6ABB00F22C21 /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
 		2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
 		2C6BA33D2C1B6ABC00F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */; };
-		2C6BA3412C1B6ABC00F22C21 /* Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C6BA32E2C1B6ABB00F22C21 /* Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2C6BA3412C1B6ABC00F22C21 /* Widget-ios.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C6BA32E2C1B6ABB00F22C21 /* Widget-ios.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
-		2C6BA3482C1B6F6900F22C21 /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
+		2C6BA3482C1B6F6900F22C21 /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
 		2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
 		2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
 		2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
@@ -51,8 +51,40 @@
 		2C6BA37B2C1C99C900F22C21 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
 		2C6BA37C2C1C99F900F22C21 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
 		2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
-		2CB314F62C2474FE0064BF6C /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
-		2CB314F72C2474FE0064BF6C /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* Widget.swift */; };
+		2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
+		2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
+		2C72C0582C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
+		2C72C0592C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
+		2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0602C3F854800AB3A1A /* ChronographMacApp.swift */; };
+		2C72C0652C3F854900AB3A1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C72C0642C3F854900AB3A1A /* Assets.xcassets */; };
+		2C72C0682C3F854900AB3A1A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C72C0672C3F854900AB3A1A /* Preview Assets.xcassets */; };
+		2C72C0722C3F857E00AB3A1A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */; };
+		2C72C0732C3F857E00AB3A1A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */; };
+		2C72C07C2C3F857E00AB3A1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C72C07B2C3F857E00AB3A1A /* Assets.xcassets */; };
+		2C72C0812C3F857E00AB3A1A /* Widget-mac.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2C72C0862C3F86FC00AB3A1A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
+		2C72C0872C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
+		2C72C0882C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
+		2C72C0892C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
+		2C72C08A2C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
+		2C72C08B2C3F874000AB3A1A /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
+		2C72C08C2C3F875800AB3A1A /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
+		2C72C08D2C3F875800AB3A1A /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
+		2C72C08E2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
+		2C72C08F2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
+		2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
+		2C72C0912C3F87BC00AB3A1A /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
+		2C72C0922C3F87C500AB3A1A /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
+		2C72C0932C3F87C500AB3A1A /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
+		2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
+		2C72C0952C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
+		2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
+		2C72C0972C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
+		2C72C0982C3F8AAF00AB3A1A /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
+		2C72C0992C3F8AAF00AB3A1A /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
+		2C72C09B2C3F8FEB00AB3A1A /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
+		2CB314F62C2474FE0064BF6C /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
+		2CB314F72C2474FE0064BF6C /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
 		2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
 		2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
 		2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
@@ -85,6 +117,13 @@
 			remoteGlobalIDString = 2C6BA32D2C1B6ABB00F22C21;
 			remoteInfo = widgetExtension;
 		};
+		2C72C07F2C3F857E00AB3A1A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C6BA2E22C1B6A4F00F22C21 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C72C0702C3F857E00AB3A1A;
+			remoteInfo = widgetExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -105,7 +144,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2C6BA3252C1B6A9700F22C21 /* Watch Widget.appex in Embed Foundation Extensions */,
+				2C6BA3252C1B6A9700F22C21 /* Widget-watch.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -116,7 +155,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2C6BA3412C1B6ABC00F22C21 /* Widget.appex in Embed Foundation Extensions */,
+				2C6BA3412C1B6ABC00F22C21 /* Widget-ios.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C72C0852C3F857E00AB3A1A /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2C72C0812C3F857E00AB3A1A /* Widget-mac.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,7 +178,7 @@
 		2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
 		2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventKit+Async.swift"; sourceTree = "<group>"; };
-		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographApp.swift; sourceTree = "<group>"; };
 		2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -138,14 +188,14 @@
 		2C6BA3012C1B6A5000F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6BA3062C1B6A5100F22C21 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2C6BA3152C1B6A9600F22C21 /* Watch Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Watch Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Widget-watch.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		2C6BA3202C1B6A9700F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6BA3222C1B6A9700F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C6BA32E2C1B6ABB00F22C21 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C6BA32E2C1B6ABB00F22C21 /* Widget-ios.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Widget-ios.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
-		2C6BA3382C1B6ABB00F22C21 /* Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
+		2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographWidget.swift; sourceTree = "<group>"; };
 		2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationIntent.swift; sourceTree = "<group>"; };
 		2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C6BA33E2C1B6ABC00F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -155,9 +205,20 @@
 		2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Utils.swift"; sourceTree = "<group>"; };
 		2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEntries.swift; sourceTree = "<group>"; };
 		2C6BA3792C1C99C700F22C21 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
+		2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenizedTextView.swift; sourceTree = "<group>"; };
+		2C72C05E2C3F854800AB3A1A /* Chronograph-mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C72C0602C3F854800AB3A1A /* ChronographMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographMacApp.swift; sourceTree = "<group>"; };
+		2C72C0642C3F854900AB3A1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C72C0672C3F854900AB3A1A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2C72C0692C3F854900AB3A1A /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
+		2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Widget-mac.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C72C07B2C3F857E00AB3A1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C72C07D2C3F857E00AB3A1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C72C07E2C3F857E00AB3A1A /* widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widget.entitlements; sourceTree = "<group>"; };
+		2C72C09A2C3F8D7F00AB3A1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreviewView.swift; sourceTree = "<group>"; };
-		2CF51FB92C25B82700955300 /* Chronograph.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chronograph.entitlements; sourceTree = "<group>"; };
-		2CF51FBA2C25B82700955300 /* Widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Widget.entitlements; sourceTree = "<group>"; };
+		2CF51FB92C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
+		2CF51FBA2C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +254,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2C72C05B2C3F854800AB3A1A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C72C06E2C3F857E00AB3A1A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C72C0732C3F857E00AB3A1A /* SwiftUI.framework in Frameworks */,
+				2C72C0722C3F857E00AB3A1A /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -217,10 +294,9 @@
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
-				2CF51FBA2C25B82700955300 /* Widget.entitlements */,
-				2CF51FB92C25B82700955300 /* Chronograph.entitlements */,
 				2C6BA2EC2C1B6A4F00F22C21 /* iOS */,
 				2C6BA2FE2C1B6A5000F22C21 /* Watch */,
+				2C72C05F2C3F854800AB3A1A /* Mac */,
 				2C0EFA3C2C226BA200012A78 /* Extensions */,
 				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
@@ -231,10 +307,12 @@
 		2C6BA2EB2C1B6A4F00F22C21 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */,
+				2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */,
 				2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */,
-				2C6BA3152C1B6A9600F22C21 /* Watch Widget.appex */,
-				2C6BA32E2C1B6ABB00F22C21 /* Widget.appex */,
+				2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */,
+				2C6BA32E2C1B6ABB00F22C21 /* Widget-ios.appex */,
+				2C72C05E2C3F854800AB3A1A /* Chronograph-mac.app */,
+				2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -248,6 +326,7 @@
 				2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */,
 				2C6BA3312C1B6ABB00F22C21 /* Widget */,
 				2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */,
+				2CF51FB92C25B82700955300 /* Entitlements.entitlements */,
 				2C6BA3462C1B6AF600F22C21 /* Info.plist */,
 				2C6BA2F32C1B6A5000F22C21 /* Preview Content */,
 			);
@@ -305,13 +384,46 @@
 			isa = PBXGroup;
 			children = (
 				2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */,
-				2C6BA3382C1B6ABB00F22C21 /* Widget.swift */,
+				2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */,
 				2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */,
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
 				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
 				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
+				2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */,
 				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
+				2CF51FBA2C25B82700955300 /* Entitlements.entitlements */,
 				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
+		2C72C05F2C3F854800AB3A1A /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				2C72C0602C3F854800AB3A1A /* ChronographMacApp.swift */,
+				2C72C0642C3F854900AB3A1A /* Assets.xcassets */,
+				2C72C0692C3F854900AB3A1A /* Entitlements.entitlements */,
+				2C72C09A2C3F8D7F00AB3A1A /* Info.plist */,
+				2C72C0742C3F857E00AB3A1A /* Widget */,
+				2C72C0662C3F854900AB3A1A /* Preview Content */,
+			);
+			path = Mac;
+			sourceTree = "<group>";
+		};
+		2C72C0662C3F854900AB3A1A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2C72C0672C3F854900AB3A1A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2C72C0742C3F857E00AB3A1A /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				2C72C07B2C3F857E00AB3A1A /* Assets.xcassets */,
+				2C72C07D2C3F857E00AB3A1A /* Info.plist */,
+				2C72C07E2C3F857E00AB3A1A /* widget.entitlements */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -319,9 +431,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2C6BA2E92C1B6A4F00F22C21 /* Chronograph */ = {
+		2C6BA2E92C1B6A4F00F22C21 /* Chronograph-ios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph" */;
+			buildConfigurationList = 2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph-ios" */;
 			buildPhases = (
 				2C6BA2E62C1B6A4F00F22C21 /* Sources */,
 				2C6BA2E72C1B6A4F00F22C21 /* Frameworks */,
@@ -335,9 +447,9 @@
 				2C6BA2FD2C1B6A5000F22C21 /* PBXTargetDependency */,
 				2C6BA3402C1B6ABC00F22C21 /* PBXTargetDependency */,
 			);
-			name = Chronograph;
+			name = "Chronograph-ios";
 			productName = txet;
-			productReference = 2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */;
+			productReference = 2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2C6BA2F92C1B6A5000F22C21 /* Chronograph-watch */ = {
@@ -359,9 +471,9 @@
 			productReference = 2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2C6BA3142C1B6A9600F22C21 /* Watch Widget */ = {
+		2C6BA3142C1B6A9600F22C21 /* Widget-watch */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C6BA3262C1B6A9700F22C21 /* Build configuration list for PBXNativeTarget "Watch Widget" */;
+			buildConfigurationList = 2C6BA3262C1B6A9700F22C21 /* Build configuration list for PBXNativeTarget "Widget-watch" */;
 			buildPhases = (
 				2C6BA3112C1B6A9600F22C21 /* Sources */,
 				2C6BA3122C1B6A9600F22C21 /* Frameworks */,
@@ -371,14 +483,14 @@
 			);
 			dependencies = (
 			);
-			name = "Watch Widget";
+			name = "Widget-watch";
 			productName = widgetExtension;
-			productReference = 2C6BA3152C1B6A9600F22C21 /* Watch Widget.appex */;
+			productReference = 2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		2C6BA32D2C1B6ABB00F22C21 /* Widget */ = {
+		2C6BA32D2C1B6ABB00F22C21 /* Widget-ios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C6BA3422C1B6ABC00F22C21 /* Build configuration list for PBXNativeTarget "Widget" */;
+			buildConfigurationList = 2C6BA3422C1B6ABC00F22C21 /* Build configuration list for PBXNativeTarget "Widget-ios" */;
 			buildPhases = (
 				2C6BA32A2C1B6ABB00F22C21 /* Sources */,
 				2C6BA32B2C1B6ABB00F22C21 /* Frameworks */,
@@ -388,9 +500,45 @@
 			);
 			dependencies = (
 			);
-			name = Widget;
+			name = "Widget-ios";
 			productName = widgetExtension;
-			productReference = 2C6BA32E2C1B6ABB00F22C21 /* Widget.appex */;
+			productReference = 2C6BA32E2C1B6ABB00F22C21 /* Widget-ios.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		2C72C05D2C3F854800AB3A1A /* Chronograph-mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C72C06A2C3F854900AB3A1A /* Build configuration list for PBXNativeTarget "Chronograph-mac" */;
+			buildPhases = (
+				2C72C05A2C3F854800AB3A1A /* Sources */,
+				2C72C05B2C3F854800AB3A1A /* Frameworks */,
+				2C72C05C2C3F854800AB3A1A /* Resources */,
+				2C72C0852C3F857E00AB3A1A /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C72C0802C3F857E00AB3A1A /* PBXTargetDependency */,
+			);
+			name = "Chronograph-mac";
+			productName = txet.mac;
+			productReference = 2C72C05E2C3F854800AB3A1A /* Chronograph-mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2C72C0702C3F857E00AB3A1A /* Widget-mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C72C0822C3F857E00AB3A1A /* Build configuration list for PBXNativeTarget "Widget-mac" */;
+			buildPhases = (
+				2C72C06D2C3F857E00AB3A1A /* Sources */,
+				2C72C06E2C3F857E00AB3A1A /* Frameworks */,
+				2C72C06F2C3F857E00AB3A1A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Widget-mac";
+			productName = widgetExtension;
+			productReference = 2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -415,6 +563,12 @@
 					2C6BA32D2C1B6ABB00F22C21 = {
 						CreatedOnToolsVersion = 16.0;
 					};
+					2C72C05D2C3F854800AB3A1A = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					2C72C0702C3F857E00AB3A1A = {
+						CreatedOnToolsVersion = 16.0;
+					};
 				};
 			};
 			buildConfigurationList = 2C6BA2E52C1B6A4F00F22C21 /* Build configuration list for PBXProject "Chronograph" */;
@@ -430,10 +584,12 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2C6BA2E92C1B6A4F00F22C21 /* Chronograph */,
-				2C6BA32D2C1B6ABB00F22C21 /* Widget */,
+				2C6BA2E92C1B6A4F00F22C21 /* Chronograph-ios */,
 				2C6BA2F92C1B6A5000F22C21 /* Chronograph-watch */,
-				2C6BA3142C1B6A9600F22C21 /* Watch Widget */,
+				2C72C05D2C3F854800AB3A1A /* Chronograph-mac */,
+				2C6BA32D2C1B6ABB00F22C21 /* Widget-ios */,
+				2C6BA3142C1B6A9600F22C21 /* Widget-watch */,
+				2C72C0702C3F857E00AB3A1A /* Widget-mac */,
 			);
 		};
 /* End PBXProject section */
@@ -474,6 +630,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2C72C05C2C3F854800AB3A1A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C72C0682C3F854900AB3A1A /* Preview Assets.xcassets in Resources */,
+				2C72C0652C3F854900AB3A1A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C72C06F2C3F857E00AB3A1A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C72C07C2C3F857E00AB3A1A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -484,9 +657,10 @@
 				2C0EA2DF2C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA36F2C1C8B3700F22C21 /* EventEntries.swift in Sources */,
 				2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
+				2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */,
-				2CB314F62C2474FE0064BF6C /* Widget.swift in Sources */,
+				2CB314F62C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
 				2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
 				2CB314FC2C2475AE0064BF6C /* Color+Utils.swift in Sources */,
 				2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
@@ -502,10 +676,11 @@
 				2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA3702C1C8B3700F22C21 /* EventEntries.swift in Sources */,
 				2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
+				2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */,
 				2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
-				2CB314F72C2474FE0064BF6C /* Widget.swift in Sources */,
+				2CB314F72C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
 				2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */,
 				2C6BA3002C1B6A5000F22C21 /* ChronographWatchApp.swift in Sources */,
 				2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
@@ -522,8 +697,9 @@
 				2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
-				2C6BA3482C1B6F6900F22C21 /* Widget.swift in Sources */,
+				2C6BA3482C1B6F6900F22C21 /* ChronographWidget.swift in Sources */,
 				2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */,
+				2C72C0592C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C6BA36D2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
 				2C6BA37B2C1C99C900F22C21 /* Formatters.swift in Sources */,
 			);
@@ -539,9 +715,46 @@
 				2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
 				2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
-				2C6BA3392C1B6ABB00F22C21 /* Widget.swift in Sources */,
+				2C6BA3392C1B6ABB00F22C21 /* ChronographWidget.swift in Sources */,
+				2C72C0582C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C6BA37A2C1C99C900F22C21 /* Formatters.swift in Sources */,
 				2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C72C05A2C3F854800AB3A1A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C72C0862C3F86FC00AB3A1A /* ContentView.swift in Sources */,
+				2C72C0982C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
+				2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
+				2C72C0892C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
+				2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
+				2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */,
+				2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */,
+				2C72C08E2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
+				2C72C08B2C3F874000AB3A1A /* WidgetPreviewView.swift in Sources */,
+				2C72C0872C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
+				2C72C08C2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
+				2C72C0922C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C72C06D2C3F857E00AB3A1A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C72C0992C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
+				2C72C0972C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
+				2C72C0952C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
+				2C72C09B2C3F8FEB00AB3A1A /* Bundle.swift in Sources */,
+				2C72C0912C3F87BC00AB3A1A /* Formatters.swift in Sources */,
+				2C72C08A2C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
+				2C72C08F2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
+				2C72C0882C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
+				2C72C08D2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
+				2C72C0932C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,13 +769,18 @@
 		};
 		2C6BA3242C1B6A9700F22C21 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2C6BA3142C1B6A9600F22C21 /* Watch Widget */;
+			target = 2C6BA3142C1B6A9600F22C21 /* Widget-watch */;
 			targetProxy = 2C6BA3232C1B6A9700F22C21 /* PBXContainerItemProxy */;
 		};
 		2C6BA3402C1B6ABC00F22C21 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2C6BA32D2C1B6ABB00F22C21 /* Widget */;
+			target = 2C6BA32D2C1B6ABB00F22C21 /* Widget-ios */;
 			targetProxy = 2C6BA33F2C1B6ABC00F22C21 /* PBXContainerItemProxy */;
+		};
+		2C72C0802C3F857E00AB3A1A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C72C0702C3F857E00AB3A1A /* Widget-mac */;
+			targetProxy = 2C72C07F2C3F857E00AB3A1A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -751,7 +969,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Chronograph.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
@@ -776,7 +994,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -790,7 +1008,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Chronograph.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
@@ -815,7 +1033,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -893,7 +1111,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
@@ -927,7 +1145,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = Widget.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
@@ -957,6 +1175,126 @@
 			};
 			name = Release;
 		};
+		2C72C06B2C3F854900AB3A1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Mac/Entitlements.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Mac/Preview Content\"";
+				DEVELOPMENT_TEAM = A7X888RRVJ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Mac/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2C72C06C2C3F854900AB3A1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Mac/Entitlements.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Mac/Preview Content\"";
+				DEVELOPMENT_TEAM = A7X888RRVJ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Mac/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		2C72C0832C3F857E00AB3A1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = Mac/Widget/widget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A7X888RRVJ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Mac/Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2C72C0842C3F857E00AB3A1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = Mac/Widget/widget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A7X888RRVJ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Mac/Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -978,7 +1316,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph" */ = {
+		2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6BA30F2C1B6A5100F22C21 /* Debug */,
@@ -987,7 +1325,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2C6BA3262C1B6A9700F22C21 /* Build configuration list for PBXNativeTarget "Watch Widget" */ = {
+		2C6BA3262C1B6A9700F22C21 /* Build configuration list for PBXNativeTarget "Widget-watch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6BA3272C1B6A9700F22C21 /* Debug */,
@@ -996,11 +1334,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2C6BA3422C1B6ABC00F22C21 /* Build configuration list for PBXNativeTarget "Widget" */ = {
+		2C6BA3422C1B6ABC00F22C21 /* Build configuration list for PBXNativeTarget "Widget-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6BA3432C1B6ABC00F22C21 /* Debug */,
 				2C6BA3442C1B6ABC00F22C21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C72C06A2C3F854900AB3A1A /* Build configuration list for PBXNativeTarget "Chronograph-mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C72C06B2C3F854900AB3A1A /* Debug */,
+				2C72C06C2C3F854900AB3A1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C72C0822C3F857E00AB3A1A /* Build configuration list for PBXNativeTarget "Widget-mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C72C0832C3F857E00AB3A1A /* Debug */,
+				2C72C0842C3F857E00AB3A1A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

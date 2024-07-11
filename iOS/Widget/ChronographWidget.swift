@@ -57,14 +57,21 @@ struct TextWidgetView : View {
     
     let accentColor = entry.configuration.accentColor.count > 0 ?
     Color.withHex(entry.configuration.accentColor) : .secondary;
-    
+
 #if os(watchOS)
     let accessory = true
     let heightIsLimited = true
     let widthIsLimited = true
     let isHuge = false
+#elseif os(macOS)
+    let accessory =
+    (widgetFamily == .systemSmall && !showsWidgetContainerBackground)
+    let heightIsLimited = accessory
+    let widthIsLimited = accessory || (widgetFamily == .systemSmall)
+    let isHuge = widgetFamily == .systemExtraLarge
 #else
     let accessory =
+    
     (widgetFamily == .accessoryRectangular) ||
     (widgetFamily == .systemSmall && !showsWidgetContainerBackground)
     let heightIsLimited = accessory
@@ -78,9 +85,14 @@ struct TextWidgetView : View {
     let content = entry.configuration.content
     
     GeometryReader { frame in
+      
+      #if os(macOS)
+      let fullBleed = !showsWidgetContainerBackground ? true : entry.configuration.fullBleed
+      #else
       let fullBleed =
       widgetFamily == .accessoryRectangular  ||
       !showsWidgetContainerBackground ? true : entry.configuration.fullBleed
+      #endif
       
       //      let isStandBy = !showsWidgetContainerBackground && (widgetFamily != .accessoryRectangular)
       let hPadding = fullBleed ? margins.top / 3 : margins.leading
@@ -145,9 +157,9 @@ struct TextWidgetView : View {
           ? cgColor != nil ? Color(cgColor: cgColor!).forScheme(scheme: colorScheme) : nil
           : accentColor
           
+          let opacity = max(0.67, pow(1.0 - Double(row.date?.timeIntervalSince(entry.date) ?? 0.0) / 60.0 / 60.0 / 24.0, 0.33))
           
           if let item = row.item {
-            let opacity = max(0.5, pow(1.0 - Double(item.start?.timeIntervalSince(entry.date) ?? 0.0) / 60.0 / 60.0 / 24.0, 0.33))
             
             let (hour, minute) = getComponents(item.date)
             
@@ -167,14 +179,13 @@ struct TextWidgetView : View {
               let eventid = "x-apple-calevent://\(row.id.replacingOccurrences(of: ":", with: "/"))"
               let titleString = Link(destination: item.url ??
                                      URL(string:eventid)!) {
-                Text(event.title)
+                TokenizedTextView(text:(event.title))
                   .font(font)
                   .lineLimit(1)
                   .foregroundColor(event.isAllDay ? .secondary : .primary)
                   .italic(event.isAllDay)
               }
                 .buttonStyle(.plain)
-                .opacity(opacity)
               
               // MARK: Events
               HStack(alignment: .firstTextBaseline) {
@@ -231,6 +242,7 @@ struct TextWidgetView : View {
               .frame(maxWidth:.infinity, alignment: .bottomLeading)
               .frame(height: realLineHeight)
               
+              .opacity(opacity)
               
               
             } else if let reminder = item as? EKReminder { // MARK: Reminders
@@ -254,7 +266,7 @@ struct TextWidgetView : View {
                 .frame(minWidth:keyline, alignment: .trailing)
                 Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
                   
-                  Text(reminder.title ?? "No Title")
+                  TokenizedTextView(text:reminder.title ?? "No Title")
                     .font(font)
                     .lineLimit(1)
                     .foregroundColor(.primary)
@@ -263,7 +275,6 @@ struct TextWidgetView : View {
                   
                 }
                 .buttonStyle(.plain)
-                .opacity(opacity)
                 
                 if let components = reminder.dueDateComponents {
                   let dueDate = components.date
@@ -302,6 +313,8 @@ struct TextWidgetView : View {
               }
               .frame(maxWidth:.infinity, alignment: .leading)
               .frame(height: realLineHeight)
+              
+              .opacity(opacity)
             }
           } else {
             
@@ -344,7 +357,7 @@ struct TextWidgetView : View {
                   widthIsLimited ? allDayItems : allDayItems
                   ForEach(visibleItems) { item in
                     if let title = item.item?.title {
-                      Text(title)
+                      TokenizedTextView(text:title)
                         .font(smallFont)
                         .foregroundColor(Color.secondary)
                       
@@ -364,6 +377,7 @@ struct TextWidgetView : View {
             .frame(maxWidth:.infinity, alignment: .bottomLeading)
             .frame(height: realLineHeight)
             
+            .opacity(opacity)
             
             
           }
@@ -416,7 +430,7 @@ struct TextWidgetView : View {
 //
 //  }
 //}
-struct widgetCalendar: Widget {
+struct ChronographWidget: Widget {
   let kind: String = "calendar"
   
   var body: some WidgetConfiguration {

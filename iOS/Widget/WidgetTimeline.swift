@@ -213,7 +213,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
             calendarEntries.append(entry)
             
             if isHappening || isNext, let location = event.location {
-              calendarEntries.append(EventEntry(id: "location", title:clean(location:location)))
+              calendarEntries.append(EventEntry(id: "location", title:clean(location:location), date: event.date))
             }
           }
         } else if let reminder = item as? EKReminder {
