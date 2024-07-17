@@ -27,7 +27,13 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     return CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), events: [
       EventEntry(id: "", title: "Today"),
-      EventEntry(id: "", item: item)
+      EventEntry(id: "", item: item),
+      EventEntry(id: "", item: item),
+      EventEntry(id: "", item: item),
+      EventEntry(id: "", title: "Today"),
+      EventEntry(id: "", item: item),
+      EventEntry(id: "", item: item),
+
     ])
     
   }
@@ -125,7 +131,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
     
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "EEE"
+    dateFormatter.dateFormat = "EEEE"
     
     
     let timeFormatter = DateFormatter()
@@ -163,7 +169,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
           entry.suffix = relativeDateFormatterDay.string(from: item.date)
           
           let header = EventEntry(id: "", title:
-                                    dateFormatter.string(from: item.date),
+                                    calendar.isDateInTomorrow(item.date) ? relativeDateFormatterDay.string(from: item.date) : dateFormatter.string(from: item.date),
                                   date:calendar.startOfDay(for: item.date),
                                   allDayItems: [],
                                   removeIfOrphaned: true
@@ -265,4 +271,10 @@ func relevances() async -> WidgetRelevances<ConfigurationIntent> {
     ])
 }
 #endif
+  
+  
+  
+  static let sampleEntry: EventEntry = EventEntry(id: "1", type: "", title: "", date: nil, url: nil, suffix: "", item: nil, allDayItems: nil, removeIfOrphaned: false, height: 0)
+  
+  
 }

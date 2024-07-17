@@ -1,29 +1,65 @@
 import SwiftUI
 
+
+struct TokenViewModifier: ViewModifier {
+  var isMonochrome: Bool
+  var corderRadius: CGFloat = 10
+  
+  func body(content: Content) -> some View {
+    if isMonochrome {
+      content.background( RoundedRectangle(cornerRadius: corderRadius).stroke(.primary.opacity(0.2), lineWidth: 2))
+    } else {
+      content.background( RoundedRectangle(cornerRadius: corderRadius).fill(.primary.opacity(0.15)))
+      
+    }
+  }
+}
+
+extension View {
+  func tokenBackground(_ isMonochrome: Bool, cornerRadius: CGFloat = 10) -> some View {
+    self.modifier(TokenViewModifier(isMonochrome: isMonochrome, corderRadius: cornerRadius))
+  }
+}
+
+
+
 struct TokenizedTextView: View {
+  @Environment(\.widgetRenderingMode) var widgetRenderingMode
+  
   let text: String
+  @State var font: Font?
+  @State var tokenFont: Font?
+  @State var alignment: VerticalAlignment = .center
+  
+  
+  
   
   var body: some View {
     let components = tokenizeText(text)
     
-    return HStack(spacing:0) {
+    return GradientMaskedHStack(alignment:alignment, spacing:0) {
       ForEach(components, id: \.self) { component in
         if component.hasPrefix("[") && component.hasSuffix("]") {
           Text(component.trimmingCharacters(in: CharacterSet(charactersIn: "[]")))
+//            .font(tokenFont ?? Font.system(size: 10))
+            .fixedSize()
             .padding(.horizontal, 3)
+            .lineLimit(1)
             .padding(.vertical, 1)
-            .opacity(0.8)
-            .background(.regularMaterial)
-            .cornerRadius(4)
+          
+            .tokenBackground(false, cornerRadius:4)
         } else if component.hasPrefix("(") && component.hasSuffix(")") {
           Text(component.trimmingCharacters(in: CharacterSet(charactersIn: "()")))
-            .padding(.horizontal, 5)
-            .padding(.vertical, 1)
-            .opacity(0.8)
-            .background(.regularMaterial)
-            .cornerRadius(.infinity)
+//            .font(tokenFont ?? Font.system(size: 10))
+            .fixedSize()
+
+            .padding(.horizontal, 7.5)
+            .padding(.vertical, 2)
+            .tokenBackground(false, cornerRadius:.infinity)
+            
         } else {
           Text(component)
+            .fixedSize()
         }
       }
     }
@@ -32,8 +68,6 @@ struct TokenizedTextView: View {
   func tokenizeText(_ text: String) -> [String] {
     var tokens: [String] = []
     var currentToken = ""
-    var isInBracket = false
-    var isInParenthesis = false
     
     for character in text {
       if character == "[" {
@@ -41,23 +75,19 @@ struct TokenizedTextView: View {
           tokens.append(currentToken)
         }
         currentToken = "["
-        isInBracket = true
       } else if character == "]" {
         currentToken.append("]")
         tokens.append(currentToken)
         currentToken = ""
-        isInBracket = false
       } else if character == "(" {
         if !currentToken.isEmpty {
           tokens.append(currentToken)
         }
         currentToken = "("
-        isInParenthesis = true
       } else if character == ")" {
         currentToken.append(")")
         tokens.append(currentToken)
         currentToken = ""
-        isInParenthesis = false
       } else {
         currentToken.append(character)
       }
@@ -75,7 +105,10 @@ struct TokenizedTextView: View {
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    TokenizedTextView(text: "This is a [sample] text with [tokens] and (parentheses).")
+    HStack {
+      TokenizedTextView(text: "This is a [sample] text with [tokens] and (parentheses).").border(Color.red)
+      Text("MORE")
+    }
       .padding()
   }
 }

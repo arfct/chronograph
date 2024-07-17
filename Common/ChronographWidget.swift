@@ -18,6 +18,9 @@ struct TextWidgetView : View {
   @Environment(\.showsWidgetContainerBackground) var showsWidgetContainerBackground
   @Environment(\.widgetFamily) var widgetFamily
   @AppStorage("state") private var state = false
+  @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
+  @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
+
   
   var entry: TimelineProvider.Entry = CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), reminders:[], events:[])
   
@@ -103,7 +106,7 @@ struct TextWidgetView : View {
       let lineHeight = height / ceil(height / minLineHeight)
       
       let fontSize = widthIsLimited ? 12.0 : (isHuge ? 32.0 : 16.0)
-      let keyline = fontSize * 2.25
+      let keyline = fontSize * (compactTime ? 2.25 : 2.5)
       
       let design = designForFontStyle(entry.configuration.fontStyle)
       var font = Font.system(size: fontSize, design: design).width(.standard)
@@ -163,12 +166,20 @@ struct TextWidgetView : View {
             
             let (hour, minute) = getComponents(item.date)
             
-            let timeString = HStack(alignment:.lastTextBaseline, spacing:0.5) {
-              Text(hour).font(font.monospacedDigit())
-                .kerning(-0.5)
-              Text(minute).font(smallFont.monospacedDigit())
-                .baselineOffset(fontSize * 0.24)
-                .kerning(-0.5)
+            let timeString = Group {
+              if (compactTime) {
+                HStack(alignment:.lastTextBaseline, spacing:0.5) {
+                  Text(hour).font(font.monospacedDigit())
+                    .kerning(-0.5)
+                  Text(minute).font(smallFont.monospacedDigit())
+                    .baselineOffset(fontSize * 0.24)
+                    .kerning(-0.5)
+                }
+              } else {
+                Text("\(hour):\(minute)")
+                  .font(font.monospacedDigit())
+                  .kerning(-0.5)
+              }
             }
               .foregroundColor(color ?? .secondary)
               .widgetAccentable(true)
@@ -179,16 +190,24 @@ struct TextWidgetView : View {
               let eventid = "x-apple-calevent://\(row.id.replacingOccurrences(of: ":", with: "/"))"
               let titleString = Link(destination: item.url ??
                                      URL(string:eventid)!) {
-                TokenizedTextView(text:(event.title))
+                Group {
+                  if (tokenize) {
+                    TokenizedTextView(text:event.title, font:font, tokenFont:font)
+                  } else {
+                    Text(event.title)
+                  }
+                }
+                
                   .font(font)
                   .lineLimit(1)
                   .foregroundColor(event.isAllDay ? .secondary : .primary)
                   .italic(event.isAllDay)
               }
+                .opacity(opacity)
                 .buttonStyle(.plain)
               
               // MARK: Events
-              HStack(alignment: .firstTextBaseline) {
+              HStack(alignment: .center) {
                 
                 let timeFirst = true
                 if (timeFirst) {
@@ -204,18 +223,22 @@ struct TextWidgetView : View {
                       .frame(minWidth:keyline, alignment: .trailing)
                   }
                   
-                  titleString
-                  if event.calendar != defaultCalendar,
-                     let initial = event.calendar?.title.first {
-                    Image(systemName: "\(String(initial).lowercased()).square")
-                      .imageScale(.small)
-                      .font(font)
-                      .foregroundColor(color ?? .red)
-                      .widgetAccentable()
+                  HStack(spacing:2) {
+                    titleString
+                    if event.calendar != defaultCalendar,
+                       let initial = event.calendar?.title.first {
+                      Image(systemName: "\(String(initial).lowercased()).circle")
+                        .imageScale(.small)
+                        .font(font)
+                        .foregroundColor(color ?? .red)
+                        .widgetAccentable()
+                        .layoutPriority(1)
+                    }
                   }
                 } else {
                   titleString
                     .layoutPriority(1)
+                  
                   Rectangle()
                     .fill(.secondary)
                     .opacity(0.5)
@@ -238,10 +261,11 @@ struct TextWidgetView : View {
                 //              }
                 
               }
-              //            .mask(LinearGradient(gradient: Gradient(colors: [.black, .black, .black, .clear]), startPoint:.leading, endPoint: .trailing))
+
+              
               .frame(maxWidth:.infinity, alignment: .bottomLeading)
               .frame(height: realLineHeight)
-              
+              .clipped()
               .opacity(opacity)
               
               
@@ -266,7 +290,13 @@ struct TextWidgetView : View {
                 .frame(minWidth:keyline, alignment: .trailing)
                 Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
                   
-                  TokenizedTextView(text:reminder.title ?? "No Title")
+                  Group {
+                    if (tokenize) {
+                      Text(reminder.title ?? "No Title")
+                    } else {
+                      Text(reminder.title)
+                    }
+                  }
                     .font(font)
                     .lineLimit(1)
                     .foregroundColor(.primary)
@@ -274,6 +304,7 @@ struct TextWidgetView : View {
                   //                    .frame(maxWidth: content == .reminders ? .infinity : nil, alignment: .leading)
                   
                 }
+
                 .buttonStyle(.plain)
                 
                 if let components = reminder.dueDateComponents {
@@ -314,7 +345,7 @@ struct TextWidgetView : View {
               .frame(maxWidth:.infinity, alignment: .leading)
               .frame(height: realLineHeight)
               
-              .opacity(opacity)
+              
             }
           } else {
             
@@ -345,7 +376,7 @@ struct TextWidgetView : View {
                       .textCase(.uppercase)
                       .kerning(1)
                       .monospaced()
-                      .foregroundColor(.secondary)
+                      .foregroundColor(.primary)
                       .widgetAccentable()
                       .frame(minWidth:widthIsLimited ? keyline : 0, alignment:.bottomTrailing)
                       .padding(.top, 8)
@@ -357,7 +388,7 @@ struct TextWidgetView : View {
                   widthIsLimited ? allDayItems : allDayItems
                   ForEach(visibleItems) { item in
                     if let title = item.item?.title {
-                      TokenizedTextView(text:title)
+                      Text(sanitizeAllDayEvents(title))
                         .font(smallFont)
                         .foregroundColor(Color.secondary)
                       
@@ -383,7 +414,7 @@ struct TextWidgetView : View {
           }
         }
         
-      }//.border(.gray)
+      }
       
       .frame(maxHeight: .infinity, alignment: .top)
       .frame(maxWidth: .infinity, alignment: .top)
@@ -392,7 +423,7 @@ struct TextWidgetView : View {
       .padding(.leading, insets.leading)
       .padding(.trailing, insets.trailing)
       
-    }//.border(.red)
+    }.clipped()
     .environment(\.colorScheme, isDark ?  .dark : .light)
     .background(widgetRenderingMode == .accented ? .clear : backgroundColor)//Color("WidgetBackground"))
   }
@@ -481,10 +512,16 @@ extension ConfigurationIntent {
     return intent
   }
 }
-
+//
 //#Preview(as: .systemSmall) {
-//  widgetReminders()
+//  TextWidgetView(entry: CalendarTimelineEntry(id: "Test"))
 //} timeline: {
-//  CalendarTimelineEntry(date: .now, configuration: .smiley, items:[])
-//  CalendarTimelineEntry(date: .now, configuration: .starEyes, items:[])
+//
+//  
+//CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), events: [
+//    EventEntry(id: "", title: "Today"),
+//    sampleEntry,
+//    sampleEntry
+//
+//  ])
 //}

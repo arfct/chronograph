@@ -20,6 +20,7 @@ struct ContentView: View {
   @State var remindersAccessGranted: Bool = false
   @State var eventsAccessGranted: Bool = false
   @State var reloadDate: Date = Date()
+  @State var showSettings: Bool = false
   
   private func checkRemindersAccess(interactive: Bool = false) async {
     do {
@@ -135,7 +136,32 @@ struct ContentView: View {
       }
       .frame(maxWidth: .infinity)
       .background(.regularMaterial)
+      .toolbar {
+        ToolbarItemGroup(placement: .primaryAction) {
+          Button(action: {
+            Task {
+              showSettings.toggle()
+            }
+          }) {
+            Label("Reminders", systemImage: "gear")
+          }
+          
+#if os(macOS)
+          .popover(isPresented: $showSettings) {
+            SettingsView().padding()
+          }
+#else
+          .sheet(isPresented: $showSettings) {
+            SettingsView()
+              .presentationDetents([.medium, .fraction(0.35)])
+          }
+#endif
+          
+        }
+      }
     }
+    
+    
   }
 }
 

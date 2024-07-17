@@ -110,3 +110,19 @@ func compareReminders(_ reminder1: EKReminder, _ reminder2: EKReminder) -> Bool 
 
     return false
 }
+
+
+func sanitizeAllDayEvents(_ input: String) -> String {
+  return replaceBirthdayString(input)
+}
+
+func replaceBirthdayString(_ input: String) -> String {
+  // Regular expression pattern to match both straight and curly quotes
+  let pattern = #"([\w\s]+)[’']s (\d+th )?Birthday"#
+  let regex = try! NSRegularExpression(pattern: pattern, options: [])
+  
+  let range = NSRange(location: 0, length: input.utf16.count)
+  let modifiedString = regex.stringByReplacingMatches(in: input, options: [], range: range, withTemplate: "🎂$1")
+  
+  return modifiedString
+}

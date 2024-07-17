@@ -17,6 +17,12 @@
 		2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
 		2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
 		2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
+		2C656A452C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
+		2C656A462C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
+		2C656A472C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
+		2C656A482C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
+		2C656A492C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
+		2C656A4A2C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
 		2C6BA2EE2C1B6A4F00F22C21 /* ChronographApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */; };
 		2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
 		2C6BA2F22C1B6A5000F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */; };
@@ -93,6 +99,21 @@
 		2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
 		2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
 		2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
+		2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
+		2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
+		2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
+		2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
+		2CCC62012C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
+		2CCC62022C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
+		2CDFDC792C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
+		2CDFDC7A2C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
+		2CDFDC7B2C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
+		2CDFDC7D2C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
+		2CDFDC7E2C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
+		2CDFDC7F2C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
+		2CDFDC802C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
+		2CDFDC812C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
+		2CDFDC822C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,6 +199,7 @@
 		2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
 		2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventKit+Async.swift"; sourceTree = "<group>"; };
+		2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
 		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographApp.swift; sourceTree = "<group>"; };
 		2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -217,6 +239,11 @@
 		2C72C07E2C3F857E00AB3A1A /* widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widget.entitlements; sourceTree = "<group>"; };
 		2C72C09A2C3F8D7F00AB3A1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreviewView.swift; sourceTree = "<group>"; };
+		2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientMaskedHStack.swift; sourceTree = "<group>"; };
+		2CDFDC772C457FF800C5DF11 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2CDFDC7C2C45827400C5DF11 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		2CDFDC8A2C46188100C5DF11 /* Chronograph-watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Chronograph-watch.entitlements"; sourceTree = "<group>"; };
+		2CDFDC8B2C46194600C5DF11 /* Widget-watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Widget-watch.entitlements"; sourceTree = "<group>"; };
 		2CF51FB92C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
 		2CF51FBA2C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -279,6 +306,9 @@
 				2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */,
 				2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */,
 				2C6BA3792C1C99C700F22C21 /* Formatters.swift */,
+				2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */,
+				2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */,
+				2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -294,10 +324,13 @@
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
+				2CDFDC8B2C46194600C5DF11 /* Widget-watch.entitlements */,
+				2CDFDC8A2C46188100C5DF11 /* Chronograph-watch.entitlements */,
+				2CDFDC782C457FF800C5DF11 /* Common */,
+				2C0EFA3C2C226BA200012A78 /* Extensions */,
 				2C6BA2EC2C1B6A4F00F22C21 /* iOS */,
 				2C6BA2FE2C1B6A5000F22C21 /* Watch */,
 				2C72C05F2C3F854800AB3A1A /* Mac */,
-				2C0EFA3C2C226BA200012A78 /* Extensions */,
 				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
 				2C6BA2EB2C1B6A4F00F22C21 /* Products */,
@@ -384,12 +417,6 @@
 			isa = PBXGroup;
 			children = (
 				2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */,
-				2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */,
-				2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */,
-				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
-				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
-				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
-				2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */,
 				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
 				2CF51FBA2C25B82700955300 /* Entitlements.entitlements */,
 				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
@@ -426,6 +453,20 @@
 				2C72C07E2C3F857E00AB3A1A /* widget.entitlements */,
 			);
 			path = Widget;
+			sourceTree = "<group>";
+		};
+		2CDFDC782C457FF800C5DF11 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */,
+				2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */,
+				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
+				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
+				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
+				2CDFDC772C457FF800C5DF11 /* SettingsView.swift */,
+				2CDFDC7C2C45827400C5DF11 /* Keys.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -656,16 +697,20 @@
 			files = (
 				2C0EA2DF2C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA36F2C1C8B3700F22C21 /* EventEntries.swift in Sources */,
+				2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */,
 				2CB314F62C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
+				2CDFDC7A2C457FF800C5DF11 /* SettingsView.swift in Sources */,
 				2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
 				2CB314FC2C2475AE0064BF6C /* Color+Utils.swift in Sources */,
 				2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
+				2CDFDC822C45827600C5DF11 /* Keys.swift in Sources */,
 				2C6BA37C2C1C99F900F22C21 /* Formatters.swift in Sources */,
 				2C6BA2EE2C1B6A4F00F22C21 /* ChronographApp.swift in Sources */,
+				2C656A4A2C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,16 +720,20 @@
 			files = (
 				2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2C6BA3702C1C8B3700F22C21 /* EventEntries.swift in Sources */,
+				2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */,
 				2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
+				2CDFDC792C457FF800C5DF11 /* SettingsView.swift in Sources */,
 				2CB314F72C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
 				2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */,
 				2C6BA3002C1B6A5000F22C21 /* ChronographWatchApp.swift in Sources */,
+				2CDFDC7D2C45827600C5DF11 /* Keys.swift in Sources */,
 				2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
 				2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */,
+				2C656A462C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -694,8 +743,11 @@
 			files = (
 				2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */,
+				2C656A492C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 				2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */,
+				2CDFDC7E2C45827600C5DF11 /* Keys.swift in Sources */,
+				2CCC62022C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3482C1B6F6900F22C21 /* ChronographWidget.swift in Sources */,
 				2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */,
@@ -711,8 +763,11 @@
 			files = (
 				2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */,
+				2C656A452C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 				2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */,
+				2CDFDC812C45827600C5DF11 /* Keys.swift in Sources */,
+				2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
 				2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3392C1B6ABB00F22C21 /* ChronographWidget.swift in Sources */,
@@ -728,16 +783,20 @@
 			files = (
 				2C72C0862C3F86FC00AB3A1A /* ContentView.swift in Sources */,
 				2C72C0982C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
+				2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
 				2C72C0892C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
 				2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
 				2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */,
 				2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */,
+				2CDFDC7B2C457FF800C5DF11 /* SettingsView.swift in Sources */,
 				2C72C08E2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C72C08B2C3F874000AB3A1A /* WidgetPreviewView.swift in Sources */,
 				2C72C0872C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
+				2CDFDC7F2C45827600C5DF11 /* Keys.swift in Sources */,
 				2C72C08C2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
 				2C72C0922C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
+				2C656A472C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -747,8 +806,11 @@
 			files = (
 				2C72C0992C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
 				2C72C0972C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
+				2C656A482C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 				2C72C0952C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
 				2C72C09B2C3F8FEB00AB3A1A /* Bundle.swift in Sources */,
+				2CDFDC802C45827600C5DF11 /* Keys.swift in Sources */,
+				2CCC62012C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C72C0912C3F87BC00AB3A1A /* Formatters.swift in Sources */,
 				2C72C08A2C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
 				2C72C08F2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
@@ -904,6 +966,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Chronograph-watch.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Watch/Preview Content\"";
@@ -936,6 +999,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Chronograph-watch.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Watch/Preview Content\"";
@@ -1048,6 +1112,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "Widget-watch.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
@@ -1079,6 +1144,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = "Widget-watch.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
@@ -1111,7 +1177,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = Entitlements.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/Widget/Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
@@ -1145,7 +1211,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CODE_SIGN_ENTITLEMENTS = Entitlements.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/Widget/Entitlements.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A7X888RRVJ;
