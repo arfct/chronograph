@@ -6,7 +6,9 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.page.chronograph</string>
+		<string>$(TeamIdentifierPrefix)chronograph.page</string>
 	</array>
+	<key>com.apple.security.personal-information.calendars</key>
+	<true/>
 </dict>
 </plist>

@@ -20,7 +20,9 @@ struct TextWidgetView : View {
   @AppStorage("state") private var state = false
   @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
-
+  
+  
+  @State private var visibleRows: Int = 100
   
   var entry: TimelineProvider.Entry = CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), reminders:[], events:[])
   
@@ -55,12 +57,14 @@ struct TextWidgetView : View {
   
   var body: some View {
     
+    let now = Date()
+    
     let backgroundColor = entry.configuration.backgroundColor.count > 0 ?
     Color.withHex(entry.configuration.backgroundColor) : .clear;
     
     let accentColor = entry.configuration.accentColor.count > 0 ?
     Color.withHex(entry.configuration.accentColor) : .secondary;
-
+    
 #if os(watchOS)
     let accessory = true
     let heightIsLimited = true
@@ -87,20 +91,20 @@ struct TextWidgetView : View {
     let defaultRemindersList = EKEventStore().defaultCalendarForNewReminders()
     let content = entry.configuration.content
     
-    GeometryReader { frame in
+    GeometryReader { container in
       
-      #if os(macOS)
+#if os(macOS)
       let fullBleed = !showsWidgetContainerBackground ? true : entry.configuration.fullBleed
-      #else
+#else
       let fullBleed =
       widgetFamily == .accessoryRectangular  ||
       !showsWidgetContainerBackground ? true : entry.configuration.fullBleed
-      #endif
+#endif
       
       //      let isStandBy = !showsWidgetContainerBackground && (widgetFamily != .accessoryRectangular)
       let hPadding = fullBleed ? margins.top / 3 : margins.leading
       let vPadding = accessory ? margins.top / 3 : margins.top / 2
-      let height = frame.size.height - vPadding * 2
+      let height = container.size.height - vPadding * 2
       
       let minLineHeight = widthIsLimited ? 18.0 : isHuge ? 48.0 : 24.0
       let lineHeight = height / ceil(height / minLineHeight)
@@ -128,7 +132,7 @@ struct TextWidgetView : View {
         let _ = font = font.width(.standard)
       }
       
-      let visibleItemCount = frame.size.height > 0 ? Int((frame.size.height - vPadding) / lineHeight) : 4
+      let visibleItemCount = visibleRows // container.size.height > 0 ? Int((container.size.height - vPadding) / lineHeight) : 4
       
       let realLineHeight = lineHeight //(frame.size.height - verticalPadding) / CGFloat(visibleItemCount)
       
@@ -160,7 +164,8 @@ struct TextWidgetView : View {
           ? cgColor != nil ? Color(cgColor: cgColor!).forScheme(scheme: colorScheme) : nil
           : accentColor
           
-          let opacity = max(0.67, pow(1.0 - Double(row.date?.timeIntervalSince(entry.date) ?? 0.0) / 60.0 / 60.0 / 24.0, 0.33))
+          let opacity = max(0.66, pow(1.0 - Double(row.startDate?.timeIntervalSince(entry.date) ?? 0.0) / 60.0 / 60.0 / 4.0, 0.33))
+          
           
           if let item = row.item {
             
@@ -198,12 +203,12 @@ struct TextWidgetView : View {
                   }
                 }
                 
-                  .font(font)
-                  .lineLimit(1)
-                  .foregroundColor(event.isAllDay ? .secondary : .primary)
-                  .italic(event.isAllDay)
+                .font(font)
+                .lineLimit(1)
+                .foregroundColor(event.isAllDay ? .secondary : .primary)
+                .italic(event.isAllDay)
               }
-                .opacity(opacity)
+              
                 .buttonStyle(.plain)
               
               // MARK: Events
@@ -261,33 +266,90 @@ struct TextWidgetView : View {
                 //              }
                 
               }
-
+              
+              .opacity(opacity)
+              .background(GeometryReader {
+                Color.clear.preference(key: RowHeightPreferenceKey.self, value: [$0.frame(in: .named("stack")).maxY])
+              })
+              
               
               .frame(maxWidth:.infinity, alignment: .bottomLeading)
               .frame(height: realLineHeight)
               .clipped()
-              .opacity(opacity)
               
+              let isHappening = row.isHappening()
+              let isSoon = row.isSoon()
               
+              if ((isHappening || isSoon)
+                  && (row.locations != nil || event.url != nil || row.documents != nil)
+              ) {
+                HStack(alignment: .top) { // Details view
+                  
+                  VStack(alignment: .trailing) {
+                    if let url = row.meetingURL {
+                      Link(destination: url) {
+                        Image(systemName: "video.fill")
+                          
+                          .font(.system(size: 16))
+                      }
+                    }
+                  }
+                  .frame(minWidth:keyline, alignment:.trailing)
+                  
+                  VStack(alignment: .leading, spacing:0) {
+                    Group {
+   
+                      if let locations = row.locations, locations.count > 0 {
+                        Text("\(locations.joined(separator: ", "))")
+                          .foregroundStyle(.secondary)
+                          
+                          .italic()
+                      }
+                     
+                      if let documents = row.documents {
+                        ForEach(documents, id: \.self) { document in
+                          if let url = document.url {
+                            Link(destination: url, label: {
+                              HStack {
+                                Image(systemName: "document")
+                                if let prefix = document.prefix { Text(prefix) }
+                                Text(document.displayName).foregroundStyle(.link)
+                                  
+                              }
+                            }).foregroundStyle(.primary).padding(5)
+                            
+                              
+                          }
+                        }
+                      }
+//                      if let notes = row.notes{
+//                        Text(notes)
+//                          .multilineTextAlignment(.leading)
+//                          .foregroundStyle(.secondary)
+//                      }
+                    }
+                    .font(smallFont)
+                    .frame(maxWidth:.infinity, alignment: .leading)
+                      .opacity(opacity)
+                  }
+                  
+                }.frame(maxWidth:.infinity, alignment:.leading)
+              }
             } else if let reminder = item as? EKReminder { // MARK: Reminders
               
               
               // TODO: For some reason calendar is nil here for reminders
               
               HStack(alignment:.center) {
-                //                if content == .calendar {
-                //                  timeString
-                //                    .frame(minWidth:keyline, alignment: .trailing)
-                //                }
                 HStack() {
                   Image(systemName: "circle")
                     .imageScale(.small)
                     .font(font)
                     .foregroundColor(color ?? .secondary)
                     .widgetAccentable()
-                  
                 }
                 .frame(minWidth:keyline, alignment: .trailing)
+                
                 Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
                   
                   Group {
@@ -297,14 +359,13 @@ struct TextWidgetView : View {
                       Text(reminder.title)
                     }
                   }
-                    .font(font)
-                    .lineLimit(1)
-                    .foregroundColor(.primary)
-                    .multilineTextAlignment(.leading)
+                  .font(font)
+                  .lineLimit(1)
+                  .foregroundColor(.primary)
+                  .multilineTextAlignment(.leading)
                   //                    .frame(maxWidth: content == .reminders ? .infinity : nil, alignment: .leading)
                   
                 }
-
                 .buttonStyle(.plain)
                 
                 if let components = reminder.dueDateComponents {
@@ -344,6 +405,11 @@ struct TextWidgetView : View {
               }
               .frame(maxWidth:.infinity, alignment: .leading)
               .frame(height: realLineHeight)
+              
+              .opacity(opacity)
+              .background(GeometryReader {
+                Color.clear.preference(key: RowHeightPreferenceKey.self, value: [$0.frame(in: .named("stack")).maxY])
+              })
               
               
             }
@@ -405,15 +471,23 @@ struct TextWidgetView : View {
               }
               
             }
-            .frame(maxWidth:.infinity, alignment: .bottomLeading)
-            .frame(height: realLineHeight)
             
             .opacity(opacity)
+            .frame(maxWidth:.infinity,
+                   maxHeight: realLineHeight * (heightIsLimited ? 1.0 : 1.5), alignment: .bottomLeading)
+            
+            .background(GeometryReader {
+              Color.clear.preference(key: RowHeightPreferenceKey.self, value: [$0.frame(in: .named("stack")).maxY])
+            })
             
             
           }
+          
+          
         }
         
+      }        .onPreferenceChange(RowHeightPreferenceKey.self) { heights in
+        updateVisibleRows(with: heights, containerHeight: container.size.height)
       }
       
       .frame(maxHeight: .infinity, alignment: .top)
@@ -423,12 +497,30 @@ struct TextWidgetView : View {
       .padding(.leading, insets.leading)
       .padding(.trailing, insets.trailing)
       
+      .coordinateSpace(name: "stack")
     }.clipped()
-    .environment(\.colorScheme, isDark ?  .dark : .light)
-    .background(widgetRenderingMode == .accented ? .clear : backgroundColor)//Color("WidgetBackground"))
+      .environment(\.colorScheme, isDark ?  .dark : .light)
+      .background(widgetRenderingMode == .accented ? .clear : backgroundColor)//Color("WidgetBackground"))
   }
+  
+  
+  private func updateVisibleRows(with rowMaxY: [CGFloat], containerHeight: CGFloat) {
+    let visibleCount = rowMaxY.indices.last { index in
+      let maxY = rowMaxY[index]
+      return maxY <= containerHeight
+    } ?? 0
+    
+    visibleRows = visibleCount + 1
+  }
+  
 }
 
+struct RowHeightPreferenceKey: PreferenceKey {
+  static var defaultValue: [CGFloat] = []
+  static func reduce(value: inout [CGFloat], nextValue: () -> [CGFloat]) {
+    value.append(contentsOf: nextValue())
+  }
+}
 
 //
 //struct widgetReminders: Widget {
@@ -495,12 +587,11 @@ struct ChronographWidget: Widget {
     ])
 #endif
     
-    
   }
 }
 
 extension ConfigurationIntent {
-  fileprivate static var smiley: ConfigurationIntent {
+  fileprivate static var slmiley: ConfigurationIntent {
     let intent = ConfigurationIntent()
     intent.fullBleed = false
     return intent
@@ -512,16 +603,11 @@ extension ConfigurationIntent {
     return intent
   }
 }
+
 //
-//#Preview(as: .systemSmall) {
-//  TextWidgetView(entry: CalendarTimelineEntry(id: "Test"))
-//} timeline: {
-//
-//  
-//CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), events: [
-//    EventEntry(id: "", title: "Today"),
-//    sampleEntry,
-//    sampleEntry
-//
-//  ])
+//struct ChronographWidget_Previews: PreviewProvider {
+//  static var previews: some View {
+//    TextWidgetView(entry: CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), reminders:[], events:[]))
+//      .previewContext(WidgetPreviewContext(family: .systemSmall))
+//  }
 //}
