@@ -7,6 +7,7 @@
 
 import WidgetKit
 import AppIntents
+import SwiftUI
 
 
 enum FontStyle: String, AppEnum {
@@ -20,6 +21,26 @@ enum FontStyle: String, AppEnum {
         .condensed: "Condensed",
         .compressed: "Compressed",
     ]
+}
+
+enum FontSize: String, AppEnum {
+    case tiny, small, medium, large, huge
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Font Size"
+  static var caseDisplayRepresentations: [FontSize : DisplayRepresentation] = [
+    .tiny: "Tiny",
+    .small: "Small",
+    .medium: "Medium",
+    .large: "Large",
+    .huge: "Huge",
+  ]
+  
+  static var caseSize: [FontSize : UIFont.TextStyle] = [
+    .tiny: .caption2,
+    .small: .footnote,
+    .medium: .body,
+    .large: .title3,
+    .huge: .title1,
+  ]
 }
 
 enum DisplayedContent: String, AppEnum {
@@ -47,6 +68,9 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
 
   @Parameter(title: "Font Style", default: .normal)
    var fontStyle: FontStyle
+  
+  @Parameter(title: "Font Size", default: .medium)
+   var fontSize: FontSize
   
   @Parameter(title: "Background (Hex)", default: "")
   var backgroundColor: String
@@ -109,6 +133,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$content
           \.$calendars
           \.$fontStyle
+          \.$fontSize
           \.$backgroundColor
           \.$accentColor
           \.$showColors
@@ -123,6 +148,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$calendars
 //          \.$reminders
           \.$fontStyle
+          \.$fontSize
           \.$backgroundColor
           \.$accentColor
           \.$showColors
@@ -135,6 +161,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$content
 //          \.$reminders
           \.$fontStyle
+          \.$fontSize
           \.$backgroundColor
           \.$accentColor
           \.$fullBleed

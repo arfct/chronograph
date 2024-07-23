@@ -1,6 +1,7 @@
 import WidgetKit
 import SwiftUI
 import EventKit
+import Contacts
 
 struct CalendarTimelineEntry: TimelineEntry {
   let date: Date
@@ -165,7 +166,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     var headerIndex = 0
     
     let renderDate = now
-    calendarEntries.append(EventEntry(type:"today", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: []))
+    calendarEntries.append(EventEntry(type:"today", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: [],  children: []))
     
     for (_, item) in calendarItems.enumerated() {
       
@@ -174,14 +175,62 @@ struct TimelineProvider: AppIntentTimelineProvider {
       
       // Insert header row on day changes
       if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
+        
+        let priorHeader =  calendarEntries[headerIndex]
+        if priorHeader.children?.count ?? 0 == 0 {
+          calendarEntries.remove(at: headerIndex)
+        }
+        
         let title = calendar.isDateInTomorrow(item.date) ? relativeDateFormatterDay.string(from: item.date) : dateFormatter.string(from: item.date)
         let header = EventEntry(type: "header", title: title,
-                                startDate:calendar.startOfDay(for: item.date), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [],
+                                startDate:calendar.startOfDay(for: item.date), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [], children: [],
                                 removeIfOrphaned: true)
         headerIndex = calendarEntries.count
         calendarEntries.append(header)
+      } else {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.maximumUnitCount = 2
+        formatter.allowsFractionalUnits = true
+        formatter.includesApproximationPhrase = false
+        
+        if let thisStart = item.start, let priorEnd = previousItem.end {
+          let original = thisStart.timeIntervalSince(priorEnd)
+          let rounded = TimeInterval((original / 900.0).rounded(.toNearestOrEven) * 900.0)
+          print(rounded)
+          
+          if let duration = formatter.string(from: rounded) {
+            
+            // TODO: Hash the strategy off the timestamp
+            if rounded >= 30 * 60, let strategy = obliqueStrategies.randomElement() {
+              
+              let free = EventEntry(type: "free", title: "\(duration) free - \(strategy)",
+                                    startDate:priorEnd, endDate:thisDate)
+              calendarEntries.append(free)
+            }
+          }
+        }
       }
       
+      
+      // TODO: Handle conflicts
+      //      if ((nextEvent = events[i + 1]) && !nextEvent.ignore) {
+      //        if (!e.allday && !nextEvent.allday)
+      //          var nextStart = new Date(nextEvent.start.dateTime);
+      //        var nextEnd = new Date(nextEvent.end.dateTime);
+      //        if (nextStart < end) {
+      //          if (e.conflict == undefined) {
+      //            e.firstConflict = true;
+      //          }
+      //          e.conflict = true;
+      //          nextEvent.conflict = true;
+      //        }
+      //
+      //        if (start - nextStart == 0) {
+      //          nextEvent.startConflict = true;
+      //        }
+        
       var eventEntry = EventEntry(id: item.calendarItemIdentifier, startDate:item.start, endDate:item.end, item: item)
       if let event = item as? EKEvent {
         
@@ -194,11 +243,13 @@ struct TimelineProvider: AppIntentTimelineProvider {
         }
         
         if event.isAllDay {
-          if calendar.isDateInToday(event.startDate) {
+          if calendar.isDateInToday(event.startDate) && renderDate.advanced(by: 60 * 60 * 6) > endDate {
             calendarEntries[headerIndex].allDayItems?.insert(eventEntry, at:0)
+            calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
             calendarEntries[headerIndex].removeIfOrphaned = false
           }
         } else {
+          calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
           let fetchDetails = event.startDate < calendar.date(byAdding: .hour, value: 4, to: renderDate)!
           if (fetchDetails) {
             if let location = event.location {
@@ -206,44 +257,70 @@ struct TimelineProvider: AppIntentTimelineProvider {
               let urls = locations.filter { $0.hasPrefix("http://") || $0.hasPrefix("https://") }
               let remainder = locations.filter { !urls.contains($0) }.map({clean(location:$0)})
               
-              print("Meeting", locations, urls, remainder)
+              
               if let string = urls.first, let url = URL(string:string) {
-                eventEntry.meetingURL = url
+                eventEntry.meeting =  EventAttachment(url: url.absoluteString, title: "Zoom")
               }
               eventEntry.locations = remainder
             }
-            print("Event Notes", event.notes)
-            if let notes = event.notes,
+            
+            let contactStore = CNContactStore()
+            if event.hasAttendees, let attendees = event.attendees {
+              //              attendees.forEach { person in
+              //                let matches = try? contactStore.unifiedContacts(matching: person.contactPredicate, keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor])
+              //              }
+              //              print("attendees", attendees.compactMap({ person in
+              //                if person.isCurrentUser { return nil }
+              //              }))
+            }
+            
+            if event.hasNotes, let notes = event.notes,
                let firstNote = notes.split(separator: CALENDAR_SEPARATOR).first
             {
               
-
+              if eventEntry.meeting == nil {
+                eventEntry.meeting = extractMeetingUrls(from: notes).first
+              }
+              
+              
+              
               let note = removeMeetingMetadata(from: String(firstNote))
               
               
-              var (docs, noteWithoutDocs) = extractDocumentURLs(from: note)
+              var (docs, noteWithoutDocs) = extractAttachments(from: note)
               
               docs = docs.filter({ !$0.urlString.contains("zoom.us")})
               
-              if (eventEntry.meetingURL == nil) {
+              if (eventEntry.meeting == nil) {
                 if let meeting = docs.filter({ $0.urlString.contains("meet.google.com")}).first {
-                  eventEntry.meetingURL = meeting.url
+                  eventEntry.meeting = meeting
                 }
               }
               
               noteWithoutDocs = noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines)
-              eventEntry.documents = docs
+              
+              
+              
+              eventEntry.attachments = docs
               
               if (firstNote.contains("</")) {
                 eventEntry.notes = attributedString(from:noteWithoutDocs)
               } else {
-                eventEntry.notes = AttributedString(noteWithoutDocs)
+                eventEntry.notes = AttributedString(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))
               }
               
               print("\n===\(event.title ?? "UNTITLED") ===")
               if (docs.count > 0) { print("Docs \(docs.map({ "\($0.title) <\($0.urlString)>"}))")}
               if (noteWithoutDocs.count > 0) { print("Note:[\(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))]\n \(note)")}
               
+            }
+            
+            
+            if let url = event.url {
+              if eventEntry.attachments == nil {
+                eventEntry.attachments = []
+              }
+              eventEntry.attachments?.append(EventAttachment(url: url.absoluteString))
             }
             
           }
@@ -259,30 +336,16 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
     
     
+#if os(iOS) || os(watchOS)
+    if context?.family == .accessoryRectangular
+        && calendarEntries.first?.allDayItems?.count == 0 {
+      calendarEntries.removeFirst()
+    }
+#endif
     
     for minuteOffset in 0 ..< 15 {
       let renderDate = Calendar.current.date(byAdding: .minute, value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: now)!
       let entryDate = Calendar.current.date(byAdding: debug ? .second : .minute, value: minuteOffset, to: now)!
-      
-      var filteredCalendarEntries: [EventEntry] = []
-      
-      calendarEntries.forEach { eventEntry in
-        var newEntry = eventEntry
-        if let event = eventEntry.item {
-          if event.valid(at: renderDate) {
-            
-//            newEntry.isHappening = renderDate >= event.start ?? .distantFuture && now <= event.end ?? .distantFuture
-//            newEntry.isNext = renderDate >= calendar.date(byAdding: .hour, value: -1, to: event.start ?? .distantFuture)!
-          }
-          filteredCalendarEntries.append(eventEntry)
-        }
-        
-      }
-      
-      if calendarEntries.first?.allDayItems?.count == 0 {
-        calendarEntries.removeFirst()
-      }
-      
       
       
       let timelineEntry = CalendarTimelineEntry(date: entryDate,

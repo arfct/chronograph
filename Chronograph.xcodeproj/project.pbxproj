@@ -13,6 +13,12 @@
 		2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
 		2C0EA2E52C272A5800177026 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */; };
 		2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
+		2C1573F12C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
+		2C1573F22C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
+		2C1573F32C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
+		2C1573F42C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
+		2C1573F52C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
+		2C1573F62C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
 		2C24A5322C4A9F100000EE32 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5312C4A9F100000EE32 /* StatusBarController.swift */; };
 		2C24A53B2C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
 		2C24A53C2C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
@@ -30,6 +36,24 @@
 		2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
 		2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
 		2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
+		2C5A1D212C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
+		2C5A1D222C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
+		2C5A1D232C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
+		2C5A1D242C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
+		2C5A1D252C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
+		2C5A1D262C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
+		2C5A1D282C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
+		2C5A1D292C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
+		2C5A1D2A2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
+		2C5A1D2B2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
+		2C5A1D2C2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
+		2C5A1D2D2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
+		2C5A1D2F2C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
+		2C5A1D302C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
+		2C5A1D312C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
+		2C5A1D322C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
+		2C5A1D332C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
+		2C5A1D342C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
 		2C656A452C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
 		2C656A462C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
 		2C656A472C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
@@ -124,6 +148,7 @@
 		2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC62012C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC62022C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
+		2CDC5ABE2C4C779A008B3139 /* Colorful in Frameworks */ = {isa = PBXBuildFile; productRef = 2CDC5ABD2C4C779A008B3139 /* Colorful */; };
 		2CDFDC792C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
 		2CDFDC7A2C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
 		2CDFDC7B2C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
@@ -217,10 +242,14 @@
 		2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTimeline.swift; sourceTree = "<group>"; };
 		2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
+		2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacePile.swift; sourceTree = "<group>"; };
 		2C24A5312C4A9F100000EE32 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		2C24A53A2C4AA20D0000EE32 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		2C24A5412C4AAD990000EE32 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventKit+Async.swift"; sourceTree = "<group>"; };
+		2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
+		2C5A1D272C4F7A19002A1586 /* Font+Features.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Features.swift"; sourceTree = "<group>"; };
+		2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObliqueStrategies.swift; sourceTree = "<group>"; };
 		2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
 		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographApp.swift; sourceTree = "<group>"; };
@@ -308,6 +337,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CDC5ABE2C4C779A008B3139 /* Colorful in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +358,7 @@
 			children = (
 				2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */,
 				2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */,
+				2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */,
 				2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */,
 				2C6BA3792C1C99C700F22C21 /* Formatters.swift */,
 				2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */,
@@ -486,12 +517,15 @@
 				2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */,
 				2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */,
 				2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */,
+				2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */,
 				2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */,
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
 				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
 				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
 				2CDFDC772C457FF800C5DF11 /* SettingsView.swift */,
 				2CDFDC7C2C45827400C5DF11 /* Keys.swift */,
+				2C5A1D272C4F7A19002A1586 /* Font+Features.swift */,
+				2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -648,6 +682,9 @@
 				Base,
 			);
 			mainGroup = 2C6BA2E12C1B6A4F00F22C21;
+			packageReferences = (
+				2CDC5ABC2C4C779A008B3139 /* XCRemoteSwiftPackageReference "swift-colorful" */,
+			);
 			productRefGroup = 2C6BA2EB2C1B6A4F00F22C21 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -734,12 +771,16 @@
 				2C8B68C72C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2CDFDC7A2C457FF800C5DF11 /* SettingsView.swift in Sources */,
 				2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
+				2C5A1D222C4C793F002A1586 /* ColorGenerator.swift in Sources */,
+				2C5A1D282C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2CB314FC2C2475AE0064BF6C /* Color+Utils.swift in Sources */,
 				2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2CDFDC822C45827600C5DF11 /* Keys.swift in Sources */,
 				2C6BA37C2C1C99F900F22C21 /* Formatters.swift in Sources */,
 				2C6BA2EE2C1B6A4F00F22C21 /* ChronographApp.swift in Sources */,
 				2C24A5472C4AAD990000EE32 /* LocationManager.swift in Sources */,
+				2C5A1D2F2C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
+				2C1573F52C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 				2C656A4A2C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -760,12 +801,16 @@
 				2C8B68C82C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2CDFDC792C457FF800C5DF11 /* SettingsView.swift in Sources */,
 				2CB314F72C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
+				2C5A1D212C4C793F002A1586 /* ColorGenerator.swift in Sources */,
+				2C5A1D2B2C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */,
 				2C6BA3002C1B6A5000F22C21 /* ChronographWatchApp.swift in Sources */,
 				2CDFDC7D2C45827600C5DF11 /* Keys.swift in Sources */,
 				2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
 				2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */,
 				2C24A5452C4AAD990000EE32 /* LocationManager.swift in Sources */,
+				2C5A1D322C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
+				2C1573F12C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 				2C656A462C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -777,6 +822,7 @@
 				2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */,
 				2C656A492C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
+				2C5A1D2A2C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C24A5462C4AAD990000EE32 /* LocationManager.swift in Sources */,
 				2C24A53D2C4AA20D0000EE32 /* Weather.swift in Sources */,
@@ -787,9 +833,12 @@
 				2C6BA3482C1B6F6900F22C21 /* ChronographWidget.swift in Sources */,
 				2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */,
 				2C72C0592C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
+				2C5A1D312C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
 				2C6BA36D2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
 				2C6BA37B2C1C99C900F22C21 /* Formatters.swift in Sources */,
+				2C5A1D252C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68C92C49C0720059E0D2 /* StringProcessing.swift in Sources */,
+				2C1573F22C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,6 +849,7 @@
 				2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */,
 				2C656A452C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
+				2C5A1D292C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C24A5422C4AAD990000EE32 /* LocationManager.swift in Sources */,
 				2C24A5402C4AA20D0000EE32 /* Weather.swift in Sources */,
@@ -810,9 +860,12 @@
 				2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3392C1B6ABB00F22C21 /* ChronographWidget.swift in Sources */,
 				2C72C0582C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
+				2C5A1D332C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
 				2C6BA37A2C1C99C900F22C21 /* Formatters.swift in Sources */,
 				2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */,
+				2C5A1D242C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68CC2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
+				2C1573F32C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -825,6 +878,7 @@
 				2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
 				2C72C0892C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
+				2C1573F42C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 				2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
 				2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */,
 				2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */,
@@ -833,8 +887,11 @@
 				2C72C08E2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C72C08B2C3F874000AB3A1A /* WidgetPreviewView.swift in Sources */,
 				2C24A5442C4AAD990000EE32 /* LocationManager.swift in Sources */,
+				2C5A1D342C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
 				2C72C0872C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
+				2C5A1D232C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C24A5322C4A9F100000EE32 /* StatusBarController.swift in Sources */,
+				2C5A1D2D2C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2CDFDC7F2C45827600C5DF11 /* Keys.swift in Sources */,
 				2C24A53C2C4AA20D0000EE32 /* Weather.swift in Sources */,
 				2C72C08C2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
@@ -850,6 +907,7 @@
 				2C72C0992C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
 				2C72C0972C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
 				2C656A482C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
+				2C5A1D2C2C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2C72C0952C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
 				2C24A5432C4AAD990000EE32 /* LocationManager.swift in Sources */,
 				2C24A53E2C4AA20D0000EE32 /* Weather.swift in Sources */,
@@ -860,9 +918,12 @@
 				2C72C08A2C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
 				2C72C08F2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C72C0882C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
+				2C5A1D302C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
 				2C72C08D2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
 				2C72C0932C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
+				2C5A1D262C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68CB2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
+				2C1573F62C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1021,6 +1082,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
+				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.blacktree.txet;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -1054,6 +1116,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
+				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.blacktree.txet;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -1088,6 +1151,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
+				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1127,6 +1191,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
+				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1302,6 +1367,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1333,6 +1401,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1476,6 +1547,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2CDC5ABC2C4C779A008B3139 /* XCRemoteSwiftPackageReference "swift-colorful" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mojzesh/swift-colorful.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2CDC5ABD2C4C779A008B3139 /* Colorful */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CDC5ABC2C4C779A008B3139 /* XCRemoteSwiftPackageReference "swift-colorful" */;
+			productName = Colorful;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2C6BA2E22C1B6A4F00F22C21 /* Project object */;
 }

@@ -3,7 +3,14 @@ import EventKit
 import Swift
 #if os(macOS)
   import Cocoa
-  typealias UIColor = NSColor
+typealias UIColor = NSColor
+typealias UIFont = NSFont
+
+extension NSFont {
+  var lineHeight: CGFloat {
+    return NSLayoutManager().defaultLineHeight(for: self)
+  }
+}
 #endif
 
 func attributedString(from html: String) -> AttributedString? {
@@ -25,12 +32,13 @@ func attributedString(from html: String) -> AttributedString? {
   }
 }
 
-func extractMeetingUrls(from text: String) -> [URL] {
+func extractMeetingUrls(from text: String) -> [EventAttachment] {
   let zoomRegexPattern = #"https://(?:\w+\.)?zoom\.us/j/\d+\?pwd=\w+"#
   let googleMeetRegexPattern = #"https://meet\.google\.com/[a-z]{3}-[a-z]{4}-[a-z]{3}"#
-  var meetingUrls: [URL] = []
+  let facetimeRegexPattern = #"https://facetime.apple.com/join#[^\s\">]+"#
+  var meetings: [EventAttachment] = []
 
-  let regexPatterns = [zoomRegexPattern, googleMeetRegexPattern]
+  let regexPatterns = [zoomRegexPattern, googleMeetRegexPattern, facetimeRegexPattern]
 
   for pattern in regexPatterns {
     do {
@@ -41,7 +49,7 @@ func extractMeetingUrls(from text: String) -> [URL] {
         if let range = Range(match.range, in: text) {
           let urlString = String(text[range])
           if let url = URL(string: urlString) {
-            meetingUrls.append(url)
+            meetings.append(EventAttachment(url: urlString))
           }
         }
       }
@@ -50,7 +58,7 @@ func extractMeetingUrls(from text: String) -> [URL] {
     }
   }
 
-  return meetingUrls
+  return meetings
 }
 
 func splitAndTrim(_ input: String, delimiter: Character = ",") -> [String] {
@@ -95,7 +103,7 @@ func cleanPrefix(_ prefix: String) -> String {
 }
 
 
-func extractDocumentURLs(from html: String) -> ([EventDocument], String) {
+func extractAttachments(from html: String) -> ([EventAttachment], String) {
   do {
     
     // TODO: Consider <p> when doing this
@@ -109,7 +117,7 @@ func extractDocumentURLs(from html: String) -> ([EventDocument], String) {
     )
 
     var urls: [String] = []
-    var results: [EventDocument] = []
+    var results: [EventAttachment] = []
     var rangesToRemove: [NSRange] = []
 
     // Extract URLs from anchor tags
@@ -130,7 +138,7 @@ func extractDocumentURLs(from html: String) -> ([EventDocument], String) {
         continue
       }
       urls.append(url)
-      results.append(EventDocument(url: url, title: title, prefix: prefix))
+      results.append(EventAttachment(url: url, title: title, prefix: prefix))
       rangesToRemove.append(match.range)
     }
 
@@ -148,7 +156,7 @@ func extractDocumentURLs(from html: String) -> ([EventDocument], String) {
       let url = String(html[urlRange])
       if !urls.contains(url) {
         urls.append(url)
-        results.append(EventDocument(url: url, title: nil, prefix: prefix))
+        results.append(EventAttachment(url: url, title: nil, prefix: prefix))
         rangesToRemove.append(match.range)
       }
     }
@@ -173,7 +181,8 @@ func extractDocumentURLs(from html: String) -> ([EventDocument], String) {
 
 let COMMON_MEETING_SUFFIXES = [
   "Join Zoom Meeting",
-  "Join Google Meet",
+  "Join with Google Meet",
+  "----( Video Call )----",
   ZOOM_SEPARATOR
 ]
 
@@ -200,20 +209,28 @@ func removeMeetingMetadata(from text: String, containing suffixes: [String] = CO
 
 
 
-func extractTitleFromURL(from url: String) -> String? {
+func extractTitleFromURL(from urlString: String) -> String? {
   let pattern = "https://paper.dropbox.com/doc/([^\\-]+)--"
   
   do {
     let regex = try NSRegularExpression(pattern: pattern, options: [])
-    let results = regex.matches(in: url, options: [], range: NSRange(url.startIndex..., in: url))
+    let results = regex.matches(in: urlString, options: [], range: NSRange(urlString.startIndex..., in: urlString))
     
     if let match = results.first {
-      if let range = Range(match.range(at: 1), in: url) {
-        return String(url[range]).replacingOccurrences(of: "-", with: " ")
+      if let range = Range(match.range(at: 1), in: urlString) {
+        return String(urlString[range]).replacingOccurrences(of: "-", with: " ")
       }
     }
   } catch {
     print("Invalid regex: \(error.localizedDescription)")
+  }
+  
+  if urlString.contains("zoom.us") { return "Zoom" }
+  if urlString.contains("meet.google.com") { return "Meet" }
+  
+  
+  if let url = URL(string: urlString) {
+    return url.host()
   }
   
   return nil

@@ -1,0 +1,15 @@
+{
+  "originHash" : "b61e510dbb1379c7e69b9fc7c8f05b0dc99eaa85226d164652081506f376ed90",
+  "pins" : [
+    {
+      "identity" : "swift-colorful",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mojzesh/swift-colorful.git",
+      "state" : {
+        "revision" : "65ad771827e2af51be02a33a0762bca09552c89e",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

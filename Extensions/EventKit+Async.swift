@@ -23,6 +23,13 @@ extension EKReminder {
   var primaryDate: Date? {
     return dueDate
   }
+  
+  //  Per RFC 5545, priorities of 1-4 are considered "high," a priority of 5 is "medium," and priorities of 6-9 are "low."
+  var priorityPrefix: String {
+    if self.priority == 5 { return "!!" }
+    if self.priority > 5 { return "!" }
+    return "!!!"
+  }
 }
 
 

@@ -39,8 +39,9 @@ struct WidgetPreviewView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .fixedLayout(width: 1000, height: 640)) {
   WidgetPreviewView(config: ConfigurationIntent.comboConfig)
-    .frame(minWidth:480, minHeight: 480)
+    .frame(minWidth:320, maxHeight: .infinity)
+    .border(.white)
     .padding()
 }
