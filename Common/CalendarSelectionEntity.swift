@@ -6,11 +6,11 @@ struct CalendarSelectionEntity: AppEntity {
   let id: String
   let title: String
   
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Character"
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Calendar"
   static var defaultQuery = CalendarQuery()
   
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(title)")
+    DisplayRepresentation(title: "\(title)", image: .init(systemName: "calendar"))
   }
 }
 
@@ -46,3 +46,6 @@ struct CalendarQuery: EntityQuery {
     return nil
   }
 }
+
+
+

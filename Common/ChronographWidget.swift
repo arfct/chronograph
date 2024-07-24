@@ -211,7 +211,14 @@ struct TextWidgetView : View {
             
             // MARK: Event
             if let event = item as? EKEvent {
-              let eventid = "x-apple-calevent://\(row.id.replacingOccurrences(of: ":", with: "/"))"
+              
+//              let eventIdentifier = event.calendarItemIdentifier
+              let calendarId = event.calendar?.source?.sourceIdentifier ?? event.calendar?.calendarIdentifier ?? ""
+              //let eventid = "x-apple-calevent://\(calendarId)/\(eventIdentifier)"
+              
+              let eventid = "x-apple-calevent://\(calendarId)/\(event.calendarItemExternalIdentifier.replacingOccurrences(of: ":", with: "/"))"
+
+              
               let titleString = Link(destination: item.url ??
                                      URL(string:eventid)!) {
                 Group {
@@ -299,14 +306,18 @@ struct TextWidgetView : View {
               let isHappening = row.isHappening()
               let isSoon = row.isSoon()
               
+              let hasLocation = row.locations != nil && row.locations!.count > 0
+              
               if ((isHappening || isSoon)
-                  && (row.locations != nil || event.url != nil || row.attachments != nil)
+                  && (hasLocation || event.url != nil || row.attachments != nil)
               ) {
+
                 HStack(alignment: .top) { // Details view
                   
                   if (!widthIsLimited) {
                     VStack(alignment: .trailing) { }
                       .frame(minWidth:keyline, alignment:.trailing)
+                    
                   }
                   
                   VStack(alignment: .leading, spacing:smallLineHeight/4.0) {
@@ -397,7 +408,6 @@ struct TextWidgetView : View {
                 Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
                   HStack {
                     if (reminder.priority > 0) {
-                      let _ = print(reminder.priority)
                       Text(reminder.priority > 0 ? reminder.priorityPrefix : "")
                         .font(font)
                         .foregroundColor(.secondary)
@@ -553,7 +563,8 @@ struct TextWidgetView : View {
           
         }
         
-      }        .onPreferenceChange(RowHeightPreferenceKey.self) { heights in
+      }
+      .onPreferenceChange(RowHeightPreferenceKey.self) { heights in
         updateVisibleRows(with: heights, containerHeight: container.size.height)
       }
       

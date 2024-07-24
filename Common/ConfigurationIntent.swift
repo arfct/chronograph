@@ -64,7 +64,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   var calendars: [CalendarSelectionEntity]
   
   @Parameter(title: "Reminders", default: [])
-  var reminders: [CalendarSelectionEntity]
+  var reminders: [ReminderSelectionEntity]
 
   @Parameter(title: "Font Style", default: .normal)
    var fontStyle: FontStyle
@@ -103,7 +103,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   static var remindersConfig: ConfigurationIntent {
     let config = ConfigurationIntent()
     config.content = .reminders
-    config.calendars = []
+    config.reminders = []
     config.fontStyle = .normal
     config.showColors = true
     config.fullBleed = false
@@ -159,7 +159,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
       Case(DisplayedContent.reminders) {
         Summary {
           \.$content
-//          \.$reminders
+          \.$reminders
           \.$fontStyle
           \.$fontSize
           \.$backgroundColor

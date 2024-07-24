@@ -13,14 +13,12 @@ struct EventAttachment: Hashable {
   init(url: String, title: String? = nil, prefix: String? = nil) {
     self.urlString = url
     
-    print("ATTACHMENT, \(url), \(title)")
     self.title = title ?? extractTitleFromURL(from: url)
     if title?.starts(with: "https") ?? false {
       
       self.title = extractTitleFromURL(from: url)
     }
     
-
     self.prefix = prefix
     self.type = URL(string:url)?.host()
   }

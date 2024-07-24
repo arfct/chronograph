@@ -101,16 +101,22 @@ struct TimelineProvider: AppIntentTimelineProvider {
       errors.append("Enable access to calendar in settings")
     }
     
+    
     // MARK: Reminders
     if (content == .reminders) {
-      let reminderPredicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: nil)
+      let calendars: [EKCalendar] = reminderIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
+      let reminderPredicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: calendars)
       if let reminders = try? await eventStore.fetchRemindersAsync(predicate:reminderPredicate) {
         let sortedReminders = reminders
           .filter { $0.dueDateComponents?.date ?? .distantPast < endDate }
           .sorted(by: compareReminders)
-        reminderEntries = sortedReminders.map { EventEntry(id: $0.calendarItemIdentifier, item: $0) }
+        if (calendars.count != 0) {
+          reminderEntries.append(EventEntry(type:"header", title:calendars.map({$0.title}).joined(separator: ", ")))
+        }
+        reminderEntries.append(contentsOf: sortedReminders.map { EventEntry(id: $0.calendarItemIdentifier, item: $0) })
       }
     }
+    
     
     // MARK: Events
     if (content == .calendar || content == .both) {
@@ -135,7 +141,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     
     // MARK: Errors
-    if (errors.count > 0 ) {
+    if (errors.count > 0) {
       return Timeline(entries: [
         CalendarTimelineEntry(date: now, configuration: configuration,
                               events: errors.map({ error in
@@ -166,7 +172,10 @@ struct TimelineProvider: AppIntentTimelineProvider {
     var headerIndex = 0
     
     let renderDate = now
-    calendarEntries.append(EventEntry(type:"today", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: [],  children: []))
+    
+    if (content != .reminders) {
+      calendarEntries.append(EventEntry(type:"header", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: [],  children: []))
+    }
     
     for (_, item) in calendarItems.enumerated() {
       
@@ -177,7 +186,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
       if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
         
         let priorHeader =  calendarEntries[headerIndex]
-        if priorHeader.children?.count ?? 0 == 0 {
+        if (priorHeader.children?.count ?? 0) == 0 {
           calendarEntries.remove(at: headerIndex)
         }
         
@@ -194,17 +203,16 @@ struct TimelineProvider: AppIntentTimelineProvider {
         formatter.maximumUnitCount = 2
         formatter.allowsFractionalUnits = true
         formatter.includesApproximationPhrase = false
-        
+         
         if let thisStart = item.start, let priorEnd = previousItem.end {
           let original = thisStart.timeIntervalSince(priorEnd)
           let rounded = TimeInterval((original / 900.0).rounded(.toNearestOrEven) * 900.0)
-          print(rounded)
           
           if let duration = formatter.string(from: rounded) {
             
             // TODO: Hash the strategy off the timestamp
-            if rounded >= 30 * 60, let strategy = obliqueStrategies.randomElement() {
-              
+            if rounded >= 30 * 60 {
+              let strategy = obliqueStrategies[Int(priorEnd.timeIntervalSince1970) % obliqueStrategies.count]
               let free = EventEntry(type: "free", title: "\(duration) free - \(strategy)",
                                     startDate:priorEnd, endDate:thisDate)
               calendarEntries.append(free)
@@ -252,7 +260,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
           calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
           let fetchDetails = event.startDate < calendar.date(byAdding: .hour, value: 4, to: renderDate)!
           if (fetchDetails) {
-            if let location = event.location {
+            if let location = event.location, location.count > 0 {
               let locations = splitAndTrim(location)
               let urls = locations.filter { $0.hasPrefix("http://") || $0.hasPrefix("https://") }
               let remainder = locations.filter { !urls.contains($0) }.map({clean(location:$0)})

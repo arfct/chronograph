@@ -44,4 +44,8 @@ struct WidgetPreviewView: View {
     .frame(minWidth:320, maxHeight: .infinity)
     .border(.white)
     .padding()
+  WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+    .frame(minWidth:320, maxHeight: .infinity)
+    .border(.white)
+    .padding()
 }

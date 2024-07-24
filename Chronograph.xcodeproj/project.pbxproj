@@ -142,6 +142,12 @@
 		2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
 		2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
 		2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
+		2CBA09922C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
+		2CBA09932C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
+		2CBA09942C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
+		2CBA09952C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
+		2CBA09962C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
+		2CBA09972C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
 		2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
@@ -291,6 +297,7 @@
 		2C72C09A2C3F8D7F00AB3A1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringProcessing.swift; sourceTree = "<group>"; };
 		2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreviewView.swift; sourceTree = "<group>"; };
+		2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersSelectionEntity.swift; sourceTree = "<group>"; };
 		2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientMaskedHStack.swift; sourceTree = "<group>"; };
 		2CDFDC772C457FF800C5DF11 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2CDFDC7C2C45827400C5DF11 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
@@ -522,6 +529,7 @@
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
 				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
 				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
+				2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */,
 				2CDFDC772C457FF800C5DF11 /* SettingsView.swift */,
 				2CDFDC7C2C45827400C5DF11 /* Keys.swift */,
 				2C5A1D272C4F7A19002A1586 /* Font+Features.swift */,
@@ -780,6 +788,7 @@
 				2C6BA2EE2C1B6A4F00F22C21 /* ChronographApp.swift in Sources */,
 				2C24A5472C4AAD990000EE32 /* LocationManager.swift in Sources */,
 				2C5A1D2F2C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
+				2CBA09942C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
 				2C1573F52C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 				2C656A4A2C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
@@ -810,6 +819,7 @@
 				2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */,
 				2C24A5452C4AAD990000EE32 /* LocationManager.swift in Sources */,
 				2C5A1D322C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
+				2CBA09962C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
 				2C1573F12C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 				2C656A462C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
@@ -822,6 +832,7 @@
 				2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */,
 				2C656A492C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
+				2CBA09932C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
 				2C5A1D2A2C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C24A5462C4AAD990000EE32 /* LocationManager.swift in Sources */,
@@ -849,6 +860,7 @@
 				2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */,
 				2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */,
 				2C656A452C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
+				2CBA09952C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
 				2C5A1D292C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
 				2C24A5422C4AAD990000EE32 /* LocationManager.swift in Sources */,
@@ -874,6 +886,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C72C0862C3F86FC00AB3A1A /* ContentView.swift in Sources */,
+				2CBA09972C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
 				2C72C0982C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
 				2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
@@ -907,6 +920,7 @@
 				2C72C0992C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
 				2C72C0972C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
 				2C656A482C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
+				2CBA09922C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
 				2C5A1D2C2C4F7A19002A1586 /* Font+Features.swift in Sources */,
 				2C72C0952C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
 				2C24A5432C4AAD990000EE32 /* LocationManager.swift in Sources */,
