@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/*.xcodeproj": true,
+    "**/*.entitlements": true,
+    "**/*.storyboard": true,
+    "**/*.xcassets": true,
+    "**/Preview Content": true
+  }
+}
