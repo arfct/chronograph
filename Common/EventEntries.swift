@@ -36,7 +36,8 @@ struct EventAttachment: Hashable {
   }
 }
 
-struct EventEntry: Identifiable, Hashable {
+class EventEntry: Identifiable, Hashable {
+   
   var id: String = UUID().uuidString
   var type: String?
   var title: String?
@@ -47,6 +48,7 @@ struct EventEntry: Identifiable, Hashable {
   var item: EKCalendarItem?
   var allDayItems: [EventEntry]?
   var children: [EventEntry]?
+  var duplicates: [EventEntry]?
   var removeIfOrphaned: Bool = false
   var height: CGFloat = 1
   var locations: [String]?
@@ -55,8 +57,50 @@ struct EventEntry: Identifiable, Hashable {
   var attachments: [EventAttachment]?
   
   var date: Date?
+  var hasConflict: Bool = false
+  var hasStartConflict: Bool = false
+  var isFirstConflict: Bool = false
 
+  internal init(id: String = UUID().uuidString, type: String? = nil, title: String? = nil, startDate: Date? = nil, endDate: Date? = nil, url: URL? = nil, suffix: String? = nil, item: EKCalendarItem? = nil, allDayItems: [EventEntry]? = nil, children: [EventEntry]? = nil, duplicates: [EventEntry]? = nil, removeIfOrphaned: Bool = false, height: CGFloat = 1, locations: [String]? = nil, meeting: EventAttachment? = nil, notes: AttributedString? = nil, attachments: [EventAttachment]? = nil, date: Date? = nil, hasConflict: Bool = false, hasStartConflict: Bool = false, isFirstConflict: Bool = false) {
+    self.id = id
+    self.type = type
+    self.title = title
+    self.startDate = startDate
+    self.endDate = endDate
+    self.url = url
+    self.suffix = suffix
+    self.item = item
+    self.allDayItems = allDayItems
+    self.children = children
+    self.duplicates = duplicates
+    self.removeIfOrphaned = removeIfOrphaned
+    self.height = height
+    self.locations = locations
+    self.meeting = meeting
+    self.notes = notes
+    self.attachments = attachments
+    self.date = date
+    self.hasConflict = hasConflict
+    self.hasStartConflict = hasStartConflict
+    self.isFirstConflict = isFirstConflict
+  }
 
+  
+  static func == (lhs: EventEntry, rhs: EventEntry) -> Bool {
+    return lhs.id == rhs.id
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
+  
+  func conflictsWith(_ other: EventEntry) -> Bool {
+    guard let end = endDate, item != nil else { return false }
+    guard let otherStart = other.startDate, other.item != nil else { return false }
+    print(item?.title ?? title, other.item?.title ?? other.title, otherStart < end, otherStart , end)
+    return otherStart < end
+  }
+  
   func isVisible(_ date: Date = Date()) -> Bool {
     guard let end = endDate else { return true }
     return end.timeIntervalSince(date) > 0
@@ -82,6 +126,13 @@ struct EventEntry: Identifiable, Hashable {
     return date > start && date < end
   }
   
+  var hasLocation: Bool {
+    return locations?.count ?? 0 > 0
+  }
+  
+  var hasAttachments: Bool {
+    return attachments?.count ?? 0 > 0
+  }
 }
 
 // Filtered replacements array

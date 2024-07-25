@@ -218,14 +218,14 @@ struct TextWidgetView : View {
               
               let eventid = "x-apple-calevent://\(calendarId)/\(event.calendarItemExternalIdentifier.replacingOccurrences(of: ":", with: "/"))"
 
-              
+              let title = (event.title.count > 0 ? event.title : nil) ?? "Untitled"
               let titleString = Link(destination: item.url ??
                                      URL(string:eventid)!) {
                 Group {
                   if (tokenize) {
-                    TokenizedTextView(text:event.title, font:font, tokenFont:font)
+                    TokenizedTextView(text:title, font:font, tokenFont:font)
                   } else {
-                    Text(event.title)
+                    Text(title ?? "Untitled")
                   }
                 }
                 
@@ -248,6 +248,9 @@ struct TextWidgetView : View {
                         .font(.system(size: fontSize))
                         .frame(minWidth:keyline)
                     }
+                  } else if (row.hasConflict && row.hasStartConflict) {
+                    Text("")
+                      .frame(minWidth:keyline, alignment: .trailing)
                   } else {
                     
                     timeString
@@ -256,15 +259,23 @@ struct TextWidgetView : View {
                   
                   HStack(spacing:2) {
                     titleString
+                    if (row.hasConflict) {
+                      Image(systemName: "exclamationmark.triangle.fill")
+                        .imageScale(.small)
+                        .font(font)
+                        .foregroundColor(.yellow)
+                    }
+ 
                     if event.calendar != defaultCalendar,
                        let initial = event.calendar?.title.first {
-                      Image(systemName: "\(String(initial).lowercased()).circle")
+                      Image(systemName: "\(String(initial).lowercased()).circle.fill")
                         .imageScale(.small)
                         .font(font)
                         .foregroundColor(color ?? .red)
                         .widgetAccentable()
                         .layoutPriority(1)
                     }
+                    
                   }
                 } else {
                   titleString
@@ -306,10 +317,8 @@ struct TextWidgetView : View {
               let isHappening = row.isHappening()
               let isSoon = row.isSoon()
               
-              let hasLocation = row.locations != nil && row.locations!.count > 0
-              
               if ((isHappening || isSoon)
-                  && (hasLocation || event.url != nil || row.attachments != nil)
+                  && (row.hasAttachments || row.hasLocation)
               ) {
 
                 HStack(alignment: .top) { // Details view

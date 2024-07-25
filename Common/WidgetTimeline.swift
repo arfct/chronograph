@@ -69,6 +69,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
     let now = Date()
     let calendar = Calendar.current
     
+    let defaultCalendar = EKEventStore().defaultCalendarForNewEvents
+    let defaultRemindersList = EKEventStore().defaultCalendarForNewReminders()
+    
     let startDate = Date()
     let beginningOfDay = calendar.startOfDay(for: startDate)
     let endDate = calendar.date(byAdding: .day, value: 7, to: startDate)!
@@ -117,6 +120,20 @@ struct TimelineProvider: AppIntentTimelineProvider {
       }
     }
     
+    func compareCalendarItems(_ a: EKCalendarItem, _ b: EKCalendarItem) -> Bool {
+      guard let aStart = a.start else { return false}
+      guard let bStart = b.start else { return true}
+      
+      if aStart != bStart { return aStart < bStart }
+      if a.title != b.title { return a.title < b.title }
+      
+      guard let lend = a.end else { return false}
+      guard let rend = b.end else { return true}
+      
+      if lend != rend { return lend < rend }
+      if b.calendar == defaultCalendar { return false }
+      return a.calendar.title < b.calendar.title;
+    }
     
     // MARK: Events
     if (content == .calendar || content == .both) {
@@ -134,8 +151,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
       
       let fetchedEvents = eventStore.events(matching: predicate)
       calendarItems.append(contentsOf: fetchedEvents)
-      let sortedItems = calendarItems.sorted { $0.compareDate(with: $1)}
-      
+      let sortedItems = calendarItems.sorted (by:compareCalendarItems)
       calendarItems =  sortedItems//.map { EventEntry(id: $0.calendarItemIdentifier, item: $0) }
     }
     
@@ -177,14 +193,14 @@ struct TimelineProvider: AppIntentTimelineProvider {
       calendarEntries.append(EventEntry(type:"header", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: [],  children: []))
     }
     
-    for (_, item) in calendarItems.enumerated() {
+    for (i, item) in calendarItems.enumerated() {
       
       let lastDate = renderDate > previousItem.date ? renderDate : previousItem.date
       let thisDate = renderDate > item.date ? renderDate : item.date
+      let dateHasChanged = !calendar.isDate(lastDate, inSameDayAs: thisDate)
       
       // Insert header row on day changes
-      if !calendar.isDate(lastDate, inSameDayAs: thisDate) {
-        
+      if (dateHasChanged) {
         let priorHeader =  calendarEntries[headerIndex]
         if (priorHeader.children?.count ?? 0) == 0 {
           calendarEntries.remove(at: headerIndex)
@@ -203,8 +219,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
         formatter.maximumUnitCount = 2
         formatter.allowsFractionalUnits = true
         formatter.includesApproximationPhrase = false
-         
-        if let thisStart = item.start, let priorEnd = previousItem.end {
+        
+        if let thisStart = item.start {
+          let priorEnd = previousItem.end ?? renderDate
           let original = thisStart.timeIntervalSince(priorEnd)
           let rounded = TimeInterval((original / 900.0).rounded(.toNearestOrEven) * 900.0)
           
@@ -222,29 +239,18 @@ struct TimelineProvider: AppIntentTimelineProvider {
       }
       
       
-      // TODO: Handle conflicts
-      //      if ((nextEvent = events[i + 1]) && !nextEvent.ignore) {
-      //        if (!e.allday && !nextEvent.allday)
-      //          var nextStart = new Date(nextEvent.start.dateTime);
-      //        var nextEnd = new Date(nextEvent.end.dateTime);
-      //        if (nextStart < end) {
-      //          if (e.conflict == undefined) {
-      //            e.firstConflict = true;
-      //          }
-      //          e.conflict = true;
-      //          nextEvent.conflict = true;
-      //        }
-      //
-      //        if (start - nextStart == 0) {
-      //          nextEvent.startConflict = true;
-      //        }
-        
+
+      
+      
       var eventEntry = EventEntry(id: item.calendarItemIdentifier, startDate:item.start, endDate:item.end, item: item)
       if let event = item as? EKEvent {
         
         // Ignore duplicates
         if event.title == previousItem.title &&
-            calendar.isDate(event.startDate, equalTo: previousItem.date, toGranularity: .hour) { continue }
+            calendar.isDate(event.startDate, equalTo: previousItem.date, toGranularity: .hour) {
+//          previousItem.duplicates = [eventEntry]
+          continue
+        }
         
         if event.calendar != previousItem.calendar {
           eventEntry.suffix = String(event.calendar.title.prefix(1))
@@ -351,6 +357,27 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
 #endif
     
+    
+    // TODO: Sort these so that longer items are sorted after shorter items to correctly catch conflicts. Also sort by name to de-dup items on multiple calendars
+    
+    for (i, entry) in (calendarEntries.enumerated()) {
+      if (i + 1 == calendarEntries.count) { break }
+      // TODO: Handle conflicts
+      let next = calendarEntries[i + 1]
+      if entry.conflictsWith(next) {
+        if (!entry.hasConflict) {
+          calendarEntries[i].isFirstConflict = true
+        }
+        calendarEntries[i].hasConflict = true
+        calendarEntries[i + 1].hasConflict = true
+        if entry.startDate == next.startDate {
+          calendarEntries[i + 1].hasStartConflict = true
+        }
+      }
+    }
+    
+    
+    
     for minuteOffset in 0 ..< 15 {
       let renderDate = Calendar.current.date(byAdding: .minute, value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: now)!
       let entryDate = Calendar.current.date(byAdding: debug ? .second : .minute, value: minuteOffset, to: now)!
@@ -366,10 +393,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     return Timeline(entries: timelineEntries, policy: .atEnd)
     
-    
   }
-  
-  
   
   func recommendations() -> [AppIntentRecommendation<ConfigurationIntent>] {
     
@@ -394,7 +418,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
   
   
   
-  static let sampleEntry: EventEntry = EventEntry(id: "1", type: "", title: "",  url: nil, suffix: "", item: nil, allDayItems: nil, removeIfOrphaned: false, height: 0)
+  static let sampleEntry: EventEntry = EventEntry(id: "1", type: "", title: "",  url: nil, suffix: "", item: nil)
   
   
 }
