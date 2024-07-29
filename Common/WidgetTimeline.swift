@@ -68,6 +68,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     let showWeather = configuration.features.contains(.weather)
     
     let weather = showWeather ? await fetchWeather() : nil
+    
     let reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
     let scheduledReminders = await fetchScheduledReminders(startDate: startDate, endDate: endDate)
     let events = await fetchEvents(configuration: configuration, startDate: startDate, endDate: endDate)
@@ -163,6 +164,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
                                                   to: calendar.startOfDay(for:item.date)).day!)
         
         let forecast = weather?.dailyForecast[safe: days]
+        
         let header = EventEntry(type: "header", title: title,
                                 startDate:calendar.startOfDay(for: thisDate), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [], children: [],
                                 removeIfOrphaned: true, dayForecast:forecast)

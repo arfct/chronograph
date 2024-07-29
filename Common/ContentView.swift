@@ -90,7 +90,7 @@ struct ContentView: View {
             
             VStack {
               if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-                WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
+                WidgetPreviewView(config: ConfigurationIntent.comboConfig)
                   .frame(minHeight: 640)
               } else {
                 Button(action: {

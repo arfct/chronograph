@@ -33,17 +33,19 @@ var tempFormatter: MeasurementFormatter {
   return formatter
 }
 
+var tempFormatterTrailing: MeasurementFormatter {
+  let formatter = MeasurementFormatter()
+  formatter.unitStyle = .short
+  formatter.numberFormatter.maximumFractionDigits = 0
+  formatter.unitOptions = .temperatureWithoutUnit
+  return formatter
+}
+
 struct WeatherRowView: View {
   let entry: EventEntry
   let forecast: HourWeather
   let config: RowViewConfig
-  
-  var percentFormatter: NumberFormatter {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .percent
-    formatter.maximumFractionDigits = 2
-    return formatter
-  }
+
   
   var body: some View {
     
@@ -494,6 +496,22 @@ struct HeaderRowView: View {
           }
         }
       }
+      
+      if let forecast = entry.dayForecast {
+        HStack {
+          Text(Image(systemName: forecast.symbolName))
+          + (forecast.precipitationChance > 0 ? Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter) : Text(""))
+          + Text(" ")
+          + Text(tempFormatter.string(from: forecast.lowTemperature.converted(to: .fahrenheit)).replacingOccurrences(of: "°", with: ""))
+          + Text("–")
+          + Text(forecast.highTemperature.converted(to: .fahrenheit), formatter: tempFormatterTrailing)
+          
+          
+
+        }.font(config.smallFont)
+      }
+      
+      
       
       VStack(alignment:.leading) {
         HStack(alignment:.center) {

@@ -51,12 +51,12 @@ enum DisplayedContent: String, AppEnum {
 }
 
 enum WidgetFeatures: String, AppEnum {
-    case allDayEvents, multiDayEvents, /*weather,*/ calendarColors, timeBars, fullBleed //, alternateCalendarIndicators
+    case allDayEvents, multiDayEvents, weather, calendarColors, timeBars, fullBleed //, alternateCalendarIndicators
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Included Content"
     static var caseDisplayRepresentations: [WidgetFeatures : DisplayRepresentation] = [
       .allDayEvents: DisplayRepresentation(title: "All-day", subtitle:"Events lasting all day", image: .init(systemName: "rectangle.grid.1x2")),
       .multiDayEvents: DisplayRepresentation(title: "Multi-day", subtitle:"Events spanning one day", image: .init(systemName: "square.grid.3x1.below.line.grid.1x2", tintColor: UIColor.blue, symbolConfiguration:.preferringMulticolor())),
-//      .weather: DisplayRepresentation(title: "Weather", image: .init(systemName: "cloud.sun.rain.fill", symbolConfiguration:.preferringMulticolor())),
+      .weather: DisplayRepresentation(title: "Weather", image: .init(systemName: "cloud.sun.rain.fill", symbolConfiguration:.preferringMulticolor())),
       .calendarColors: DisplayRepresentation(title: "Calendar Colors", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
       .timeBars: DisplayRepresentation(title: "Time Bars", image: .init(systemName: "calendar.day.timeline.leading", symbolConfiguration:.preferringMulticolor())),
       .fullBleed: DisplayRepresentation(title: "Remove Padding", image: .init(systemName: "arrowshape.left.arrowshape.right", symbolConfiguration:.preferringMulticolor())),
@@ -123,7 +123,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     let config = ConfigurationIntent()
     config.content = .both
     config.calendars = []
-    config.features = [.allDayEvents, .timeBars, .multiDayEvents]
+    config.features = [.allDayEvents, .timeBars, .multiDayEvents, .weather]
     config.fontStyle = .normal
     config.fullBleed = false
     return config

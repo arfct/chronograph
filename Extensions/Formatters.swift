@@ -53,3 +53,10 @@ var relativeTimeFormatter: DateComponentsFormatter {
   formatter.allowedUnits = [.hour, .minute]
 return formatter
 }
+
+var percentFormatter: NumberFormatter {
+  let formatter = NumberFormatter()
+  formatter.numberStyle = .percent
+  formatter.maximumFractionDigits = 2
+  return formatter
+}
