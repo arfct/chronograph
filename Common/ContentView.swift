@@ -15,13 +15,12 @@ struct ContentView: View {
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
   
   let eventStore = EKEventStore()
-  //  @State var reminders: [EventEntry]? = []
-  //  @State var events: [EventEntry]? = []
   @State var remindersAccessGranted: Bool = false
   @State var eventsAccessGranted: Bool = false
   @State var locationAccessGranted: Bool = false
   @State var reloadDate: Date = Date()
   @State var showSettings: Bool = false
+  @AppStorage(Keys.hideIntroduction, store: UserDefaults(suiteName: Keys.suiteName)) private var hideIntroduction = false
   
   private func checkRemindersAccess(interactive: Bool = false) async {
     do {
@@ -55,19 +54,21 @@ struct ContentView: View {
 
   
   var body: some View {
+    let isCompact = horizontalSizeClass == .compact
     NavigationStack {
       
       VStack {
-        VStack(alignment: .leading, spacing:10) {
-          Image("Wordmark")
-          Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed below. Add widgets from the home screen.")
-            .foregroundStyle(.secondary)
+        if !hideIntroduction {
+          VStack(alignment: .leading, spacing:10) {
+            Image("Wordmark")
+            Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed below. Add widgets from the home screen.")
+              .foregroundStyle(.secondary)
+          }
+          .padding(.top,40)
+          .padding(.leading, 36)
+          .padding(.bottom, 10)
+          .padding()
         }
-        .padding(.top,40)
-        .padding(.leading, 36)
-        .padding(.bottom, 10)
-        .padding()
-        
         ScrollView {
           let previews = Group {
             VStack {
@@ -90,8 +91,13 @@ struct ContentView: View {
             
             VStack {
               if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-                WidgetPreviewView(config: ConfigurationIntent.comboConfig)
-                  .frame(minHeight: 640)
+                if (isCompact) {
+                  WidgetPreviewView(config: ConfigurationIntent.comboConfig)
+                    .frame(minHeight: 1024)
+                } else {
+                  WidgetPreviewView(config: ConfigurationIntent.bigComboConfig)
+                    .frame(minHeight: 1440)
+                }
               } else {
                 Button(action: {
                   Task {
@@ -102,7 +108,7 @@ struct ContentView: View {
                   Label("Enable Calendar Access", systemImage: "lock")
                 }
               }
-            }.frame(maxWidth:400)
+            }.frame(maxWidth:isCompact ? 400 : 800)
             
             Divider()
               .padding(.vertical, 20)
@@ -128,15 +134,15 @@ struct ContentView: View {
           }
             .background(.background)
           //          .cornerRadius(20)
-          if horizontalSizeClass == .compact {
+//          if horizontalSizeClass == .compact {
             VStack(spacing:0) {
               previews
             }.padding()
-          } else {
-            HStack(spacing:0) {
-              previews
-            }.padding()
-          }
+//          } else {
+//            HStack(spacing:0) {
+//              previews
+//            }.padding()
+//          }
           
         }
         
@@ -156,20 +162,19 @@ struct ContentView: View {
               showSettings.toggle()
             }
           }) {
-            Label("Reminders", systemImage: "gear")
+            Label("Settings", systemImage: "ellipsis")
           }
           
-#if os(macOS)
+          #if os(macOS)
           .popover(isPresented: $showSettings) {
             SettingsView().padding()
           }
-#else
+          #else
           .sheet(isPresented: $showSettings) {
             SettingsView()
               .presentationDetents([.medium, .fraction(0.35)])
           }
-#endif
-          
+          #endif
         }
       }
     }

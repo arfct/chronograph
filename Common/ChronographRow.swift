@@ -112,7 +112,7 @@ struct TimeStringView: View {
             .kerning(-0.5)
         }
       }
-      .frame(minWidth:0, minHeight:config.lineHeight, maxHeight:.infinity, alignment: .trailing)
+      .frame(minWidth:0, minHeight:config.lineHeight, alignment: .trailing)
     }
     
   }

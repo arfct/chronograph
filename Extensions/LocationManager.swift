@@ -10,9 +10,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
   
   var isAuthorized: Bool  {
 #if os(macOS)
-    locationManager.authorizationStatus == .authorizedAlways
+    return locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .notDetermined
 #else
-    locationManager.authorizationStatus == .authorizedWhenInUse
+    return locationManager.authorizationStatus == .authorizedWhenInUse
 #endif
   }
   

@@ -135,6 +135,12 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     return config
   }
   
+  static var bigComboConfig: ConfigurationIntent {
+    let config = comboConfig
+    config.fontSize = .huge
+    return config
+  }
+  
   static var parameterSummary: some ParameterSummary {
     Switch(\.$content) {
       Case(DisplayedContent.calendar) {

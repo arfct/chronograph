@@ -8,6 +8,7 @@ struct Keys {
 
   static let tokenizeParens = "tokenizeParens"
   static let compactTime = "compactTime"
+  static let hideIntroduction = "hideIntroduction"
 }
 
 struct Values {

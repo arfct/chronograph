@@ -11,16 +11,20 @@ struct SettingsView: View {
   @Environment(\.dismiss) var dismiss
   @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
+  @AppStorage(Keys.hideIntroduction, store: UserDefaults(suiteName: Keys.suiteName)) private var hideIntroduction = false
   
     var body: some View {
       NavigationStack {
         Form {
-          Section("Style") {
+          Section {
             Toggle(isOn: $tokenize) {
               Text("Wrap Parenthesis")
             }
             Toggle(isOn: $compactTime) {
               Text("Compact Time")
+            }
+            Toggle(isOn: $hideIntroduction) {
+              Text("Hide App Header")
             }
           }
         }
