@@ -1,14 +1,11 @@
-//
-//  AppIntent.swift
-//  widget
-//
-//  Created by Nicholas Jitkoff on 1/4/24.
-//
-
 import WidgetKit
 import AppIntents
 import SwiftUI
-
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 enum FontStyle: String, AppEnum {
     case normal, rounded, serif, monospace, condensed, compressed
@@ -53,12 +50,30 @@ enum DisplayedContent: String, AppEnum {
     ]
 }
 
+enum WidgetFeatures: String, AppEnum {
+    case allDayEvents, multiDayEvents, weather, calendarColors, timeBars, fullBleed //, alternateCalendarIndicators
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Included Content"
+    static var caseDisplayRepresentations: [WidgetFeatures : DisplayRepresentation] = [
+      .allDayEvents: DisplayRepresentation(title: "All-day", subtitle:"Events lasting all day", image: .init(systemName: "rectangle.grid.1x2")),
+      .multiDayEvents: DisplayRepresentation(title: "Multi-day", subtitle:"Events spanning one day", image: .init(systemName: "square.grid.3x1.below.line.grid.1x2", tintColor: UIColor.blue, symbolConfiguration:.preferringMulticolor())),
+      .weather: DisplayRepresentation(title: "Weather", image: .init(systemName: "cloud.sun.rain.fill", symbolConfiguration:.preferringMulticolor())),
+      .calendarColors: DisplayRepresentation(title: "Calendar Colors", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
+      .timeBars: DisplayRepresentation(title: "Time Bars", image: .init(systemName: "calendar.day.timeline.leading", symbolConfiguration:.preferringMulticolor())),
+      .fullBleed: DisplayRepresentation(title: "Remove Padding", image: .init(systemName: "arrowshape.left.arrowshape.right", symbolConfiguration:.preferringMulticolor())),
+     //.alternateCalendarIndicators: DisplayRepresentation(title: "Calendar Indicators", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
+   ]
+}
+
+
 struct ConfigurationIntent: WidgetConfigurationIntent {
   static var title: LocalizedStringResource = "Configuration"
   static var description = IntentDescription("Chronograph")
   
-  @Parameter(title: "Show", default: .calendar)
+  @Parameter(title: "Widget Type", default: .calendar)
    var content: DisplayedContent
+  
+  @Parameter(title: "Show", default: [.allDayEvents, .timeBars])
+   var features: [WidgetFeatures]
   
   @Parameter(title: "Calendars", default: [])
   var calendars: [CalendarSelectionEntity]
@@ -77,12 +92,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   
   @Parameter(title: "Accent (Hex)", default: "")
   var accentColor: String
-  
-  @Parameter(title: "Show All Day Events", default: false)
-  var showAllDay: Bool
-  
-  @Parameter(title: "Show Item Colors", default: false)
-  var showColors: Bool
+
   
   @Parameter(title: "Draw to Edges", default: false)
   var fullBleed: Bool
@@ -94,8 +104,8 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     let config = ConfigurationIntent()
     config.content = .calendar
     config.calendars = []
+    config.features = [.allDayEvents, .timeBars, .multiDayEvents]
     config.fontStyle = .normal
-    config.showColors = true
     config.fullBleed = false
     return config
   }
@@ -105,7 +115,6 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.content = .reminders
     config.reminders = []
     config.fontStyle = .normal
-    config.showColors = true
     config.fullBleed = false
     return config
   }
@@ -114,8 +123,8 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     let config = ConfigurationIntent()
     config.content = .both
     config.calendars = []
+    config.features = [.allDayEvents, .timeBars, .multiDayEvents]
     config.fontStyle = .normal
-    config.showColors = true
     config.fullBleed = false
     return config
   }
@@ -131,13 +140,12 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
       Case(DisplayedContent.calendar) {
         Summary {
           \.$content
+          \.$features
           \.$calendars
           \.$fontStyle
           \.$fontSize
           \.$backgroundColor
           \.$accentColor
-          \.$showColors
-          \.$showAllDay
           \.$fullBleed
         }
       }
@@ -151,7 +159,6 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$fontSize
           \.$backgroundColor
           \.$accentColor
-          \.$showColors
           \.$fullBleed
         }
       }

@@ -42,7 +42,14 @@ extension Color {
       return .clear
     default:
       
-      let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+      var hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+
+      if hex.count == 1 { // C -> CCCCCCC
+        hex = String(repeating: hex, count: 6)
+      } else if hex.count == 2 { // CC -> CCCCCCC
+        hex = String(repeating: hex, count: 3)
+      }
+
       var int: UInt64 = 0
       Scanner(string: hex).scanHexInt64(&int)
       let a, r, g, b: UInt64

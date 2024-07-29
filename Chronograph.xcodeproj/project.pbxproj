@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C0561202C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
+		2C0561212C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
+		2C0561222C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
+		2C0561232C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
+		2C0561242C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
+		2C0561252C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
 		2C0EA2DF2C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
 		2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
 		2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
@@ -32,6 +38,12 @@
 		2C24A5452C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
 		2C24A5462C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
 		2C24A5472C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
+		2C26F60E2C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
+		2C26F60F2C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
+		2C26F6102C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
+		2C26F6112C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
+		2C26F6122C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
+		2C26F6132C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
 		2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
 		2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
 		2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
@@ -148,6 +160,12 @@
 		2CBA09952C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
 		2CBA09962C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
 		2CBA09972C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
+		2CC35E782C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
+		2CC35E792C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
+		2CC35E7A2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
+		2CC35E7B2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
+		2CC35E7C2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
+		2CC35E7D2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
 		2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
@@ -245,6 +263,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2C05611F2C5556EE00435969 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTimeline.swift; sourceTree = "<group>"; };
 		2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
@@ -252,6 +271,8 @@
 		2C24A5312C4A9F100000EE32 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		2C24A53A2C4AA20D0000EE32 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		2C24A5412C4AAD990000EE32 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		2C26F60D2C549D74001F893E /* ConcatenatedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcatenatedText.swift; sourceTree = "<group>"; };
+		2C41B9C52C56BDAB007D4519 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventKit+Async.swift"; sourceTree = "<group>"; };
 		2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
 		2C5A1D272C4F7A19002A1586 /* Font+Features.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Features.swift"; sourceTree = "<group>"; };
@@ -298,6 +319,7 @@
 		2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringProcessing.swift; sourceTree = "<group>"; };
 		2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreviewView.swift; sourceTree = "<group>"; };
 		2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersSelectionEntity.swift; sourceTree = "<group>"; };
+		2CC35E772C52AE3500774244 /* ChronographRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographRow.swift; sourceTree = "<group>"; };
 		2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientMaskedHStack.swift; sourceTree = "<group>"; };
 		2CDFDC772C457FF800C5DF11 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2CDFDC7C2C45827400C5DF11 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
@@ -364,6 +386,8 @@
 			isa = PBXGroup;
 			children = (
 				2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */,
+				2C05611F2C5556EE00435969 /* Extensions.swift */,
+				2C26F60D2C549D74001F893E /* ConcatenatedText.swift */,
 				2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */,
 				2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */,
 				2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */,
@@ -385,6 +409,14 @@
 			path = Experiments;
 			sourceTree = "<group>";
 		};
+		2C41B9C42C56BDAB007D4519 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				2C41B9C52C56BDAB007D4519 /* RealityKitContent */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
@@ -395,6 +427,7 @@
 				2C72C05F2C3F854800AB3A1A /* Mac */,
 				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
+				2C41B9C42C56BDAB007D4519 /* Packages */,
 				2C6BA2EB2C1B6A4F00F22C21 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -524,6 +557,7 @@
 				2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */,
 				2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */,
 				2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */,
+				2CC35E772C52AE3500774244 /* ChronographRow.swift */,
 				2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */,
 				2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */,
 				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
@@ -768,9 +802,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C0EA2DF2C27295800177026 /* WidgetTimeline.swift in Sources */,
+				2C0561242C5556EE00435969 /* Extensions.swift in Sources */,
 				2C6BA36F2C1C8B3700F22C21 /* EventEntries.swift in Sources */,
+				2CC35E7D2C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
+				2C26F6132C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C24A53B2C4AA20D0000EE32 /* Weather.swift in Sources */,
 				2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
@@ -799,9 +836,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */,
+				2C0561252C5556EE00435969 /* Extensions.swift in Sources */,
 				2C6BA3702C1C8B3700F22C21 /* EventEntries.swift in Sources */,
+				2CC35E782C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
+				2C26F6112C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C24A53F2C4AA20D0000EE32 /* Weather.swift in Sources */,
 				2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
@@ -839,13 +879,16 @@
 				2C24A53D2C4AA20D0000EE32 /* Weather.swift in Sources */,
 				2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2CDFDC7E2C45827600C5DF11 /* Keys.swift in Sources */,
+				2CC35E7A2C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CCC62022C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
+				2C26F60F2C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3482C1B6F6900F22C21 /* ChronographWidget.swift in Sources */,
 				2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */,
 				2C72C0592C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C5A1D312C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
 				2C6BA36D2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
+				2C0561202C5556EE00435969 /* Extensions.swift in Sources */,
 				2C6BA37B2C1C99C900F22C21 /* Formatters.swift in Sources */,
 				2C5A1D252C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68C92C49C0720059E0D2 /* StringProcessing.swift in Sources */,
@@ -867,13 +910,16 @@
 				2C24A5402C4AA20D0000EE32 /* Weather.swift in Sources */,
 				2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2CDFDC812C45827600C5DF11 /* Keys.swift in Sources */,
+				2CC35E7B2C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
+				2C26F60E2C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
 				2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3392C1B6ABB00F22C21 /* ChronographWidget.swift in Sources */,
 				2C72C0582C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C5A1D332C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
 				2C6BA37A2C1C99C900F22C21 /* Formatters.swift in Sources */,
+				2C0561232C5556EE00435969 /* Extensions.swift in Sources */,
 				2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */,
 				2C5A1D242C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68CC2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
@@ -887,12 +933,14 @@
 			files = (
 				2C72C0862C3F86FC00AB3A1A /* ContentView.swift in Sources */,
 				2CBA09972C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
+				2C26F6122C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C72C0982C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
 				2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
 				2C72C0892C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
 				2C1573F42C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 				2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
+				2CC35E792C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */,
 				2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */,
 				2C8B68CA2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
@@ -910,6 +958,7 @@
 				2C72C08C2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
 				2C72C0922C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
 				2C656A472C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
+				2C0561222C5556EE00435969 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -927,13 +976,16 @@
 				2C24A53E2C4AA20D0000EE32 /* Weather.swift in Sources */,
 				2C72C09B2C3F8FEB00AB3A1A /* Bundle.swift in Sources */,
 				2CDFDC802C45827600C5DF11 /* Keys.swift in Sources */,
+				2CC35E7C2C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CCC62012C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
+				2C26F6102C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C72C0912C3F87BC00AB3A1A /* Formatters.swift in Sources */,
 				2C72C08A2C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
 				2C72C08F2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2C72C0882C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
 				2C5A1D302C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
 				2C72C08D2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
+				2C0561212C5556EE00435969 /* Extensions.swift in Sources */,
 				2C72C0932C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
 				2C5A1D262C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68CB2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
@@ -1166,6 +1218,7 @@
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1206,6 +1259,7 @@
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1322,7 +1376,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1356,7 +1410,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

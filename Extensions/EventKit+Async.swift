@@ -1,5 +1,5 @@
 import EventKit
-
+import SwiftUI
 extension EKEventStore {
     func fetchRemindersAsync(predicate: NSPredicate) async throws -> [EKReminder] {
         return try await withCheckedThrowingContinuation { continuation in
@@ -13,7 +13,6 @@ extension EKEventStore {
         }
     }
 }
-
 
 extension EKReminder {
   var dueDate: Date? {
@@ -32,7 +31,12 @@ extension EKReminder {
   }
 }
 
-
+extension EKEvent {
+  var participantStatus: EKParticipantStatus? {
+    print ("attendees:", self.attendees)
+    return attendees?.filter({$0.isCurrentUser}).first?.participantStatus
+  }
+}
 extension EKCalendarItem {
 
   
@@ -96,6 +100,12 @@ extension EKCalendarItem {
   }
   
   
+  var color: Color? {
+    if let cgColor = calendar?.cgColor {
+      return Color(cgColor: cgColor)
+    }
+    return nil
+  }
 }
 
 func compareReminders(_ reminder1: EKReminder, _ reminder2: EKReminder) -> Bool {
@@ -137,3 +147,59 @@ func replaceBirthdayString(_ input: String) -> String {
 let CALENDAR_SEPARATOR = "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
 
 let ZOOM_SEPARATOR = "──────────"
+
+
+
+extension Array {
+  mutating func removeAllFromEnd(where predicate: (Element) -> Bool) {
+    while let last = self.last, predicate(last) {
+      self.removeLast()
+    }
+  }
+}
+
+extension Date {
+  func formattedHourAndMinute() -> (hour: String, minute: String) {
+    let dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale.current
+
+    dateFormatter.dateFormat = "h"
+    let hourString = dateFormatter.string(from: self)
+
+    dateFormatter.dateFormat = "mm"
+    let minuteString = dateFormatter.string(from: self)
+
+    return (hourString, minuteString)
+  }
+}
+
+
+extension Collection {
+    /// Returns the element at the specified index if it is within bounds, otherwise nil.
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
+func openAppSettings() {
+#if os(iOS)
+  if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+//    UIApplication.shared.open(appSettings)
+    
+    let sharedSelector = NSSelectorFromString("sharedApplication")
+    let openSelector = NSSelectorFromString("openURL:")
+
+    if UIApplication.responds(to: sharedSelector),
+        let shared = UIApplication.perform(sharedSelector)?.takeRetainedValue() as? UIApplication,
+        shared.responds(to: openSelector) {
+
+        shared.perform(openSelector, with: appSettings)
+
+    }
+  }
+  
+  
+#elseif os(macOS)
+  
+#endif
+}

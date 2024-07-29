@@ -7,12 +7,12 @@
 		<key>Chronograph Mac.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Chronograph Watch.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>Chronograph iOS.xcscheme_^#shared#^_</key>
 		<dict>
@@ -32,22 +32,17 @@
 		<key>Widget Mac.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>4</integer>
 		</dict>
 		<key>Widget Watch.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>5</integer>
 		</dict>
 		<key>Widget iOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>
-		</dict>
-		<key>Widget-mac.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>6</integer>
 		</dict>
 		<key>macOS.xcscheme_^#shared#^_</key>
 		<dict>
@@ -57,6 +52,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>2C41B9C12C56BDAB007D4519</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>2C6BA2E92C1B6A4F00F22C21</key>
 		<dict>
 			<key>primary</key>

@@ -19,6 +19,7 @@ struct ContentView: View {
   //  @State var events: [EventEntry]? = []
   @State var remindersAccessGranted: Bool = false
   @State var eventsAccessGranted: Bool = false
+  @State var locationAccessGranted: Bool = false
   @State var reloadDate: Date = Date()
   @State var showSettings: Bool = false
   
@@ -51,15 +52,7 @@ struct ContentView: View {
   }
   
   
-  private func openAppSettings() {
-#if os(iOS)
-    if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-      UIApplication.shared.open(appSettings)
-    }
-#elseif os(macOS)
-    
-#endif
-  }
+
   
   var body: some View {
     NavigationStack {
@@ -78,9 +71,47 @@ struct ContentView: View {
         ScrollView {
           let previews = Group {
             VStack {
+              if locationAccessGranted || LocationManager().isAuthorized {
+                
+              } else {
+                Button(action: {
+                  Task {
+                    LocationManager().checkAuthorization()
+                    locationAccessGranted = true
+                  }
+                }) {
+                  Label("Enable Weather", systemImage: "lock")
+                }
+                Divider()
+                  .padding(.vertical, 20)
+                  .padding(.leading, 36)
+              }
+            }.frame(maxWidth:400)
+            
+            VStack {
+              if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
+                WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
+                  .frame(minHeight: 640)
+              } else {
+                Button(action: {
+                  Task {
+                    await checkEventsAccess(interactive: true)
+                    eventsAccessGranted = true
+                  }
+                }) {
+                  Label("Enable Calendar Access", systemImage: "lock")
+                }
+              }
+            }.frame(maxWidth:400)
+            
+            Divider()
+              .padding(.vertical, 20)
+              .padding(.leading, 36)
+            
+            VStack {
               if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
                 WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
-                  .frame(minHeight: 230)
+                  .frame(minHeight: 120)
               } else {
                 Button(action: {
                   Task {
@@ -93,25 +124,7 @@ struct ContentView: View {
               }
             }.frame(maxWidth:400)
             
-            Divider()
-              .padding(.vertical, 20)
-              .padding(.leading, 36)
             
-            VStack {
-              if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-                WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
-                  .frame(minHeight: 230)
-              } else {
-                Button(action: {
-                  Task {
-                    await checkEventsAccess(interactive: true)
-                    eventsAccessGranted = true
-                  }
-                }) {
-                  Label("Enable Calendar Access", systemImage: "lock")
-                }
-              }
-            }.frame(maxWidth:400)
           }
             .background(.background)
           //          .cornerRadius(20)

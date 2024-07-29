@@ -2,6 +2,7 @@ import WidgetKit
 import SwiftUI
 import EventKit
 import Contacts
+import WeatherKit
 
 struct CalendarTimelineEntry: TimelineEntry {
   let date: Date
@@ -9,7 +10,8 @@ struct CalendarTimelineEntry: TimelineEntry {
   let state: Bool = false
   var reminders: [EventEntry] = []
   var events: [EventEntry] = []
-  var weather: String = ""
+  var weather: Weather?
+  let context: TimelineProviderContext?
 }
 
 
@@ -17,13 +19,15 @@ struct TimelineProvider: AppIntentTimelineProvider {
   
   @AppStorage("state") private var state = false
   
+  var weatherManager = WeatherLocationManager()
+  var eventStore = EKEventStore()
   func placeholder(in context: Context) -> CalendarTimelineEntry {
     
     let config = ConfigurationIntent()
     config.content = .calendar
     config.calendars = []
     
-    let item = EKEvent(eventStore: EKEventStore())
+    let item = EKEvent(eventStore: eventStore)
     item.title = "Calendar Event"
     item.startDate = Date()
     
@@ -36,7 +40,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
       EventEntry(id: "", item: item),
       EventEntry(id: "", item: item),
       
-    ])
+    ], context: context)
     
   }
   
@@ -52,49 +56,35 @@ struct TimelineProvider: AppIntentTimelineProvider {
   // MARK: Timeline
   
   func timeline(for configuration: ConfigurationIntent, context: Context? = nil) async -> Timeline<CalendarTimelineEntry> {
+    print("\nTimeline for \(context?.family ?? .none).\(configuration.content)")
     
-    //
-    //    let location = try? await LocationManager().currentLocation
-    //    let weatherLocationManager = WeatherLocationManager()
-    //      do {
-    //        let weather = try await weatherLocationManager.fetchWeather()
-    //
-    //      } catch {
-    //        print("Failed to fetch weather: \(error.localizedDescription)")
-    //
-    //      }
-    //
-    
-    let content = configuration.content
     let now = Date()
     let calendar = Calendar.current
-    
-    let defaultCalendar = EKEventStore().defaultCalendarForNewEvents
-    let defaultRemindersList = EKEventStore().defaultCalendarForNewReminders()
-    
     let startDate = Date()
-    let beginningOfDay = calendar.startOfDay(for: startDate)
     let endDate = calendar.date(byAdding: .day, value: 7, to: startDate)!
+    
+    let showAllDay = configuration.features.contains(.allDayEvents)
+    let showMultiDay = configuration.features.contains(.multiDayEvents)
+    let showWeather = configuration.features.contains(.weather)
+    
+    let weather = showWeather ? await fetchWeather() : nil
+    let reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
+    let scheduledReminders = await fetchScheduledReminders(startDate: startDate, endDate: endDate)
+    let events = await fetchEvents(configuration: configuration, startDate: startDate, endDate: endDate)
+    
+    var calendarItems: [EKCalendarItem] = []
+    calendarItems.append(contentsOf: scheduledReminders)
+    calendarItems.append(contentsOf: events)
     
     let reloadDate = calendar.date(byAdding: .minute,
                                    value: 15,
                                    to: now)!
     
-    let showAllDay = configuration.showAllDay
-    
-    let calendarIDs = configuration.calendars.map({$0.id})
-    let reminderIDs = configuration.reminders.map({$0.id})
     
     var errors: [String] = []
     
-    var calendarItems: [EKCalendarItem] = []
-    
-    var reminderEntries: [EventEntry] = []
-    
-    let eventStore = EKEventStore()
-    
-    let remindersError = (content == .reminders || content == .both) && EKEventStore.authorizationStatus(for: .reminder) != .fullAccess
-    let eventsError = (content == .calendar || content == .both) && EKEventStore.authorizationStatus(for: .event) != .fullAccess
+    let remindersError = (configuration.content == .reminders || configuration.content == .both) && EKEventStore.authorizationStatus(for: .reminder) != .fullAccess
+    let eventsError = (configuration.content == .calendar || configuration.content == .both) && EKEventStore.authorizationStatus(for: .event) != .fullAccess
     
     if (remindersError) {
       errors.append("Enable access to reminders in settings")
@@ -105,74 +95,19 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
     
     
-    // MARK: Reminders
-    if (content == .reminders) {
-      let calendars: [EKCalendar] = reminderIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
-      let reminderPredicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: calendars)
-      if let reminders = try? await eventStore.fetchRemindersAsync(predicate:reminderPredicate) {
-        let sortedReminders = reminders
-          .filter { $0.dueDateComponents?.date ?? .distantPast < endDate }
-          .sorted(by: compareReminders)
-        if (calendars.count != 0) {
-          reminderEntries.append(EventEntry(type:"header", title:calendars.map({$0.title}).joined(separator: ", ")))
-        }
-        reminderEntries.append(contentsOf: sortedReminders.map { EventEntry(id: $0.calendarItemIdentifier, item: $0) })
-      }
-    }
-    
-    func compareCalendarItems(_ a: EKCalendarItem, _ b: EKCalendarItem) -> Bool {
-      guard let aStart = a.start else { return false}
-      guard let bStart = b.start else { return true}
-      
-      if aStart != bStart { return aStart < bStart }
-      if a.title != b.title { return a.title < b.title }
-      
-      guard let lend = a.end else { return false}
-      guard let rend = b.end else { return true}
-      
-      if lend != rend { return lend < rend }
-      if b.calendar == defaultCalendar { return false }
-      return a.calendar.title < b.calendar.title;
-    }
-    
-    // MARK: Events
-    if (content == .calendar || content == .both) {
-      let calendars: [EKCalendar] = calendarIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
-      
-      if content == .both, let scheduledReminders =
-          try? await eventStore.fetchRemindersAsync(predicate: eventStore.predicateForIncompleteReminders(
-            withDueDateStarting: beginningOfDay,
-            ending: endDate, calendars: nil)) {
-        
-        calendarItems.append(contentsOf: scheduledReminders)
-      }
-      
-      let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
-      
-      let fetchedEvents = eventStore.events(matching: predicate)
-      calendarItems.append(contentsOf: fetchedEvents)
-      let sortedItems = calendarItems.sorted (by:compareCalendarItems)
-      calendarItems =  sortedItems//.map { EventEntry(id: $0.calendarItemIdentifier, item: $0) }
-    }
-    
-    
     // MARK: Errors
     if (errors.count > 0) {
       return Timeline(entries: [
         CalendarTimelineEntry(date: now, configuration: configuration,
                               events: errors.map({ error in
                                 EventEntry(type: error, title: error, url: URL(string: "settings:"))
-                              }))
+                              }), context: context)
       ], policy: .after(reloadDate))
     }
     
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "EEEE"
     
-    
-    let timeFormatter = DateFormatter()
-    timeFormatter.timeStyle = .short
-    timeFormatter.dateStyle = .short
     // MARK: Creating timeline entries
     
     let debug = false
@@ -184,32 +119,53 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     let distantPastEvent = EKEvent.init(eventStore: eventStore)
     distantPastEvent.startDate = .distantPast
-    var previousItem: EKCalendarItem = distantPastEvent
-    var headerIndex = 0
+    var previousItem: EKCalendarItem?
+    var headerIndex = -1
     
     let renderDate = now
     
-    if (content != .reminders) {
-      calendarEntries.append(EventEntry(type:"header", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: [],  children: []))
-    }
+    //    if (content != .reminders) {
+    //      calendarEntries.append(EventEntry(type:"header", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: [],  children: []))
+    //    }
+    //
     
     for (i, item) in calendarItems.enumerated() {
       
-      let lastDate = renderDate > previousItem.date ? renderDate : previousItem.date
+      var lastDate: Date = .distantPast
+      if let previousItem = previousItem {
+        lastDate = renderDate > previousItem.date ? renderDate : previousItem.date
+      }
+      
       let thisDate = renderDate > item.date ? renderDate : item.date
       let dateHasChanged = !calendar.isDate(lastDate, inSameDayAs: thisDate)
       
+      
+      
+      if (item.allDay) {
+        if (!showAllDay) { continue }
+        if !showMultiDay && !calendar.isDate(item.start ?? .distantPast, inSameDayAs: item.end ?? .distantFuture) { continue }
+      }
+      
       // Insert header row on day changes
       if (dateHasChanged) {
-        let priorHeader =  calendarEntries[headerIndex]
-        if (priorHeader.children?.count ?? 0) == 0 {
-          calendarEntries.remove(at: headerIndex)
+        if (headerIndex >= 0) {
+          let priorHeader = calendarEntries[headerIndex]
+          if (priorHeader.children?.count ?? 0) == 0 {
+            calendarEntries.remove(at: headerIndex)
+          }
         }
         
-        let title = calendar.isDateInTomorrow(item.date) ? relativeDateFormatterDay.string(from: item.date) : dateFormatter.string(from: item.date)
+        let title = calendar.isDateInToday(thisDate) || calendar.isDateInTomorrow(thisDate) ? relativeDateFormatterDay.string(from: thisDate) : dateFormatter.string(from: thisDate)
+        
+        let startOfDay = calendar.startOfDay(for: item.date)
+        let days = max(0, calendar.dateComponents([.day],
+                                                  from: calendar.startOfDay(for: renderDate),
+                                                  to: calendar.startOfDay(for:item.date)).day!)
+        
+        let forecast = weather?.dailyForecast[safe: days]
         let header = EventEntry(type: "header", title: title,
-                                startDate:calendar.startOfDay(for: item.date), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [], children: [],
-                                removeIfOrphaned: true)
+                                startDate:calendar.startOfDay(for: thisDate), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [], children: [],
+                                removeIfOrphaned: true, dayForecast:forecast)
         headerIndex = calendarEntries.count
         calendarEntries.append(header)
       } else {
@@ -221,7 +177,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
         formatter.includesApproximationPhrase = false
         
         if let thisStart = item.start {
-          let priorEnd = previousItem.end ?? renderDate
+          let priorEnd = previousItem?.end ?? renderDate
           let original = thisStart.timeIntervalSince(priorEnd)
           let rounded = TimeInterval((original / 900.0).rounded(.toNearestOrEven) * 900.0)
           
@@ -239,25 +195,29 @@ struct TimelineProvider: AppIntentTimelineProvider {
       }
       
       
-
+      
       
       
       var eventEntry = EventEntry(id: item.calendarItemIdentifier, startDate:item.start, endDate:item.end, item: item)
+      
       if let event = item as? EKEvent {
         
         // Ignore duplicates
-        if event.title == previousItem.title &&
+        if let previousItem = previousItem, event.title == previousItem.title &&
             calendar.isDate(event.startDate, equalTo: previousItem.date, toGranularity: .hour) {
-//          previousItem.duplicates = [eventEntry]
+          //          previousItem.duplicates = [eventEntry]
           continue
         }
         
-        if event.calendar != previousItem.calendar {
+        if event.calendar != previousItem?.calendar {
           eventEntry.suffix = String(event.calendar.title.prefix(1))
         }
         
+        
         if event.isAllDay {
-          if calendar.isDateInToday(event.startDate) && renderDate.advanced(by: 60 * 60 * 6) > endDate {
+          if true || calendar.isDateInToday(event.startDate)
+              && (renderDate.advanced(by: 60 * 60 * 3) < event.endDate) // remove all day events after 9
+          {
             calendarEntries[headerIndex].allDayItems?.insert(eventEntry, at:0)
             calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
             calendarEntries[headerIndex].removeIfOrphaned = false
@@ -278,8 +238,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
               eventEntry.locations = remainder
             }
             
-            let contactStore = CNContactStore()
+//            let contactStore = CNContactStore()
             if event.hasAttendees, let attendees = event.attendees {
+              
               //              attendees.forEach { person in
               //                let matches = try? contactStore.unifiedContacts(matching: person.contactPredicate, keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor])
               //              }
@@ -312,9 +273,6 @@ struct TimelineProvider: AppIntentTimelineProvider {
               }
               
               noteWithoutDocs = noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines)
-              
-              
-              
               eventEntry.attachments = docs
               
               if (firstNote.contains("</")) {
@@ -325,7 +283,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
               
               print("\n===\(event.title ?? "UNTITLED") ===")
               if (docs.count > 0) { print("Docs \(docs.map({ "\($0.title) <\($0.urlString)>"}))")}
-              if (noteWithoutDocs.count > 0) { print("Note:[\(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))]\n \(note)")}
+              //              if (noteWithoutDocs.count > 0) { print("Note:[\(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))]\n \(note)")}
               
             }
             
@@ -348,7 +306,6 @@ struct TimelineProvider: AppIntentTimelineProvider {
       
       previousItem = item
     }
-    
     
 #if os(iOS) || os(watchOS)
     if context?.family == .accessoryRectangular
@@ -377,22 +334,101 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
     
     
+//    if let weather = weather {
+//
+//      //      let hourlyForecast = weather.hourlyForecast
+//      //
+//      //      for forecast in hourlyForecast.forecast.prefix(24) {
+//      //        let eventEntry = EventEntry(type: "weather",
+//      //                                    title:"Weather",
+//      //                                    startDate: forecast.date,
+//      //                                    endDate: forecast.date.addingTimeInterval(3600),
+//      //                                    forecast: forecast
+//      //        )
+//      //        calendarEntries.append(eventEntry)
+    //      //      }
+    //    }
+    
+    
+    let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
+    
+    let fullMinuteDate = calendar.date(from: components)!
     
     for minuteOffset in 0 ..< 15 {
-      let renderDate = Calendar.current.date(byAdding: .minute, value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: now)!
-      let entryDate = Calendar.current.date(byAdding: debug ? .second : .minute, value: minuteOffset, to: now)!
-      
+      let renderDate = calendar.date(byAdding: .minute,
+                                             value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: fullMinuteDate)!
+      let entryDate = calendar.date(byAdding: debug ? .second : .minute,
+                                            value: minuteOffset,
+                                            to: fullMinuteDate)!
       
       let timelineEntry = CalendarTimelineEntry(date: entryDate,
                                                 configuration: configuration,
                                                 reminders: reminderEntries,
-                                                events: calendarEntries)
+                                                events: calendarEntries,
+                                                weather: weather,
+                                                context: context)
       timelineEntries.append(timelineEntry)
       
     }
-    
+    print ("Returning timeline in \(round(-now.timeIntervalSinceNow * 1000))ms\nTimes: [\(timelineEntries.map({ shortTimeFormatter.string(from:$0.date)}).joined(separator:", "))]")
+
     return Timeline(entries: timelineEntries, policy: .atEnd)
     
+  }
+  
+  private func fetchWeather() async -> Weather? {
+    print("Fetching Weather")
+    do {
+      return try await weatherManager.fetchWeather()
+    } catch {
+      print("Weather Error: \(error.localizedDescription)")
+    }
+    return nil
+  }
+  
+  private func fetchReminders(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EventEntry] {
+    guard configuration.content == .reminders || configuration.content == .both else { return [] }
+    
+    let reminderIDs = configuration.reminders.map({$0.id})
+    let calendars: [EKCalendar] = reminderIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
+    let reminderPredicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: calendars)
+    
+    print("Fetching Reminders")
+    if let reminders = try? await eventStore.fetchRemindersAsync(predicate:reminderPredicate) {
+      let sortedReminders = reminders
+        .filter { $0.dueDateComponents?.date ?? .distantPast < endDate }
+        .sorted(by: compareReminders)
+      var reminderEntries: [EventEntry] = []
+      if (calendars.count != 0) {
+        reminderEntries.append(EventEntry(type:"header", title:calendars.map({$0.title}).joined(separator: ", ")))
+      }
+      reminderEntries.append(contentsOf: sortedReminders.map { EventEntry(id: $0.calendarItemIdentifier, item: $0) })
+      return reminderEntries
+    }
+    return []
+  }
+  
+  private func fetchScheduledReminders(startDate: Date, endDate: Date) async -> [EKReminder] {
+    print("Fetching Scheduled Reminders")
+    do {
+      return try await eventStore.fetchRemindersAsync(predicate: eventStore.predicateForIncompleteReminders(
+        withDueDateStarting: Calendar.current.startOfDay(for: startDate),
+        ending: endDate, calendars: nil))
+    } catch {
+      print("Reminder Error: \(error)")
+      return []
+    }
+  }
+  
+  private func fetchEvents(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EKEvent] {
+    guard configuration.content == .calendar || configuration.content == .both else { return [] }
+    
+    let calendarIDs = configuration.calendars.map({$0.id})
+    let calendars: [EKCalendar] = calendarIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
+    let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+    
+    print("Fetching Events")
+    return eventStore.events(matching: predicate)
   }
   
   func recommendations() -> [AppIntentRecommendation<ConfigurationIntent>] {

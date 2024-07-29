@@ -14,7 +14,7 @@ struct WidgetPreviewView: View {
     var body: some View {
       VStack {
         if let entry = timeline?.entries.first {
-          TextWidgetView(entry: entry)
+          ChronographWidgetView(entry: entry)
         } else {
           Text("Loading...")
         }
@@ -33,16 +33,36 @@ struct WidgetPreviewView: View {
         WidgetCenter.shared.reloadAllTimelines()
       }
       .task {
-        reloadTimeline()
+        reloadTimeline() 
       }
      
     }
 }
 
-#Preview(traits: .fixedLayout(width: 1000, height: 640)) {
-  WidgetPreviewView(config: ConfigurationIntent.comboConfig)
-    .frame(minWidth:320, maxHeight: .infinity)
-    .border(.white)
+
+#Preview("Calendar") {
+  var config = ConfigurationIntent.comboConfig
+  var testConfig: ConfigurationIntent {
+    let config = ConfigurationIntent()
+    config.content = .both
+    config.calendars = []
+    config.fontStyle = .normal
+    config.fontSize = .tiny
+    config.accentColor = "#FF5500"
+    config.features = [.allDayEvents, .calendarColors]
+    return config
+  }
+ 
+  WidgetPreviewView(config: testConfig)
+    .frame(minWidth:240, maxHeight: 555)
+    .border(.black)
     .padding()
 
+}
+
+#Preview("Reminders", traits: .fixedLayout(width: 160, height: 160)) {
+  WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+    .frame(minWidth:160, maxHeight: 160)
+    .border(.white)
+    .padding()
 }

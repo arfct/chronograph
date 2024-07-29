@@ -45,9 +45,10 @@ struct FacePile: View {
     if let attendees = event.attendees, attendees.count > 2 {
       
       HStack(spacing:4) {
-        Image(systemName: "\(attendees.count).circle")
+        Image(systemName: "person")
         Text(attendees.compactMap { $0.isCurrentUser ? nil :  $0.displayName }.joined(separator: ", "))
           .lineLimit(1)
+        Text(attendees.count, format:.number)
       }
 //      LazyVGrid(
 //        columns: [GridItem(.adaptive(minimum: 1, maximum: 100))],

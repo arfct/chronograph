@@ -18,10 +18,7 @@ func convertToSuperscript(time: String) -> String {
   return hour + minute
 }
 
-
-
-
-private var timeFormatter: DateFormatter {
+var shortTimeFormatter: DateFormatter {
   let formatter = DateFormatter()
   formatter.dateFormat = "H:mm"
   return formatter

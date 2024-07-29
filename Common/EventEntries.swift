@@ -1,4 +1,5 @@
 import EventKit
+import WeatherKit
 
 struct EventAttachment: Hashable {
   static let typeImageMappings = [
@@ -37,6 +38,35 @@ struct EventAttachment: Hashable {
 }
 
 class EventEntry: Identifiable, Hashable {
+  internal init(id: String = UUID().uuidString, type: String? = nil, title: String? = nil, startDate: Date? = nil, endDate: Date? = nil, url: URL? = nil, suffix: String? = nil, item: EKCalendarItem? = nil, allDayItems: [EventEntry]? = nil, children: [EventEntry]? = nil, duplicates: [EventEntry]? = nil, forecast: HourWeather? = nil, removeIfOrphaned: Bool = false, height: CGFloat = 1, locations: [String]? = nil, meeting: EventAttachment? = nil, notes: AttributedString? = nil, attachments: [EventAttachment]? = nil, currentForecast: CurrentWeather? = nil, dayForecast: DayWeather? = nil, hourForecast: HourWeather? = nil, date: Date? = nil, hasConflict: Bool = false, hasStartConflict: Bool = false, isFirstConflict: Bool = false) {
+    self.id = id
+    self.type = type
+    self.title = title
+    self.startDate = startDate
+    self.endDate = endDate
+    self.url = url
+    self.suffix = suffix
+    self.item = item
+    self.allDayItems = allDayItems
+    self.children = children
+    self.duplicates = duplicates
+    self.forecast = forecast
+    self.removeIfOrphaned = removeIfOrphaned
+    self.height = height
+    self.locations = locations
+    self.meeting = meeting
+    self.notes = notes
+    self.attachments = attachments
+    self.currentForecast = currentForecast
+    self.dayForecast = dayForecast
+    self.hourForecast = hourForecast
+    self.date = date
+    self.hasConflict = hasConflict
+    self.hasStartConflict = hasStartConflict
+    self.isFirstConflict = isFirstConflict
+  }
+  
+ 
    
   var id: String = UUID().uuidString
   var type: String?
@@ -49,41 +79,21 @@ class EventEntry: Identifiable, Hashable {
   var allDayItems: [EventEntry]?
   var children: [EventEntry]?
   var duplicates: [EventEntry]?
+  var forecast: HourWeather?
   var removeIfOrphaned: Bool = false
   var height: CGFloat = 1
   var locations: [String]?
   var meeting: EventAttachment?
   var notes: AttributedString?
   var attachments: [EventAttachment]?
+  var currentForecast: CurrentWeather?
+  var dayForecast: DayWeather?
+  var hourForecast: HourWeather?
   
   var date: Date?
   var hasConflict: Bool = false
   var hasStartConflict: Bool = false
   var isFirstConflict: Bool = false
-
-  internal init(id: String = UUID().uuidString, type: String? = nil, title: String? = nil, startDate: Date? = nil, endDate: Date? = nil, url: URL? = nil, suffix: String? = nil, item: EKCalendarItem? = nil, allDayItems: [EventEntry]? = nil, children: [EventEntry]? = nil, duplicates: [EventEntry]? = nil, removeIfOrphaned: Bool = false, height: CGFloat = 1, locations: [String]? = nil, meeting: EventAttachment? = nil, notes: AttributedString? = nil, attachments: [EventAttachment]? = nil, date: Date? = nil, hasConflict: Bool = false, hasStartConflict: Bool = false, isFirstConflict: Bool = false) {
-    self.id = id
-    self.type = type
-    self.title = title
-    self.startDate = startDate
-    self.endDate = endDate
-    self.url = url
-    self.suffix = suffix
-    self.item = item
-    self.allDayItems = allDayItems
-    self.children = children
-    self.duplicates = duplicates
-    self.removeIfOrphaned = removeIfOrphaned
-    self.height = height
-    self.locations = locations
-    self.meeting = meeting
-    self.notes = notes
-    self.attachments = attachments
-    self.date = date
-    self.hasConflict = hasConflict
-    self.hasStartConflict = hasStartConflict
-    self.isFirstConflict = isFirstConflict
-  }
 
   
   static func == (lhs: EventEntry, rhs: EventEntry) -> Bool {
@@ -97,7 +107,7 @@ class EventEntry: Identifiable, Hashable {
   func conflictsWith(_ other: EventEntry) -> Bool {
     guard let end = endDate, item != nil else { return false }
     guard let otherStart = other.startDate, other.item != nil else { return false }
-    print(item?.title ?? title, other.item?.title ?? other.title, otherStart < end, otherStart , end)
+//    print(item?.title ?? title, other.item?.title ?? other.title, otherStart < end, otherStart , end)
     return otherStart < end
   }
   
