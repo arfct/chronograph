@@ -48,14 +48,17 @@ struct ChronographWidgetView : View {
     self.isAccessory = true
     self.heightIsLimited = true
     self.widthIsLimited = true
+    let isIOS = false
 #elseif os(macOS)
     self.isAccessory = false
     self.heightIsLimited = isAccessory
     self.widthIsLimited = isAccessory || (widgetFamily == .systemSmall)
+    let isIOS = false
 #else
     self.isAccessory = (widgetFamily == .accessoryRectangular)
     self.heightIsLimited = isAccessory
     self.widthIsLimited = isAccessory || (widgetFamily == .systemSmall)
+    let isIOS = true
 #endif
     
     
@@ -65,10 +68,9 @@ struct ChronographWidgetView : View {
     self.fullBleed = widgetFamily == .accessoryRectangular || entry.configuration.features.contains(.fullBleed)
 #endif
     
-    
     let baseFont = UIFont.preferredFont(forTextStyle: textStyle)
     let baseFontSize = baseFont.pointSize
-    self.fontSize = widthIsLimited ? baseFontSize * 0.75 : baseFontSize
+    self.fontSize = isAccessory && isIOS ? baseFontSize * 0.75 : baseFontSize
     self.lineHeight = self.fontSize * baseFont.lineHeight / baseFont.pointSize * (heightIsLimited ? 1.0 : 1.5)
     
     var visibleCount = 30
@@ -120,7 +122,7 @@ struct ChronographWidgetView : View {
       config.defaultRemindersList = eventStore.defaultCalendarForNewReminders()
       config.compactTime = compactTime
       config.tokenize = tokenize
-      config.showTimeBars = entry.configuration.features.contains(.timeBars)
+      config.showTimeBars = entry.configuration.features.contains(.timeBars) && !widthIsLimited
       return config
     }()
     

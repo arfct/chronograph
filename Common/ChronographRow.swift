@@ -175,11 +175,20 @@ struct EventRowView: View {
         HStack(alignment: .center, spacing:2) {
           Link(destination: event.url ??
                URL(string:eventid)!) {
+            let (emoji, remaining) = extractEmoji(from: title)
             
+
             if (config.tokenize) {
-              TokenizedTextView(text:title, font:config.font, tokenFont:config.font)
+              TokenizedTextView(text:remaining, font:config.font, tokenFont:config.font)
             } else {
-              Text(title)
+              HStack(alignment: .center, spacing:1) {
+                Text(remaining)
+                if emoji.count > 0 {
+                  Text(emoji)
+                    .font(config.smallFont)
+                }
+              }
+       
             }
             
           }.font(config.font)
@@ -291,16 +300,7 @@ struct ReminderRowView: View {
     
     HStack(alignment:.center, spacing: RowViewConfig.columnSpacing) {
       
-      if (entry.startDate != nil) {
-        TimeStringView(entry:entry, config:config)
-          .foregroundColor(.primary)
-          .widgetAccentable(true)
-          .frame(minWidth:config.keyline, alignment: .trailing)
-      } else {
-        Text("").frame(minWidth:config.keyline, alignment: .trailing)
-      }
-      
-      HStack() {
+      let circleView = HStack() {
         Image(systemName: "circle")
           .imageScale(.small)
           .font(config.font)
@@ -308,6 +308,25 @@ struct ReminderRowView: View {
           .widgetAccentable()
       }
       .frame(minWidth:config.fontSize, maxHeight:.infinity, alignment: .center)
+      
+      
+      if (!config.widthIsLimited) {
+        if (entry.startDate != nil) {
+          TimeStringView(entry:entry, config:config)
+            .foregroundColor(.primary)
+            .widgetAccentable(true)
+            .frame(minWidth:config.keyline, alignment: .trailing)
+        } else {
+          Text("").frame(minWidth:config.keyline, alignment: .trailing)
+        }
+        circleView
+      } else {
+        circleView
+        
+        .frame(minWidth:config.keyline, alignment: .trailing)
+      }
+      
+
       
       
       Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
@@ -351,13 +370,13 @@ struct ReminderRowView: View {
       }
       
       
-      if reminder.calendar != config.defaultRemindersList,
-         let initial = reminder.calendar?.title.first {
-        Image(systemName: "\(String(initial).lowercased()).circle")
-          .imageScale(.small)
-          .foregroundColor(config.accentColor)
-          .widgetAccentable()
-      }
+//      if reminder.calendar != config.defaultRemindersList,
+//         let initial = reminder.calendar?.title.first {
+//        Image(systemName: "\(String(initial).lowercased()).circle")
+//          .imageScale(.small)
+//          .foregroundColor(config.accentColor)
+//          .widgetAccentable()
+//      }
       
       
     }

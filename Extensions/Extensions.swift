@@ -14,5 +14,5 @@ func extractEmoji(from input: String) -> (emojis: String, remaining: String) {
     }
   }
 
-  return (emojis, remaining)
+  return (emojis, remaining.trimmingCharacters(in: .whitespacesAndNewlines))
 }

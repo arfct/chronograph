@@ -29,7 +29,7 @@ struct ContentView: View {
       VStack(spacing:10) {
         if EKEventStore.authorizationStatus(for: .event) == .fullAccess {
           WidgetPreviewView(config:ConfigurationIntent.calendarConfig)
-            .frame(minHeight: 100)
+            .frame(minHeight: 600)
         } else {
           Button(action: {
             
