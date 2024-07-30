@@ -60,3 +60,21 @@ var percentFormatter: NumberFormatter {
   formatter.maximumFractionDigits = 2
   return formatter
 }
+
+var dayOfWeekFormat: DateFormatter  {
+  let formatter = DateFormatter()
+  formatter.dateFormat = "EEE"
+  return formatter
+}
+
+var dayOfWeekLongFormat: DateFormatter  {
+  let formatter = DateFormatter()
+  formatter.dateFormat = "EEEE"
+  return formatter
+}
+
+var dayOfMonthFormat: DateFormatter  {
+  let formatter = DateFormatter()
+  formatter.dateFormat = "d"
+  return formatter
+}

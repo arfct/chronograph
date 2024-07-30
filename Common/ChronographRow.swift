@@ -22,7 +22,7 @@ struct RowViewConfig {
   var heightIsLimited: Bool = false
   
   var showTimeBars: Bool = false
-  static let columnSpacing = 4.0
+  var columnSpacing: CGFloat = 3.0
 }
 
 var tempFormatter: MeasurementFormatter {
@@ -45,7 +45,7 @@ struct WeatherRowView: View {
   let entry: EventEntry
   let forecast: HourWeather
   let config: RowViewConfig
-
+  
   
   var body: some View {
     
@@ -118,6 +118,22 @@ struct TimeStringView: View {
   }
 }
 
+struct TimeBarView: View {
+  let entry: EventEntry
+  let config: RowViewConfig
+  let color: Color?
+  
+  var body: some View {
+    let SFRegularStrokeWidthMultiple = 0.085
+    VStack(alignment: .center, spacing:3) {
+      RoundedRectangle(cornerRadius: .infinity)
+        .fill((color ?? .secondary).opacity(0.5))
+        .frame(maxWidth:SFRegularStrokeWidthMultiple * config.fontSize * 1.5)
+      
+    }
+    .padding(.vertical, config.fontSize / 8)
+  }
+}
 struct EventRowView: View {
   let event: EKEvent
   let entry: EventEntry
@@ -146,7 +162,7 @@ struct EventRowView: View {
     
     let title = (event.title.count > 0 ? event.title : nil) ?? "Untitled"
     
-    HStack(alignment: .top, spacing:RowViewConfig.columnSpacing) {
+    HStack(alignment: .top, spacing:config.columnSpacing) {
       VStack(spacing: 0) {
         HStack {
           if (entry.hasConflict && entry.hasStartConflict) {
@@ -161,15 +177,8 @@ struct EventRowView: View {
       .frame(minWidth:config.keyline, alignment: .trailing)
       
       if (config.showTimeBars) {
-        let SFRegularStrokeWidthMultiple = 0.085
-        VStack(alignment: .center, spacing:3) {
-          RoundedRectangle(cornerRadius: .infinity)
-            .fill(color ?? .secondary)
-            .frame(maxWidth:SFRegularStrokeWidthMultiple * config.fontSize)
-          
-        }
-        .padding(.vertical, 4)
-        .frame(minWidth:config.fontSize, maxHeight:.infinity)
+        TimeBarView(entry: entry, config:config, color: color)
+          .frame(minWidth:config.fontSize, maxHeight:.infinity)
       }
       
       
@@ -179,7 +188,7 @@ struct EventRowView: View {
                URL(string:eventid)!) {
             let (emoji, remaining) = extractEmoji(from: title)
             
-
+            
             if (config.tokenize) {
               TokenizedTextView(text:remaining, font:config.font, tokenFont:config.font)
             } else {
@@ -190,7 +199,7 @@ struct EventRowView: View {
                     .font(config.smallFont)
                 }
               }
-       
+              
             }
             
           }.font(config.font)
@@ -300,7 +309,7 @@ struct ReminderRowView: View {
     let hoursAway = Double(entry.startDate?.timeIntervalSince(config.entry.date) ?? 0.0) / 60.0 / 60.0
     let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
     
-    HStack(alignment:.center, spacing: RowViewConfig.columnSpacing) {
+    HStack(alignment:.center, spacing: config.columnSpacing) {
       
       let circleView = HStack() {
         Image(systemName: "circle")
@@ -309,7 +318,7 @@ struct ReminderRowView: View {
           .foregroundColor(config.accentColor)
           .widgetAccentable()
       }
-      .frame(minWidth:config.fontSize, maxHeight:.infinity, alignment: .center)
+        .frame(minWidth:config.fontSize, maxHeight:.infinity, alignment: .center)
       
       
       if (!config.widthIsLimited) {
@@ -325,10 +334,10 @@ struct ReminderRowView: View {
       } else {
         circleView
         
-        .frame(minWidth:config.keyline, alignment: .trailing)
+          .frame(minWidth:config.keyline, alignment: .trailing)
       }
       
-
+      
       
       
       Link(destination: reminder.url ?? URL(string:"x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)")!) {
@@ -372,13 +381,13 @@ struct ReminderRowView: View {
       }
       
       
-//      if reminder.calendar != config.defaultRemindersList,
-//         let initial = reminder.calendar?.title.first {
-//        Image(systemName: "\(String(initial).lowercased()).circle")
-//          .imageScale(.small)
-//          .foregroundColor(config.accentColor)
-//          .widgetAccentable()
-//      }
+      //      if reminder.calendar != config.defaultRemindersList,
+      //         let initial = reminder.calendar?.title.first {
+      //        Image(systemName: "\(String(initial).lowercased()).circle")
+      //          .imageScale(.small)
+      //          .foregroundColor(config.accentColor)
+      //          .widgetAccentable()
+      //      }
       
       
     }
@@ -398,7 +407,7 @@ struct FreeRowView: View {
     let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
     let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
     
-    HStack(alignment: .center, spacing: RowViewConfig.columnSpacing) {
+    HStack(alignment: .center, spacing: config.columnSpacing) {
       
       HStack{}.frame(minWidth:config.keyline, alignment:.trailing)
       if (config.showTimeBars) {
@@ -452,92 +461,115 @@ struct ErrorRowView: View {
 struct HeaderRowView: View {
   let entry: EventEntry
   let config: RowViewConfig
+  let large: Bool
   
   var body: some View {
     let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
     let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
-    HStack(alignment: .center, spacing: RowViewConfig.columnSpacing) {
-      
-      var dayOfWeekFormat: DateFormatter  {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEE"
-        return formatter
-      }
-      var dayOfMonthFormat: DateFormatter  {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d"
-        return formatter
-      }
-      let hasAllDayItems = entry.allDayItems?.count ?? 0 > 0
-      
-      if (true) {
-        
-        if let startDate = entry.startDate,
-           let shortDayName = dayOfWeekFormat.string(for:startDate),
-           let shortDayNumber = dayOfMonthFormat.string(for:startDate)
-        {
-          VStack() {
-            HStack { Text(shortDayName)}
-            .font(config.smallFont)
-            .textCase(.uppercase)
-            .lineLimit(1)
-            .kerning(1)
-            .monospaced()
-            .widgetAccentable()
-            .frame(minWidth:config.widthIsLimited ? config.keyline : 0, alignment:.trailing)
-          }.frame(minWidth:config.keyline, alignment:.trailing)
-          
-          if (!config.widthIsLimited) {
-            VStack() {
-              Text(shortDayNumber)
-                .foregroundColor(config.accentColor)
+    
+    
+    
+    let hasAllDayItems = entry.allDayItems?.count ?? 0 > 0
+    
+    let allDayItems = VStack(alignment:.leading) {
+      HStack(alignment:.center) {
+        if let allDayItems = entry.allDayItems?.prefix(config.widthIsLimited ? 2: 3) {
+          let visibleItems = config.widthIsLimited ? allDayItems : allDayItems
+          ForEach(visibleItems) { item in
+            if let title = item.item?.title {
+              let (emoji, remaining) = extractEmoji(from: title)
+              Text(sanitizeAllDayEvents(remaining))
                 .font(config.smallFont)
-            }.frame(minWidth:config.fontSize, alignment:.center)
-          }
-        }
-      }
-      
-      if let forecast = entry.dayForecast {
-        HStack {
-          Text(Image(systemName: forecast.symbolName))
-          + (forecast.precipitationChance > 0 ? Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter) : Text(""))
-          + Text(" ")
-          + Text(tempFormatter.string(from: forecast.lowTemperature.converted(to: .fahrenheit)).replacingOccurrences(of: "°", with: ""))
-          + Text("–")
-          + Text(forecast.highTemperature.converted(to: .fahrenheit), formatter: tempFormatterTrailing)
-          
-          
-
-        }.font(config.smallFont)
-      }
-      
-      
-      
-      VStack(alignment:.leading) {
-        HStack(alignment:.center) {
-          if let allDayItems = entry.allDayItems?.prefix(config.widthIsLimited ? 2: 3) {
-            let visibleItems = config.widthIsLimited ? allDayItems : allDayItems
-            ForEach(visibleItems) { item in
-              if let title = item.item?.title {
-                let (emoji, remaining) = extractEmoji(from: title)
-                Text(sanitizeAllDayEvents(remaining))
-                  .font(config.smallFont)
-                  .foregroundColor(Color.secondary)
-                  .lineLimit(1)
-                //              if emoji.count > 0 {
-                //                Text(emoji)
-                //                  .font(config.smallFont)
-                //              }
-              }
+                .foregroundColor(Color.secondary)
+                .lineLimit(1)
+              //              if emoji.count > 0 {
+              //                Text(emoji)
+              //                  .font(config.smallFont)
+              //              }
             }
           }
         }
-        
       }
-      
     }
-    .padding(.top, config.heightIsLimited ? 0 : config.lineHeight / 2)
-    .padding(.bottom, config.heightIsLimited ? 0 : config.lineHeight / 8)
-    .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
+    
+    let forecastView =  HStack(spacing:0) {
+      Text("")
+      if let forecast = entry.dayForecast {
+        
+        Text(Image(systemName: forecast.symbolName))
+        + (forecast.precipitationChance > 0 ? Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter) : Text(""))
+        + Text(" ")
+        + Text(tempFormatter.string(from: forecast.lowTemperature.converted(to: .fahrenheit)).replacingOccurrences(of: "°", with: ""))
+        + Text("–")
+        + Text(forecast.highTemperature.converted(to: .fahrenheit), formatter: tempFormatterTrailing)
+      }
+    }.font(config.smallFont)
+    
+    
+    
+    if let startDate = entry.startDate,
+       let shortDayName = dayOfWeekFormat.string(for:startDate),
+       let shortDayNumber = dayOfMonthFormat.string(for:startDate)
+    {
+      
+      let dayName =
+      Text(shortDayName)
+        .font(config.smallFont)
+        .textCase(.uppercase)
+        .lineLimit(1)
+        .kerning(1)
+        .monospaced()
+        .widgetAccentable()
+        .frame(minWidth:config.widthIsLimited ? config.keyline : 0, alignment:.trailing)
+      
+      let dayNumber = Text(shortDayNumber)
+        .foregroundColor(config.accentColor)
+       
+        if (large) {
+          HStack(alignment: .center, spacing: config.columnSpacing) {
+            
+            VStack() {
+              dayNumber
+                .font(.system(size: config.fontSize * 1.8).weight(.light))
+            }.frame(width:config.keyline, alignment:.trailing)
+              
+            TimeBarView(entry: entry, config:config, color: nil)
+              .frame(minWidth:config.fontSize, maxHeight:.infinity)
+              
+            
+            VStack(alignment:.leading) {
+              HStack(spacing:config.smallFontSize / 2) {
+                dayName
+                forecastView
+              }
+              allDayItems
+            }
+            .padding(.vertical, config.lineHeight / 2)
+          }
+          .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
+          .fixedSize(horizontal: false, vertical: true)
+          
+        } else {
+          HStack(alignment: .center, spacing: config.columnSpacing) {
+            
+            VStack() {
+              dayName
+            }.frame(minWidth:config.keyline, alignment:.trailing)
+            
+            if (!config.widthIsLimited) {
+              VStack() {
+                dayNumber
+                  .font(config.smallFont)
+              }.frame(minWidth:config.fontSize, alignment:.center)
+            }
+            forecastView
+            allDayItems
+          }
+          .padding(.top, config.heightIsLimited ? 0 : config.lineHeight / 2)
+          .padding(.bottom, config.heightIsLimited ? 0 : config.lineHeight / 8)
+          .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
+        }
+
+    }
   }
 }

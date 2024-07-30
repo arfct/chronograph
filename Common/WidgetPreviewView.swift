@@ -39,7 +39,6 @@ struct WidgetPreviewView: View {
     }
 }
 
-
 #Preview("Calendar") {
   var config = ConfigurationIntent.comboConfig
   var testConfig: ConfigurationIntent {
@@ -49,13 +48,12 @@ struct WidgetPreviewView: View {
     config.fontStyle = .normal
     config.fontSize = .tiny
     config.accentColor = "#FF5500"
-    config.features = [.allDayEvents, .calendarColors]
+    config.features = [.allDayEvents, .calendarColors, .timeBars, .weather]
     return config
   }
  
   WidgetPreviewView(config: testConfig)
     .frame(minWidth:240, maxHeight: 555)
-    .border(.black)
     .padding()
 
 }

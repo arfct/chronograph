@@ -100,7 +100,7 @@ struct ChronographWidgetView : View {
       config.accentColor = entry.configuration.accentColor.count > 0 ?
       Color.withHex(entry.configuration.accentColor) : .secondary
       config.colorScheme = isDark ? .dark : .light
-      config.keyline = config.fontSize * (compactTime ? 2.25 : 2.5)
+      config.keyline = config.fontSize * (compactTime ? 2.25 : 2.6)
       config.widthIsLimited = widthIsLimited
       config.heightIsLimited = heightIsLimited
       
@@ -118,6 +118,7 @@ struct ChronographWidgetView : View {
         config.font = config.font.width(.standard)
       }
       
+      config.columnSpacing = fontSize / 8
       config.defaultCalendar = eventStore.defaultCalendarForNewEvents
       config.defaultRemindersList = eventStore.defaultCalendarForNewReminders()
       config.compactTime = compactTime
@@ -156,7 +157,8 @@ struct ChronographWidgetView : View {
           } else if entry.type == "error" {
             ErrorRowView(entry: entry, config: row)
           } else if entry.type == "header" {
-            HeaderRowView(entry: entry, config: row)
+            let large = !widthIsLimited && widgetFamily != .systemMedium
+            HeaderRowView(entry: entry, config: row, large: large)
           } else if entry.type == "free" {
             FreeRowView(entry: entry, config: row)
           }
