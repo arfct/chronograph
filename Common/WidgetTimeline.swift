@@ -330,12 +330,12 @@ struct TimelineProvider: AppIntentTimelineProvider {
       previousItem = item
     }
     
-#if os(iOS) || os(watchOS)
-    if context?.family == .accessoryRectangular
-        && calendarEntries.first?.allDayItems?.count == 0 {
-      calendarEntries.removeFirst()
-    }
-#endif
+//#if os(iOS) || os(watchOS)
+//    if context?.family == .accessoryRectangular
+//        && calendarEntries.first?.allDayItems?.count == 0 {
+//      calendarEntries.removeFirst()
+//    }
+//#endif
     
     
     // TODO: Sort these so that longer items are sorted after shorter items to correctly catch conflicts. Also sort by name to de-dup items on multiple calendars
