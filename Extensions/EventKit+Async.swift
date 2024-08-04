@@ -108,6 +108,27 @@ extension EKCalendarItem {
   }
 }
 
+
+func compareCalendarItems(_ reminder1: EKCalendarItem, _ reminder2: EKCalendarItem) -> Bool {
+  if let dueDate1 = reminder1.start, let dueDate2 = reminder2.start {
+      let now = Date()
+        if dueDate1 != dueDate2 { // sort by distance from now
+          return abs(dueDate1.timeIntervalSince(now)) < abs(dueDate2.timeIntervalSince(now))
+        }
+    } else if reminder1.start != nil {
+        return true
+    } else if reminder2.start != nil {
+        return false
+    }
+    
+    // If due dates are the same or both nil, compare by creation date
+    if let creationDate1 = reminder1.creationDate, let creationDate2 = reminder2.creationDate {
+        return creationDate1 > creationDate2
+    }
+
+    return false
+}
+
 func compareReminders(_ reminder1: EKReminder, _ reminder2: EKReminder) -> Bool {
     if let dueDate1 = reminder1.dueDateComponents?.date, let dueDate2 = reminder2.dueDateComponents?.date {
       let now = Date()

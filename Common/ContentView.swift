@@ -90,13 +90,32 @@ struct ContentView: View {
             }.frame(maxWidth:400)
             
             VStack {
+              if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+//                WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+//                  .frame(minHeight: 120)
+              } else {
+                Button(action: {
+                  Task {
+                    await checkRemindersAccess(interactive: true)
+                    remindersAccessGranted = true
+                  }
+                }) {
+                  Label("Enable Reminders Access", systemImage: "lock")
+                }
+              }
+            }.frame(maxWidth:400)
+            
+            
+            VStack {
               if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
                 if (isCompact) {
-                  WidgetPreviewView(config: ConfigurationIntent.comboConfig)
+                  WidgetPreviewView(config: ConfigurationIntent.appComboConfig)
                     .frame(minHeight: 1024)
+                    .padding(.leading, 20)
                 } else {
-                  WidgetPreviewView(config: ConfigurationIntent.bigComboConfig)
+                  WidgetPreviewView(config: ConfigurationIntent.bigAppComboConfig)
                     .frame(minHeight: 1440)
+                  
                 }
               } else {
                 Button(action: {
@@ -110,25 +129,8 @@ struct ContentView: View {
               }
             }.frame(maxWidth:isCompact ? 400 : 800)
             
-            Divider()
-              .padding(.vertical, 20)
-              .padding(.leading, 36)
             
-            VStack {
-              if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
-                WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
-                  .frame(minHeight: 120)
-              } else {
-                Button(action: {
-                  Task {
-                    await checkRemindersAccess(interactive: true)
-                    remindersAccessGranted = true
-                  }
-                }) {
-                  Label("Enable Reminders Access", systemImage: "lock")
-                }
-              }
-            }.frame(maxWidth:400)
+
             
             
           }

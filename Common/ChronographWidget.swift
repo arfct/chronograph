@@ -2,6 +2,33 @@ import WidgetKit
 import SwiftUI
 import EventKit
 
+
+
+struct CustomToggleStyle: ToggleStyle {
+  var onLabel: String
+  var offLabel: String
+  var onImageName: String
+  var offImageName: String
+  var onColor: Color
+  var offColor: Color
+
+  func makeBody(configuration: Configuration) -> some View {
+    HStack {
+      Link(destination: URL(string: "https://www.google.com")!) {
+        Text(configuration.isOn ? onLabel : offLabel)
+          .font(.headline)
+
+      }
+      Image(systemName: configuration.isOn ? onImageName : offImageName)
+        .resizable()
+        .frame(width: 24, height: 24)
+        .foregroundColor(configuration.isOn ? onColor : offColor)
+      configuration.label
+    }
+    .padding()
+  }
+}
+
 struct ChronographWidgetView : View {
   @Environment(\.colorScheme) var colorScheme
   @Environment(\.widgetContentMargins) var margins
@@ -11,9 +38,16 @@ struct ChronographWidgetView : View {
   @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
   
+//  @AppStorage("KEY", store: UserDefaults(suiteName: Keys.suiteName)) private var defaultValueTest1 = "test1"
+  
+  @AppStorage("view") private var defaultValueTest2 = "view"
+  
   @State private var eventStore = EKEventStore()
   @State private var visibleItemCount: Int
   @State private var extraSpace: CGFloat = 0.0
+  
+  @State private var toggled = false
+  
   
   private var isAccessory = false
   private var heightIsLimited = false
@@ -56,7 +90,7 @@ struct ChronographWidgetView : View {
     let isIOS = false
 #else
     self.isAccessory = (widgetFamily == .accessoryRectangular)
-    self.heightIsLimited = isAccessory
+    self.heightIsLimited = isAccessory || widgetFamily == .systemSmall
     self.widthIsLimited = isAccessory || (widgetFamily == .systemSmall)
     let isIOS = true
 #endif
@@ -69,14 +103,23 @@ struct ChronographWidgetView : View {
 #endif
     
     let baseFont = UIFont.preferredFont(forTextStyle: textStyle)
-    let baseFontSize = baseFont.pointSize
-    self.fontSize = isAccessory && isIOS ? baseFontSize * 0.75 : baseFontSize
-    self.lineHeight = self.fontSize * baseFont.lineHeight / baseFont.pointSize * (heightIsLimited ? 1.0 : 1.5)
     
+    self.lineHeight = baseFont.lineHeight
+    self.fontSize = baseFont.pointSize
+
+    if let minLines = FontSize.caseMinLines[entry.configuration.fontSize],
+       let height = entry.context?.displaySize.height {
+      self.lineHeight = min(self.lineHeight, height / CGFloat(minLines))
+      self.fontSize = self.lineHeight * baseFont.pointSize / baseFont.lineHeight
+    }
+
+    self.lineHeight = self.lineHeight * (heightIsLimited ? 1.0 : 1.5)
+    
+  
     var visibleCount = 30
     if let displaySize = entry.context?.displaySize {
+      print("font: \(baseFont.lineHeight) \(self.fontSize) \(self.lineHeight) \(displaySize.height) \(widgetFamily?.debugDescription ?? "")")
       visibleCount = Int(floor(displaySize.height / self.lineHeight))
-      //      print("entry.configuration.content: \(displaySize) \(visibleCount) \(Int(floor(displaySize.height / self.lineHeight)))")
     }
     _visibleItemCount = State(initialValue: visibleCount)
     
@@ -84,8 +127,42 @@ struct ChronographWidgetView : View {
     //    print("\n Init view \(widgetFamily).\(entry.configuration.content) \(shortTimeFormatter.string(from:entry.date)) ")
   }
   
+  var defaults = UserDefaults.standard
+  
   // MARK: body
   var body: some View {
+    
+    // Preliminary tests of intents and toggles
+//    HStack {
+//      let selectedTab = defaults.string(forKey: "view")
+//      
+//      Button(intent: SetDefault("reminders", for: "view")) {
+//        Image(systemName: "checkmark.square")
+//      }
+//      .foregroundColor(selectedTab == "reminders" ? .red : .blue)
+//      
+//      
+//      Button(intent: SetDefault("calendar", for: "view")) {
+//        Image(systemName: "calendar")
+//      }
+//      .foregroundColor(selectedTab == "calendar" ? .red : .blue)
+//      
+//      let isOn = defaults.string(forKey: "isOn") == "true"
+//      Toggle(isOn: isOn, intent: SetDefault(isOn ? "false" : "true", for: "isOn")) {
+//        
+//      }
+//      .toggleStyle(CustomToggleStyle(
+//        onLabel: "On",
+//        offLabel: "Off",
+//        onImageName: "checkmark.circle.fill",
+//        offImageName: "circle",
+//        onColor: .green,
+//        offColor: .gray
+//      ))
+//    }.hidden()
+    
+
+    
     let now = Date()
     
     let backgroundColor = entry.configuration.backgroundColor.count > 0 ?
@@ -120,6 +197,7 @@ struct ChronographWidgetView : View {
       
       config.columnSpacing = fontSize / 8
       config.defaultCalendar = eventStore.defaultCalendarForNewEvents
+      // TODO: Infer default from number of events
       config.defaultRemindersList = eventStore.defaultCalendarForNewReminders()
       config.compactTime = compactTime
       config.tokenize = tokenize
@@ -143,7 +221,7 @@ struct ChronographWidgetView : View {
     let clippedItems: [EventEntry] = Array(items[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
     let index = clippedItems.lastIndex { $0.removeIfOrphaned != true}
     let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
-    let extraSpacing = 0.0 // extraSpace < (row.lineHeight) ? CGFloat(extraSpace) / CGFloat(visibleItemCount) : 0
+    let extraSpacing =  extraSpace < (row.lineHeight) ? CGFloat(extraSpace) / CGFloat(visibleItemCount) : 0
     
     GeometryReader { container in
       VStack(spacing: extraSpacing) {
@@ -157,8 +235,12 @@ struct ChronographWidgetView : View {
           } else if entry.type == "error" {
             ErrorRowView(entry: entry, config: row)
           } else if entry.type == "header" {
-            let large = !widthIsLimited && widgetFamily != .systemMedium
+            #if !os(watchOS)
+            let large = !widthIsLimited && !heightIsLimited
             HeaderRowView(entry: entry, config: row, large: large)
+            #else
+            HeaderRowView(entry: entry, config: row, large: false)
+            #endif
           } else if entry.type == "free" {
             FreeRowView(entry: entry, config: row)
           }
@@ -215,13 +297,18 @@ struct ChronographWidget: Widget {
   
   var body: some WidgetConfiguration {
     
-    AppIntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: TimelineProvider()) { entry in
-      ChronographWidgetView(entry: entry)
-        .containerBackground(.clear, for: .widget)
-    }
-    .contentMarginsDisabled()
-    .configurationDisplayName("Events + Reminders")
-    .description("A text view of events or reminders")
+    let configuration = AppIntentConfiguration(
+      kind: kind,
+      intent: ConfigurationIntent.self,
+      provider: TimelineProvider()) { entry in
+        ChronographWidgetView(entry: entry)
+          .containerBackground(.clear, for: .widget)
+      }
+      .contentMarginsDisabled()
+      .configurationDisplayName("Events + Reminders")
+      .description("A text view of events or reminders")
+
+  
     
 #if os(watchOS)
     .supportedFamilies([
@@ -244,5 +331,12 @@ struct ChronographWidget: Widget {
     ])
 #endif
     
+//#if os(iOS) // This may only work for Controls
+//    if #available(iOS 18.0, *) {
+//      return configuration
+//        .promptsForUserConfiguration()
+//    }
+//#endif
+    return configuration
   }
 }

@@ -38,6 +38,13 @@ enum FontSize: String, AppEnum {
     .large: .title3,
     .huge: .title1,
   ]
+  static var caseMinLines: [FontSize : Int] = [
+    .tiny: 6,
+    .small: 5,
+    .medium: 4,
+    .large: 3,
+    .huge: 2,
+  ]
 }
 
 enum DisplayedContent: String, AppEnum {
@@ -50,8 +57,11 @@ enum DisplayedContent: String, AppEnum {
     ]
 }
 
+
+
+
 enum WidgetFeatures: String, AppEnum {
-    case allDayEvents, multiDayEvents, weather, calendarColors, timeBars, fullBleed //, alternateCalendarIndicators
+    case allDayEvents, multiDayEvents, weather, calendarColors, timeBars, fullBleed, freeTime //, alternateCalendarIndicators
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Included Content"
     static var caseDisplayRepresentations: [WidgetFeatures : DisplayRepresentation] = [
       .allDayEvents: DisplayRepresentation(title: "All-day", subtitle:"Events lasting all day", image: .init(systemName: "rectangle.grid.1x2")),
@@ -59,9 +69,14 @@ enum WidgetFeatures: String, AppEnum {
       .weather: DisplayRepresentation(title: "Weather", image: .init(systemName: "cloud.sun.rain.fill", symbolConfiguration:.preferringMulticolor())),
       .calendarColors: DisplayRepresentation(title: "Calendar Colors", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
       .timeBars: DisplayRepresentation(title: "Time Bars", image: .init(systemName: "calendar.day.timeline.leading", symbolConfiguration:.preferringMulticolor())),
+      
+      .freeTime: DisplayRepresentation(title: "Free Time", image: .init(systemName: "water.waves", symbolConfiguration:.preferringMulticolor())),
       .fullBleed: DisplayRepresentation(title: "Remove Padding", image: .init(systemName: "arrowshape.left.arrowshape.right", symbolConfiguration:.preferringMulticolor())),
      //.alternateCalendarIndicators: DisplayRepresentation(title: "Calendar Indicators", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
    ]
+  
+  
+
 }
 
 
@@ -72,7 +87,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Widget Type", default: .calendar)
    var content: DisplayedContent
   
-  @Parameter(title: "Show", default: [.allDayEvents, .timeBars])
+  @Parameter(title: "Options", default: [.allDayEvents, .timeBars])
    var features: [WidgetFeatures]
   
   @Parameter(title: "Calendars", default: [])
@@ -94,8 +109,8 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   var accentColor: String
 
   
-  @Parameter(title: "Draw to Edges", default: false)
-  var fullBleed: Bool
+//  @Parameter(title: "Draw to Edges", default: false)
+//  var fullBleed: Bool
   
   @Parameter(title: "Skip Pages", default: 0)
   var pageOffset: Int
@@ -106,7 +121,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.calendars = []
     config.features = [.allDayEvents, .timeBars, .multiDayEvents]
     config.fontStyle = .normal
-    config.fullBleed = false
+    
     return config
   }
   
@@ -115,7 +130,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.content = .reminders
     config.reminders = []
     config.fontStyle = .normal
-    config.fullBleed = false
+    
     return config
   }
   
@@ -125,7 +140,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     config.calendars = []
     config.features = [.allDayEvents, .timeBars, .multiDayEvents, .weather]
     config.fontStyle = .normal
-    config.fullBleed = false
+    
     return config
   }
   
@@ -135,11 +150,20 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     return config
   }
   
-  static var bigComboConfig: ConfigurationIntent {
+  static var appComboConfig: ConfigurationIntent {
     let config = comboConfig
+    config.accentColor = "#db4437"
+    config.features = config.features + [.calendarColors]
+    return config
+  }
+  
+  static var bigAppComboConfig: ConfigurationIntent {
+    let config = appComboConfig
     config.fontSize = .huge
     return config
   }
+  
+
   
   static var parameterSummary: some ParameterSummary {
     Switch(\.$content) {
@@ -152,7 +176,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$fontSize
           \.$backgroundColor
           \.$accentColor
-          \.$fullBleed
+          
         }
       }
       
@@ -165,7 +189,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$fontSize
           \.$backgroundColor
           \.$accentColor
-          \.$fullBleed
+          
         }
       }
       
@@ -177,7 +201,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$fontSize
           \.$backgroundColor
           \.$accentColor
-          \.$fullBleed
+          
         }
       }
 

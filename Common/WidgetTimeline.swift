@@ -55,10 +55,28 @@ struct TimelineProvider: AppIntentTimelineProvider {
   
   // MARK: Timeline
   
+  
+  static var cachedTimelines: [String: (timeline: Timeline<CalendarTimelineEntry>, timestamp: Date)] = [:]
+
   func timeline(for configuration: ConfigurationIntent, context: Context? = nil) async -> Timeline<CalendarTimelineEntry> {
     print("\nTimeline for \(context?.family ?? .none).\(configuration.content)")
     
     let now = Date()
+    
+//    WidgetCenter.shared.getCurrentConfigurations { widgets in
+//      print("widgets", widgets.map({ $0}))
+//    }
+    
+    let identifier = "\(context?.family.description ?? "none").\(configuration.content).\(configuration.features.debugDescription)"
+    
+    // Check if the cached timeline exists and if it's within the last minute
+    if let cachedData = TimelineProvider.cachedTimelines[identifier],
+       cachedData.timestamp > now.addingTimeInterval(-60) {
+      print("returning cached timeline for \(identifier)" )
+      return(cachedData.timeline)
+    }
+    
+    
     let calendar = Calendar.current
     let startDate = Date()
     let endDate = calendar.date(byAdding: .day, value: 7, to: startDate)!
@@ -77,6 +95,11 @@ struct TimelineProvider: AppIntentTimelineProvider {
     calendarItems.append(contentsOf: scheduledReminders)
     calendarItems.append(contentsOf: events)
     
+    
+    
+    calendarItems = calendarItems.sorted(by: compareCalendarItems)
+    
+    
     let reloadDate = calendar.date(byAdding: .minute,
                                    value: 15,
                                    to: now)!
@@ -94,7 +117,6 @@ struct TimelineProvider: AppIntentTimelineProvider {
     if (eventsError) {
       errors.append("Enable access to calendar in settings")
     }
-    
     
     // MARK: Errors
     if (errors.count > 0) {
@@ -140,8 +162,6 @@ struct TimelineProvider: AppIntentTimelineProvider {
       let thisDate = renderDate > item.date ? renderDate : item.date
       let dateHasChanged = !calendar.isDate(lastDate, inSameDayAs: thisDate)
       
-      
-      
       if (item.allDay) {
         if (!showAllDay) { continue }
         if !showMultiDay && !calendar.isDate(item.start ?? .distantPast, inSameDayAs: item.end ?? .distantFuture) { continue }
@@ -168,9 +188,10 @@ struct TimelineProvider: AppIntentTimelineProvider {
         let header = EventEntry(type: "header", title: title,
                                 startDate:calendar.startOfDay(for: thisDate), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [], children: [],
                                 removeIfOrphaned: true, dayForecast:forecast)
+        
         headerIndex = calendarEntries.count
         calendarEntries.append(header)
-      } else {
+      } else if (configuration.features.contains(.freeTime)){
         let formatter = DateComponentsFormatter()
         formatter.unitsStyle = .abbreviated
         formatter.allowedUnits = [.hour, .minute]
@@ -374,7 +395,11 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
     print ("Returning timeline in \(round(-now.timeIntervalSinceNow * 1000))ms\nTimes: [\(timelineEntries.map({ shortTimeFormatter.string(from:$0.date)}).joined(separator:", "))]")
 
-    return Timeline(entries: timelineEntries, policy: .atEnd)
+    let timeline = Timeline(entries: timelineEntries, policy: .atEnd)
+    
+    TimelineProvider.cachedTimelines[identifier] = (timeline: timeline, timestamp: now)
+
+    return timeline
     
   }
   

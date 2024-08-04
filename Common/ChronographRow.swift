@@ -169,7 +169,7 @@ struct EventRowView: View {
             
           } else {
             TimeStringView(entry:entry, config:config)
-              .foregroundColor(color ?? .primary)
+              .foregroundColor(.secondary)
               .widgetAccentable(true)
           }
         }
@@ -204,7 +204,7 @@ struct EventRowView: View {
             
           }.font(config.font)
             .buttonStyle(.plain)
-            .lineLimit(isHappening || isSoon ? 2 : 1, reservesSpace: false)
+            .lineLimit(!config.heightIsLimited && (isHappening || isSoon) ? 2 : 1, reservesSpace: false)
             .fixedSize(horizontal: false, vertical: true)
           
           
@@ -233,7 +233,7 @@ struct EventRowView: View {
         
         .clipped()
         
-        if ((isHappening || isSoon)
+        if (!config.heightIsLimited && (isHappening || isSoon)
             && (entry.hasAttachments || entry.hasLocation) ) {
           
           
@@ -296,6 +296,7 @@ struct EventRowView: View {
         }
       }
     }
+    
     .fixedSize(horizontal: false, vertical: true)
   }
 }
@@ -322,7 +323,7 @@ struct ReminderRowView: View {
       
       
       if (!config.widthIsLimited) {
-        if (entry.startDate != nil) {
+        if (entry.startDate != nil && entry.item?.allDay == false) {
           TimeStringView(entry:entry, config:config)
             .foregroundColor(.primary)
             .widgetAccentable(true)
@@ -497,11 +498,14 @@ struct HeaderRowView: View {
       if let forecast = entry.dayForecast {
         
         Text(Image(systemName: forecast.symbolName))
-        + (forecast.precipitationChance > 0 ? Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter) : Text(""))
         + Text(" ")
         + Text(tempFormatter.string(from: forecast.lowTemperature.converted(to: .fahrenheit)).replacingOccurrences(of: "°", with: ""))
         + Text("–")
         + Text(forecast.highTemperature.converted(to: .fahrenheit), formatter: tempFormatterTrailing)
+        + (forecast.precipitationChance > 0 ?
+           Text(" ") + Text(Image(systemName: "drop")) +
+           Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter)
+           : Text(""))
       }
     }.font(config.smallFont)
     
@@ -533,7 +537,7 @@ struct HeaderRowView: View {
                 .font(.system(size: config.fontSize * 1.8).weight(.light))
             }.frame(width:config.keyline, alignment:.trailing)
               
-            TimeBarView(entry: entry, config:config, color: nil)
+            TimeBarView(entry: entry, config:config, color: config.accentColor )
               .frame(minWidth:config.fontSize, maxHeight:.infinity)
               
             

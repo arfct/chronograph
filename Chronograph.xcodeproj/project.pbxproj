@@ -166,6 +166,12 @@
 		2CC35E7B2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
 		2CC35E7C2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
 		2CC35E7D2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
+		2CC8A1EE2C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
+		2CC8A1EF2C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
+		2CC8A1F02C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
+		2CC8A1F12C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
+		2CC8A1F22C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
+		2CC8A1F32C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
@@ -812,6 +818,7 @@
 				2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */,
+				2CC8A1EE2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 				2CB314F62C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
 				2C8B68C72C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2CDFDC7A2C457FF800C5DF11 /* SettingsView.swift in Sources */,
@@ -846,6 +853,7 @@
 				2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */,
+				2CC8A1EF2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 				2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C8B68C82C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2CDFDC792C457FF800C5DF11 /* SettingsView.swift in Sources */,
@@ -880,6 +888,7 @@
 				2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2CDFDC7E2C45827600C5DF11 /* Keys.swift in Sources */,
 				2CC35E7A2C52AE3500774244 /* ChronographRow.swift in Sources */,
+				2CC8A1F22C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
 				2CCC62022C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C26F60F2C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
@@ -911,6 +920,7 @@
 				2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */,
 				2CDFDC812C45827600C5DF11 /* Keys.swift in Sources */,
 				2CC35E7B2C52AE3500774244 /* ChronographRow.swift in Sources */,
+				2CC8A1F12C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
 				2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C26F60E2C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
@@ -941,6 +951,7 @@
 				2C1573F42C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 				2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
 				2CC35E792C52AE3500774244 /* ChronographRow.swift in Sources */,
+				2CC8A1F02C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 				2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */,
 				2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */,
 				2C8B68CA2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
@@ -977,6 +988,7 @@
 				2C72C09B2C3F8FEB00AB3A1A /* Bundle.swift in Sources */,
 				2CDFDC802C45827600C5DF11 /* Keys.swift in Sources */,
 				2CC35E7C2C52AE3500774244 /* ChronographRow.swift in Sources */,
+				2CC8A1F32C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
 				2CCC62012C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
 				2C26F6102C549D74001F893E /* ConcatenatedText.swift in Sources */,
 				2C72C0912C3F87BC00AB3A1A /* Formatters.swift in Sources */,
