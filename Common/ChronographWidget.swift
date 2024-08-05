@@ -113,7 +113,7 @@ struct ChronographWidgetView : View {
       self.fontSize = self.lineHeight * baseFont.pointSize / baseFont.lineHeight
     }
 
-    self.lineHeight = self.lineHeight * (heightIsLimited ? 1.0 : 1.5)
+    self.lineHeight = self.lineHeight * (self.isAccessory ? 1.0 : 1.5)
     
   
     var visibleCount = 30
