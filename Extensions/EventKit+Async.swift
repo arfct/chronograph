@@ -111,7 +111,10 @@ extension EKCalendarItem {
 
 func compareCalendarItems(_ item1: EKCalendarItem, _ item2: EKCalendarItem) -> Bool {
   if let start1 = item1.start, let start2 = item2.start {
-  return start1 < start2
+    if start1 == start2 {
+      return item1.title < item2.title
+    }
+    return start1 < start2
     
     } else if item1.start != nil {
         return true

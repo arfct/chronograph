@@ -22,7 +22,7 @@ struct RowViewConfig {
   var heightIsLimited: Bool = false
   
   var showTimeBars: Bool = false
-  var columnSpacing: CGFloat = 3.0
+  var columnSpacing: CGFloat = 4.0
 }
 
 var tempFormatter: MeasurementFormatter {
@@ -325,7 +325,7 @@ struct ReminderRowView: View {
       if (!config.widthIsLimited) {
         if (entry.startDate != nil && entry.item?.allDay == false) {
           TimeStringView(entry:entry, config:config)
-            .foregroundColor(.primary)
+            .foregroundColor(.secondary)
             .widgetAccentable(true)
             .frame(minWidth:config.keyline, alignment: .trailing)
         } else {
