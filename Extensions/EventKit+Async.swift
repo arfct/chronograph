@@ -181,9 +181,10 @@ extension Array {
 }
 
 extension Date {
-  func formattedHourAndMinute() -> (hour: String, minute: String) {
+  func formattedHourAndMinute(timeZone: TimeZone? = nil) -> (hour: String, minute: String) {
     let dateFormatter = DateFormatter()
     dateFormatter.locale = Locale.current
+    dateFormatter.timeZone = timeZone
 
     dateFormatter.dateFormat = "h"
     let hourString = dateFormatter.string(from: self)

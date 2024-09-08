@@ -118,7 +118,7 @@ struct ChronographWidgetView : View {
   
     var visibleCount = 30
     if let displaySize = entry.context?.displaySize {
-      print("font: \(baseFont.lineHeight) \(self.fontSize) \(self.lineHeight) \(displaySize.height) \(widgetFamily?.debugDescription ?? "")")
+//      print("font: \(baseFont.lineHeight) \(self.fontSize) \(self.lineHeight) \(displaySize.height) \(widgetFamily?.debugDescription ?? "")")
       visibleCount = Int(floor(displaySize.height / self.lineHeight))
     }
     _visibleItemCount = State(initialValue: visibleCount)
@@ -213,8 +213,9 @@ struct ChronographWidgetView : View {
                             trailing: hPadding)
     
     var items: [EventEntry] = []
+    let _ = items.append(contentsOf: entry.timezones)
     let _ = items.append(contentsOf: entry.events)
-    let _ = items.append(contentsOf: entry.reminders.prefix(entry.configuration.content == .both ? (visibleItemCount / 2) : visibleItemCount))
+    let _ = items.append(contentsOf: entry.reminders.prefix(entry.configuration.content == .calendar ? (visibleItemCount / 2) : visibleItemCount))
     let filteredItems = items.filter { $0.isVisible() }
     
     let offsetCount = entry.configuration.pageOffset * visibleItemCount
@@ -243,6 +244,10 @@ struct ChronographWidgetView : View {
             #endif
           } else if entry.type == "free" {
             FreeRowView(entry: entry, config: row)
+          } else if entry.type == "timezone" {
+            TimeZoneRowView(entry: entry, config: row)
+          } else  {
+            HeaderRowView(entry: entry, config: row, large: false)
           }
         }
         
@@ -268,6 +273,7 @@ struct ChronographWidgetView : View {
       .background(widgetRenderingMode == .accented ? .clear : backgroundColor)
     }
     
+      .containerBackground(.clear, for: .widget)
     //    let _ = print("Rendered \(widgetFamily).\(entry.configuration.content) for \(shortTimeFormatter.string(from:entry.date)) \(visibleItemCount) in \(round(-now.timeIntervalSinceNow * 1000))ms")
   }
   
@@ -291,52 +297,41 @@ struct RowHeightPreferenceKey: PreferenceKey {
   }
 }
 
+
+#if os(watchOS)
+let widgetFamilies: [WidgetFamily] = [
+  .accessoryRectangular
+]
+#elseif os(iOS)
+let widgetFamilies: [WidgetFamily] = [
+  .accessoryRectangular,
+  .systemSmall,
+  .systemMedium,
+  .systemLarge,
+  .systemExtraLarge
+]
+#elseif os(macOS)
+let widgetFamilies: [WidgetFamily] = [
+  .systemSmall,
+  .systemMedium,
+  .systemLarge,
+  .systemExtraLarge
+]
+#endif
+
+
 // MARK: ChronographWidget
 struct ChronographWidget: Widget {
   let kind: String = "calendar"
-  
   var body: some WidgetConfiguration {
-    
     let configuration = AppIntentConfiguration(
       kind: kind,
       intent: ConfigurationIntent.self,
-      provider: TimelineProvider()) { entry in
-        ChronographWidgetView(entry: entry)
-          .containerBackground(.clear, for: .widget)
-      }
+      provider: TimelineProvider()) { ChronographWidgetView(entry: $0) }
       .contentMarginsDisabled()
       .configurationDisplayName("Events + Reminders")
       .description("A text view of events or reminders")
-
-  
-    
-#if os(watchOS)
-    .supportedFamilies([
-      .accessoryRectangular
-    ])
-#elseif os(iOS)
-    .supportedFamilies([
-      .accessoryRectangular,
-      .systemSmall,
-      .systemMedium,
-      .systemLarge,
-      .systemExtraLarge
-    ])
-#elseif os(macOS)
-    .supportedFamilies([
-      .systemSmall,
-      .systemMedium,
-      .systemLarge,
-      .systemExtraLarge
-    ])
-#endif
-    
-//#if os(iOS) // This may only work for Controls
-//    if #available(iOS 18.0, *) {
-//      return configuration
-//        .promptsForUserConfiguration()
-//    }
-//#endif
+      .supportedFamilies(widgetFamilies)
     return configuration
   }
 }

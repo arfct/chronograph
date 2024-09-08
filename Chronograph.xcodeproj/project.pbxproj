@@ -188,6 +188,12 @@
 		2CDFDC802C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
 		2CDFDC812C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
 		2CDFDC822C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
+		50C93C3B2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
+		50C93C3C2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
+		50C93C3D2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
+		50C93C3E2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
+		50C93C3F2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
+		50C93C402C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -333,6 +339,7 @@
 		2CDFDC8B2C46194600C5DF11 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
 		2CF51FB92C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
 		2CF51FBA2C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
+		50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeZoneSelectionEntity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -570,6 +577,7 @@
 				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
 				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
 				2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */,
+				50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */,
 				2CDFDC772C457FF800C5DF11 /* SettingsView.swift */,
 				2CDFDC7C2C45827400C5DF11 /* Keys.swift */,
 				2C5A1D272C4F7A19002A1586 /* Font+Features.swift */,
@@ -818,6 +826,7 @@
 				2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */,
+				50C93C3B2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2CC8A1EE2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 				2CB314F62C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
 				2C8B68C72C49C0720059E0D2 /* StringProcessing.swift in Sources */,
@@ -853,6 +862,7 @@
 				2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
 				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
 				2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */,
+				50C93C3C2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2CC8A1EF2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 				2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
 				2C8B68C82C49C0720059E0D2 /* StringProcessing.swift in Sources */,
@@ -899,6 +909,7 @@
 				2C6BA36D2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
 				2C0561202C5556EE00435969 /* Extensions.swift in Sources */,
 				2C6BA37B2C1C99C900F22C21 /* Formatters.swift in Sources */,
+				50C93C3F2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2C5A1D252C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68C92C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2C1573F22C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
@@ -931,6 +942,7 @@
 				2C6BA37A2C1C99C900F22C21 /* Formatters.swift in Sources */,
 				2C0561232C5556EE00435969 /* Extensions.swift in Sources */,
 				2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */,
+				50C93C3E2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2C5A1D242C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68CC2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2C1573F32C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
@@ -957,6 +969,7 @@
 				2C8B68CA2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2CDFDC7B2C457FF800C5DF11 /* SettingsView.swift in Sources */,
 				2C72C08E2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
+				50C93C3D2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2C72C08B2C3F874000AB3A1A /* WidgetPreviewView.swift in Sources */,
 				2C24A5442C4AAD990000EE32 /* LocationManager.swift in Sources */,
 				2C5A1D342C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
@@ -999,6 +1012,7 @@
 				2C72C08D2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
 				2C0561212C5556EE00435969 /* Extensions.swift in Sources */,
 				2C72C0932C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
+				50C93C402C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2C5A1D262C4C793F002A1586 /* ColorGenerator.swift in Sources */,
 				2C8B68CB2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
 				2C1573F62C4C0BAE00D4CA45 /* FacePile.swift in Sources */,

@@ -43,7 +43,7 @@ struct WidgetPreviewView: View {
   var config = ConfigurationIntent.comboConfig
   var testConfig: ConfigurationIntent {
     let config = ConfigurationIntent()
-    config.content = .both
+    config.content = .calendar
     config.calendars = []
     config.fontStyle = .normal
     config.fontSize = .tiny

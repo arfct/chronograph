@@ -11,6 +11,7 @@ struct CalendarTimelineEntry: TimelineEntry {
   var reminders: [EventEntry] = []
   var events: [EventEntry] = []
   var weather: Weather?
+  var timezones: [EventEntry] = []
   let context: TimelineProviderContext?
 }
 
@@ -55,27 +56,60 @@ struct TimelineProvider: AppIntentTimelineProvider {
   
   // MARK: Timeline
   
+  private func getTimezoneEntries(configuration: ConfigurationIntent) -> [EventEntry] {
+    var timezoneEntries: [EventEntry] = []
+    
+    if configuration.content == .timezones {
+      let calendar = Calendar.current
+      let now = Date()
+      
+      var timezones = configuration.timezones.compactMap({TimeZone(identifier: $0.id)})
+      
+      for timeZone in timezones {
+        
+        let offset = timeZone.secondsFromGMT(for: now)
+        let offsetHours = offset / 3600
+        let offsetMinutes = abs((offset % 3600) / 60)
+        
+        var offsetString = ""
+        if offsetHours >= 0 {
+          offsetString += "+"
+        } else {
+          offsetString += "-"
+        }
+        
+        offsetString += String(format: "%02d:%02d", abs(offsetHours), offsetMinutes)
+        
+        let timezoneEntry = EventEntry(type: "timezone", title: timeZone.description.components(separatedBy: "/").last?.replacingOccurrences(of: "_", with: " "), timeZone: timeZone)
+        timezoneEntries.append(timezoneEntry)
+        
+      }
+    }
+    
+    return timezoneEntries
+  }
   
   static var cachedTimelines: [String: (timeline: Timeline<CalendarTimelineEntry>, timestamp: Date)] = [:]
-
+  
   func timeline(for configuration: ConfigurationIntent, context: Context? = nil) async -> Timeline<CalendarTimelineEntry> {
-    print("\nTimeline for \(context?.family ?? .none).\(configuration.content)")
+    
+    let identifier = "\(context?.family.description ?? "none").\(configuration.content)"
     
     let now = Date()
     
-//    WidgetCenter.shared.getCurrentConfigurations { widgets in
-//      print("widgets", widgets.map({ $0}))
-//    }
+    //    WidgetCenter.shared.getCurrentConfigurations { widgets in
+    //      print("widgets", widgets.map({ $0}))
+    //    }
     
-    let identifier = "\(context?.family.description ?? "none").\(configuration.content).\(configuration.features.debugDescription)"
     
     // Check if the cached timeline exists and if it's within the last minute
     if let cachedData = TimelineProvider.cachedTimelines[identifier],
        cachedData.timestamp > now.addingTimeInterval(-60) {
-      print("returning cached timeline for \(identifier)" )
+      print("Returning cached timeline for \(identifier)" )
       return(cachedData.timeline)
     }
     
+   print("\nMaking timeline for \(identifier)" )
     
     let calendar = Calendar.current
     let startDate = Date()
@@ -83,12 +117,15 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     let showAllDay = configuration.features.contains(.allDayEvents)
     let showMultiDay = configuration.features.contains(.multiDayEvents)
-    let showWeather = configuration.features.contains(.weather)
+    let showWeather = configuration.features.contains(.weather) || configuration.content == .weather
+    
+    let timezoneEntries = getTimezoneEntries(configuration:configuration)
+    
     
     let weather = showWeather ? await fetchWeather() : nil
     
     let reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
-    let scheduledReminders = await fetchScheduledReminders(startDate: startDate, endDate: endDate)
+    let scheduledReminders = await fetchScheduledReminders(configuration: configuration, startDate: startDate, endDate: endDate)
     let events = await fetchEvents(configuration: configuration, startDate: startDate, endDate: endDate)
     
     var calendarItems: [EKCalendarItem] = []
@@ -99,6 +136,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     calendarItems = calendarItems.sorted(by: compareCalendarItems)
     
+    //    events.forEach { (item) in
+    //      print("Event:\n\(item.title ?? "?")\n\(item.eventIdentifier ?? "?")")
+    //    }
     
     let reloadDate = calendar.date(byAdding: .minute,
                                    value: 15,
@@ -107,8 +147,8 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     var errors: [String] = []
     
-    let remindersError = (configuration.content == .reminders || configuration.content == .both) && EKEventStore.authorizationStatus(for: .reminder) != .fullAccess
-    let eventsError = (configuration.content == .calendar || configuration.content == .both) && EKEventStore.authorizationStatus(for: .event) != .fullAccess
+    let remindersError = (configuration.content == .reminders || configuration.content == .calendar) && EKEventStore.authorizationStatus(for: .reminder) != .fullAccess
+    let eventsError = (configuration.content == .calendar) && EKEventStore.authorizationStatus(for: .event) != .fullAccess
     
     if (remindersError) {
       errors.append("Enable access to reminders in settings")
@@ -261,7 +301,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
               eventEntry.locations = remainder
             }
             
-//            let contactStore = CNContactStore()
+            //            let contactStore = CNContactStore()
             if event.hasAttendees, let attendees = event.attendees {
               
               //              attendees.forEach { person in
@@ -304,7 +344,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
                 eventEntry.notes = AttributedString(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))
               }
               
-              print("\n===\(event.title ?? "UNTITLED") ===")
+              //print("\n===\(event.title ?? "UNTITLED") ===")
               if (docs.count > 0) { print("Docs \(docs.map({ "\($0.title) <\($0.urlString)>"}))")}
               //              if (noteWithoutDocs.count > 0) { print("Note:[\(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))]\n \(note)")}
               
@@ -330,12 +370,12 @@ struct TimelineProvider: AppIntentTimelineProvider {
       previousItem = item
     }
     
-//#if os(iOS) || os(watchOS)
-//    if context?.family == .accessoryRectangular
-//        && calendarEntries.first?.allDayItems?.count == 0 {
-//      calendarEntries.removeFirst()
-//    }
-//#endif
+    //#if os(iOS) || os(watchOS)
+    //    if context?.family == .accessoryRectangular
+    //        && calendarEntries.first?.allDayItems?.count == 0 {
+    //      calendarEntries.removeFirst()
+    //    }
+    //#endif
     
     
     // TODO: Sort these so that longer items are sorted after shorter items to correctly catch conflicts. Also sort by name to de-dup items on multiple calendars
@@ -357,54 +397,54 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
     
     
-//    if let weather = weather {
-//
-//      //      let hourlyForecast = weather.hourlyForecast
-//      //
-//      //      for forecast in hourlyForecast.forecast.prefix(24) {
-//      //        let eventEntry = EventEntry(type: "weather",
-//      //                                    title:"Weather",
-//      //                                    startDate: forecast.date,
-//      //                                    endDate: forecast.date.addingTimeInterval(3600),
-//      //                                    forecast: forecast
-//      //        )
-//      //        calendarEntries.append(eventEntry)
-    //      //      }
-    //    }
+    if let weather = weather, configuration.content == .weather {
+      
+      let hourlyForecast = weather.hourlyForecast
+      
+      for forecast in hourlyForecast.forecast.prefix(24) {
+        let eventEntry = EventEntry(type: "weather",
+                                    title:"Weather",
+                                    startDate: forecast.date,
+                                    endDate: forecast.date.addingTimeInterval(3600),
+                                    forecast: forecast
+        )
+        calendarEntries.append(eventEntry)
+      }
+    }
     
     
     let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
     
     let fullMinuteDate = calendar.date(from: components)!
-    
+    print("timezon \(timezoneEntries)")
     for minuteOffset in 0 ..< 15 {
       let renderDate = calendar.date(byAdding: .minute,
-                                             value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: fullMinuteDate)!
+                                     value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: fullMinuteDate)!
       let entryDate = calendar.date(byAdding: debug ? .second : .minute,
-                                            value: minuteOffset,
-                                            to: fullMinuteDate)!
+                                    value: minuteOffset,
+                                    to: fullMinuteDate)!
       
       let timelineEntry = CalendarTimelineEntry(date: entryDate,
                                                 configuration: configuration,
                                                 reminders: reminderEntries,
                                                 events: calendarEntries,
                                                 weather: weather,
+                                                timezones: timezoneEntries,
                                                 context: context)
       timelineEntries.append(timelineEntry)
       
     }
     print ("Returning timeline in \(round(-now.timeIntervalSinceNow * 1000))ms\nTimes: [\(timelineEntries.map({ shortTimeFormatter.string(from:$0.date)}).joined(separator:", "))]")
-
+    
     let timeline = Timeline(entries: timelineEntries, policy: .atEnd)
     
     TimelineProvider.cachedTimelines[identifier] = (timeline: timeline, timestamp: now)
-
+    
     return timeline
     
   }
   
   private func fetchWeather() async -> Weather? {
-    print("Fetching Weather")
     do {
       return try await weatherManager.fetchWeather()
     } catch {
@@ -414,7 +454,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
   }
   
   private func fetchReminders(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EventEntry] {
-    guard configuration.content == .reminders || configuration.content == .both else { return [] }
+    guard configuration.content == .reminders else { return [] }
     
     let reminderIDs = configuration.reminders.map({$0.id})
     let calendars: [EKCalendar] = reminderIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
@@ -435,7 +475,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
     return []
   }
   
-  private func fetchScheduledReminders(startDate: Date, endDate: Date) async -> [EKReminder] {
+  private func fetchScheduledReminders(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EKReminder] {
+    guard configuration.content == .reminders || configuration.content == .calendar else { return [] }
+
     print("Fetching Scheduled Reminders")
     do {
       return try await eventStore.fetchRemindersAsync(predicate: eventStore.predicateForIncompleteReminders(
@@ -448,7 +490,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
   }
   
   private func fetchEvents(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EKEvent] {
-    guard configuration.content == .calendar || configuration.content == .both else { return [] }
+    guard configuration.content == .calendar else { return [] }
     
     let calendarIDs = configuration.calendars.map({$0.id})
     let calendars: [EKCalendar] = calendarIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
@@ -469,15 +511,15 @@ struct TimelineProvider: AppIntentTimelineProvider {
     return recommendations
   }
   
-#if os(watchOS)
-  @available(watchOS 11.0, *)
-  func relevances() async -> WidgetRelevances<ConfigurationIntent> {
-    // Generate a list containing the contexts this widget is relevant in.
-    return WidgetRelevances([
-      //        WidgetRelevance(context: .someContext, weight: 1),
-    ])
-  }
-#endif
+  //#if os(watchOS)
+  //  @available(watchOS 11.0, *)
+  //  func relevances() async -> WidgetRelevances<ConfigurationIntent> {
+  //    // Generate a list containing the contexts this widget is relevant in.
+  //    return WidgetRelevances([
+  //      //        WidgetRelevance(context: .someContext, weight: 1),
+  //    ])
+  //  }
+  //#endif
   
   
   

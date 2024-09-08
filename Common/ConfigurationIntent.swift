@@ -20,6 +20,17 @@ enum FontStyle: String, AppEnum {
     ]
 }
 
+
+enum WeatherStyle: String, AppEnum {
+  case current, hourly, daily
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Weather Style"
+  static var caseDisplayRepresentations: [WeatherStyle : DisplayRepresentation] = [
+    .current: "Current",
+    .hourly: "Hourly",
+    .daily: "Daily"
+  ]
+}
+
 enum FontSize: String, AppEnum {
     case tiny, small, medium, large, huge
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Font Size"
@@ -48,12 +59,13 @@ enum FontSize: String, AppEnum {
 }
 
 enum DisplayedContent: String, AppEnum {
-    case calendar, reminders, both
+    case calendar, reminders, timezones, weather
     static var typeDisplayRepresentation: TypeDisplayRepresentation = "Displayed Content"
     static var caseDisplayRepresentations: [DisplayedContent : DisplayRepresentation] = [
-        .calendar: "Calendar",
-        .reminders: "Reminders",
-        .both: "Both",
+      .calendar: "Calendar",
+      .reminders: "Reminders",
+      .timezones: "World Clock",
+      .weather: "Weather"
     ]
 }
 
@@ -95,9 +107,15 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   
   @Parameter(title: "Reminders", default: [])
   var reminders: [ReminderSelectionEntity]
+  
+  @Parameter(title: "Time Zones", default: [])
+  var timezones: [TimeZoneSelectionEntity]
 
   @Parameter(title: "Font Style", default: .normal)
    var fontStyle: FontStyle
+  
+  @Parameter(title: "Weather Style", default: .current)
+  var weatherStyle: WeatherStyle
   
   @Parameter(title: "Font Size", default: .medium)
    var fontSize: FontSize
@@ -134,9 +152,17 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     return config
   }
   
+  static var timezonesConfig: ConfigurationIntent {
+    let config = ConfigurationIntent()
+    config.content = .timezones
+  
+    
+    return config
+  }
+  
   static var comboConfig: ConfigurationIntent {
     let config = ConfigurationIntent()
-    config.content = .both
+    config.content = .calendar
     config.calendars = []
     config.features = [.allDayEvents, .timeBars, .multiDayEvents, .weather]
     config.fontStyle = .normal
@@ -170,6 +196,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
       Case(DisplayedContent.calendar) {
         Summary {
           \.$content
+          \.$timezones
           \.$features
           \.$calendars
           \.$fontStyle
@@ -179,19 +206,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           
         }
       }
-      
-      Case(DisplayedContent.both) {
-        Summary {
-          \.$content
-          \.$calendars
-//          \.$reminders
-          \.$fontStyle
-          \.$fontSize
-          \.$backgroundColor
-          \.$accentColor
-          
-        }
-      }
+
       
       Case(DisplayedContent.reminders) {
         Summary {
@@ -202,6 +217,28 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$backgroundColor
           \.$accentColor
           
+        }
+      }
+
+      Case(DisplayedContent.timezones) {
+        Summary {
+          \.$content
+          \.$timezones
+          \.$fontStyle
+          \.$fontSize
+          \.$backgroundColor
+          \.$accentColor
+        }
+      }
+      
+      
+      Case(DisplayedContent.weather) {
+        Summary {
+          \.$content
+          \.$fontStyle
+          \.$fontSize
+          \.$backgroundColor
+          \.$accentColor
         }
       }
 

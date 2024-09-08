@@ -135,6 +135,8 @@ struct ContentView: View {
         ScrollView {
           let previews = Group {
             VStack {
+              WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
+
               if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
                 if (isCompact) {
                   WidgetPreviewView(config: ConfigurationIntent.appComboConfig)

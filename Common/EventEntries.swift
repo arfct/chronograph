@@ -38,7 +38,7 @@ struct EventAttachment: Hashable {
 }
 
 class EventEntry: Identifiable, Hashable {
-  internal init(id: String = UUID().uuidString, type: String? = nil, title: String? = nil, startDate: Date? = nil, endDate: Date? = nil, url: URL? = nil, suffix: String? = nil, item: EKCalendarItem? = nil, allDayItems: [EventEntry]? = nil, children: [EventEntry]? = nil, duplicates: [EventEntry]? = nil, forecast: HourWeather? = nil, removeIfOrphaned: Bool = false, height: CGFloat = 1, locations: [String]? = nil, meeting: EventAttachment? = nil, notes: AttributedString? = nil, attachments: [EventAttachment]? = nil, currentForecast: CurrentWeather? = nil, dayForecast: DayWeather? = nil, hourForecast: HourWeather? = nil, date: Date? = nil, hasConflict: Bool = false, hasStartConflict: Bool = false, isFirstConflict: Bool = false) {
+  internal init(id: String = UUID().uuidString, type: String? = nil, title: String? = nil, startDate: Date? = nil, endDate: Date? = nil, url: URL? = nil, suffix: String? = nil, item: EKCalendarItem? = nil, allDayItems: [EventEntry]? = nil, children: [EventEntry]? = nil, duplicates: [EventEntry]? = nil, forecast: HourWeather? = nil, removeIfOrphaned: Bool = false, height: CGFloat = 1, locations: [String]? = nil, meeting: EventAttachment? = nil, notes: AttributedString? = nil, attachments: [EventAttachment]? = nil, currentForecast: CurrentWeather? = nil, dayForecast: DayWeather? = nil, hourForecast: HourWeather? = nil, date: Date? = nil, hasConflict: Bool = false, hasStartConflict: Bool = false, isFirstConflict: Bool = false, timeZone: TimeZone? = nil) {
     self.id = id
     self.type = type
     self.title = title
@@ -64,6 +64,7 @@ class EventEntry: Identifiable, Hashable {
     self.hasConflict = hasConflict
     self.hasStartConflict = hasStartConflict
     self.isFirstConflict = isFirstConflict
+    self.timeZone = timeZone
   }
   
  
@@ -94,7 +95,7 @@ class EventEntry: Identifiable, Hashable {
   var hasConflict: Bool = false
   var hasStartConflict: Bool = false
   var isFirstConflict: Bool = false
-
+  var timeZone: TimeZone?
   
   static func == (lhs: EventEntry, rhs: EventEntry) -> Bool {
     return lhs.id == rhs.id

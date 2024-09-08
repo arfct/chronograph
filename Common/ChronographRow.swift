@@ -2,6 +2,135 @@ import SwiftUI
 import EventKit
 import WeatherKit
 
+struct TimeZoneRowView: View {
+  var entry: EventEntry
+  let config: RowViewConfig
+  
+  private var calendar: Calendar {
+    var calendar = Calendar.current
+    if let timeZone = entry.timeZone {
+      calendar.timeZone = timeZone
+    }
+    return calendar
+  }
+
+  private var isNightTime: Bool {
+    let hour = calendar.component(.hour, from: Date())
+    return hour < 6 || hour >= 22
+  }
+  
+  private var isLikelySleeping: Bool {
+    let hour = calendar.component(.hour, from: Date())
+    return hour >= 0 && hour < 7
+  }
+  
+  private var isLikelyWorking: Bool {
+    let hour = calendar.component(.hour, from: Date())
+    return hour >= 8 && hour < 18
+  }
+  
+  private enum TimeOfDay {
+    case sunrise
+    case morning
+    case day
+    case endOfDay
+    case evening
+    case night
+    case sleeping
+    case dawn
+    
+    var icon: String {
+      switch self {
+      case .sunrise:
+        return "sunrise.fill"
+      case .morning:
+        return "sun.max.fill"
+      case .day:
+        return "sun.max.fill"
+      case .endOfDay:
+        return "sun.max.fill"
+      case .evening:
+        return "sunset.fill"
+      case .night:
+        return "moon.stars.fill"
+      case .sleeping:
+        return "moon.stars.fill"
+      case .dawn:
+        return "sunrise.fill"
+      }
+    }
+    
+    var color: Color {
+      switch self {
+      case .sunrise:
+        return .yellow
+      case .morning:
+        return .yellow
+      case .day:
+        return .yellow
+      case .endOfDay:
+        return .yellow
+      case .evening:
+        return .orange
+      case .night:
+        return .indigo
+      case .sleeping:
+        return .indigo
+      case .dawn:
+        return .yellow
+      }
+    }
+  }
+  
+  private func getTimeOfDay(hour: Int) -> TimeOfDay {
+    switch hour {
+    case 5..<7:
+      return .sunrise
+    case 7..<9:
+      return .morning
+    case 9..<11:
+      return .day
+    case 11..<17:
+      return .endOfDay
+    case 17..<19:
+      return .evening
+    case 19..<22:
+      return .night
+    case 22..<23:
+      return .sleeping
+    case 0..<5:
+      return .dawn
+    default:
+      return .night
+    }
+  }
+  
+  private var timeOfDay: TimeOfDay {
+    getTimeOfDay(hour: calendar.component(.hour, from: Date()))
+  }
+  
+  var body: some View {
+    HStack(spacing: 8) {
+      HStack {
+        TimeStringView(entry: entry, config: config, date: Date(), timeZone: entry.timeZone)
+          .foregroundColor(isLikelySleeping ? .secondary : .primary)
+          .italic(isLikelySleeping)
+        
+      }.frame(minWidth:config.keyline, alignment:.trailing)
+      
+      Image(systemName: timeOfDay.icon)
+        .foregroundColor(timeOfDay.color)
+      
+      Text(entry.title ?? "Timezone")
+        .font(config.font)
+        .foregroundColor(isLikelySleeping ? .secondary : .primary)
+        .italic(isLikelySleeping)
+        .lineLimit(1)
+    }
+    .frame(maxWidth:.infinity, alignment:.leading)
+  }
+}
+
 
 struct RowViewConfig {
   var entry: TimelineProvider.Entry
@@ -92,10 +221,12 @@ struct WeatherRowView: View {
 struct TimeStringView: View {
   let entry: EventEntry
   let config: RowViewConfig
+  var date: Date? = nil
+  var timeZone: TimeZone? = nil
   
   var body: some View {
-    if let date = entry.startDate {
-      let (hour, minute) = date.formattedHourAndMinute()
+    if let displayDate = date ?? entry.startDate {
+      let (hour, minute) = displayDate.formattedHourAndMinute(timeZone:timeZone)
       
       Group {
         if (config.compactTime) {
@@ -114,7 +245,6 @@ struct TimeStringView: View {
       }
       .frame(minWidth:0, minHeight:config.lineHeight, alignment: .trailing)
     }
-    
   }
 }
 
@@ -159,6 +289,11 @@ struct EventRowView: View {
     
     let calendarId = event.calendar?.source?.sourceIdentifier ?? event.calendar?.calendarIdentifier ?? ""
     let eventid = "x-apple-calevent://\(calendarId)/\(event.calendarItemExternalIdentifier.replacingOccurrences(of: ":", with: "/"))"
+    
+//    let _ = print("Event", event.title ?? "",
+//                  "\neid:", eventid,
+//                  "\ncid:", event.calendarItemExternalIdentifier ?? "",
+//                  "\ndid:", event.eventIdentifier)
     
     let title = (event.title.count > 0 ? event.title : nil) ?? "Untitled"
     
@@ -528,52 +663,52 @@ struct HeaderRowView: View {
       
       let dayNumber = Text(shortDayNumber)
         .foregroundColor(config.accentColor)
-       
-        if (large) {
-          HStack(alignment: .center, spacing: config.columnSpacing) {
-            
-            VStack() {
-              dayNumber
-                .font(.system(size: config.fontSize * 1.8).weight(.light))
-            }.frame(width:config.keyline, alignment:.trailing)
-              
-            TimeBarView(entry: entry, config:config, color: config.accentColor )
-              .frame(minWidth:config.fontSize, maxHeight:.infinity)
-              
-            
-            VStack(alignment:.leading) {
-              HStack(spacing:config.smallFontSize / 2) {
-                dayName
-                forecastView
-              }
-              allDayItems
-            }
-            .padding(.vertical, config.lineHeight / 2)
-          }
-          .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
-          .fixedSize(horizontal: false, vertical: true)
+      
+      if (large) {
+        HStack(alignment: .center, spacing: config.columnSpacing) {
           
-        } else {
-          HStack(alignment: .center, spacing: config.columnSpacing) {
-            
-            VStack() {
+          VStack() {
+            dayNumber
+              .font(.system(size: config.fontSize * 1.8).weight(.light))
+          }.frame(width:config.keyline, alignment:.trailing)
+          
+          TimeBarView(entry: entry, config:config, color: config.accentColor )
+            .frame(minWidth:config.fontSize, maxHeight:.infinity)
+          
+          
+          VStack(alignment:.leading) {
+            HStack(spacing:config.smallFontSize / 2) {
               dayName
-            }.frame(minWidth:config.keyline, alignment:.trailing)
-            
-            if (!config.widthIsLimited) {
-              VStack() {
-                dayNumber
-                  .font(config.smallFont)
-              }.frame(minWidth:config.fontSize, alignment:.center)
+              forecastView
             }
-            forecastView
             allDayItems
           }
-          .padding(.top, config.heightIsLimited ? 0 : config.lineHeight / 2)
-          .padding(.bottom, config.heightIsLimited ? 0 : config.lineHeight / 8)
-          .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
+          .padding(.vertical, config.lineHeight / 2)
         }
-
+        .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
+        .fixedSize(horizontal: false, vertical: true)
+        
+      } else {
+        HStack(alignment: .center, spacing: config.columnSpacing) {
+          
+          VStack() {
+            dayName
+          }.frame(minWidth:config.keyline, alignment:.trailing)
+          
+          if (!config.widthIsLimited) {
+            VStack() {
+              dayNumber
+                .font(config.smallFont)
+            }.frame(minWidth:config.fontSize, alignment:.center)
+          }
+          forecastView
+          allDayItems
+        }
+        .padding(.top, config.heightIsLimited ? 0 : config.lineHeight / 2)
+        .padding(.bottom, config.heightIsLimited ? 0 : config.lineHeight / 8)
+        .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
+      }
+      
     }
   }
 }
