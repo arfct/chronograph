@@ -155,8 +155,18 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   static var timezonesConfig: ConfigurationIntent {
     let config = ConfigurationIntent()
     config.content = .timezones
+    config.timezones = [
+      TimeZoneSelectionEntity(id: "America/Los_Angeles", title: "Los Angeles", subtitle:nil, color:nil),
+      TimeZoneSelectionEntity(id: "America/New_York", title: "New York City", subtitle:nil, color:nil),
+      TimeZoneSelectionEntity(id: "Europe/London", title: "London", subtitle:nil, color:nil),
+      TimeZoneSelectionEntity(id: "Asia/Tokyo", title: "Tokyo", subtitle:nil, color:nil)
+      ]
+    return config
+  }
   
-    
+  static var weatherConfig: ConfigurationIntent {
+    let config = ConfigurationIntent()
+    config.content = .weather
     return config
   }
   

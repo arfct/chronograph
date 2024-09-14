@@ -29,6 +29,8 @@ struct TimeZoneRowView: View {
     return hour >= 8 && hour < 18
   }
   
+  var daylightColors = ["#012459", "#001322", "#003972", "#001322", "#003972", "#001322", "#004372", "#00182b", "#004372", "#011d34", "#016792", "#00182b", "#07729f", "#042c47", "#12a1c0", "#07506e", "#74d4cc", "#1386a6", "#efeebc", "#61d0cf", "#fee154", "#a3dec6", "#fdc352", "#e8ed92", "#ffac6f", "#ffe467", "#fda65a", "#ffe467", "#fd9e58", "#ffe467", "#f18448", "#ffd364", "#f06b7e", "#f9a856", "#ca5a92", "#f4896b", "#5b2c83", "#d1628b", "#371a79", "#713684", "#28166b", "#45217c", "#192861", "#372074", "#040b3c", "#233072", "#040b3c", "#012459" ];
+
   private enum TimeOfDay {
     case sunrise
     case morning
@@ -42,64 +44,65 @@ struct TimeZoneRowView: View {
     var icon: String {
       switch self {
       case .sunrise:
-        return "sunrise.fill"
+        return "sunrise"
       case .morning:
-        return "sun.max.fill"
+        return "sun.min"
       case .day:
-        return "sun.max.fill"
+        return "sun.max"
       case .endOfDay:
-        return "sun.max.fill"
+        return "sunset"
       case .evening:
-        return "sunset.fill"
+        return "sun.haze"
       case .night:
         return "moon.stars.fill"
       case .sleeping:
-        return "moon.stars.fill"
+        return "moon.zzz.fill"
       case .dawn:
-        return "sunrise.fill"
+        return "sun.dust"
       }
     }
     
     var color: Color {
       switch self {
-      case .sunrise:
-        return .yellow
-      case .morning:
-        return .yellow
-      case .day:
-        return .yellow
-      case .endOfDay:
-        return .yellow
-      case .evening:
-        return .orange
-      case .night:
-        return .indigo
-      case .sleeping:
-        return .indigo
       case .dawn:
-        return .yellow
+        return Color.withHex("041D80")
+      case .sunrise:
+        return Color.withHex("00B2FF")
+      case .morning:
+        return Color.withHex("00B2FF")
+      case .day:
+        return Color.withHex("00B2FF")
+      case .endOfDay:
+        return Color.withHex("FAC22B")
+      case .evening:
+        return Color.withHex("FA732B")
+      case .night:
+        return Color.withHex("450063")
+      case .sleeping:
+        return Color.withHex("041D80")
       }
     }
   }
   
   private func getTimeOfDay(hour: Int) -> TimeOfDay {
     switch hour {
-    case 5..<7:
+      
+    case 6..<8:
+      return .dawn
+    case 8..<10:
       return .sunrise
-    case 7..<9:
-      return .morning
     case 9..<11:
-      return .day
+      return .morning
     case 11..<17:
-      return .endOfDay
+      return .day
     case 17..<19:
+      return .endOfDay
+    case 19..<20:
       return .evening
-    case 19..<22:
+    case 20..<22:
       return .night
     case 22..<23:
       return .sleeping
-    case 0..<5:
-      return .dawn
     default:
       return .night
     }
@@ -110,22 +113,39 @@ struct TimeZoneRowView: View {
   }
   
   var body: some View {
-    HStack(spacing: 8) {
+    let hour = calendar.component(.hour, from: Date())
+    
+    let daylightGradient = LinearGradient(colors: [Color.withHex(daylightColors[hour * 2]), Color.withHex(daylightColors[hour * 2 + 1])], startPoint: .top, endPoint: .bottom)
+      
+    HStack(spacing: config.columnSpacing) {
       HStack {
-        TimeStringView(entry: entry, config: config, date: Date(), timeZone: entry.timeZone)
-          .foregroundColor(isLikelySleeping ? .secondary : .primary)
-          .italic(isLikelySleeping)
         
+        TimeStringView(entry: entry, config: config, date: Date(), timeZone: entry.timeZone, showAMPM: true)
+//          .foregroundColor(isLikelySleeping ? .secondary : .primary)
+          
+
+
       }.frame(minWidth:config.keyline, alignment:.trailing)
       
-      Image(systemName: timeOfDay.icon)
-        .foregroundColor(timeOfDay.color)
+      .foregroundColor(isLikelySleeping ? .secondary : .primary)
+//        .foregroundStyle(daylightGradient)
       
       Text(entry.title ?? "Timezone")
         .font(config.font)
         .foregroundColor(isLikelySleeping ? .secondary : .primary)
         .italic(isLikelySleeping)
         .lineLimit(1)
+      
+      
+      
+      
+      Image(systemName: timeOfDay.icon)
+        .font(config.font)
+//        .foregroundColor(timeOfDay.color)
+        .imageScale(.small)
+      
+        .foregroundStyle(daylightGradient)
+
     }
     .frame(maxWidth:.infinity, alignment:.leading)
   }
@@ -179,7 +199,7 @@ struct WeatherRowView: View {
   var body: some View {
     
     if let date = entry.startDate {
-      let (hour, minute) = date.formattedHourAndMinute()
+      let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
           Text(hour).font(config.font.monospacedDigit())
@@ -223,19 +243,30 @@ struct TimeStringView: View {
   let config: RowViewConfig
   var date: Date? = nil
   var timeZone: TimeZone? = nil
+  var showAMPM: Bool = false
+  
   
   var body: some View {
+      
     if let displayDate = date ?? entry.startDate {
-      let (hour, minute) = displayDate.formattedHourAndMinute(timeZone:timeZone)
+      let (hour, minute, ampm) = displayDate.formattedHourAndMinute(timeZone:timeZone)
       
       Group {
         if (config.compactTime) {
           HStack(alignment:.center, spacing:0.5) {
             Text(hour).font(config.font.monospacedDigit())
               .kerning(-0.5)
-            Text(minute).font(config.smallFont.monospacedDigit())
-              .baselineOffset(config.fontSize * 0.24)
-              .kerning(-0.5)
+            
+            if (showAMPM) {
+              Text(ampm)
+                .font(config.smallFont.monospacedDigit())
+                .baselineOffset(config.fontSize * 0.24)
+            } else {
+              Text(minute).font(config.smallFont.monospacedDigit())
+                .baselineOffset(config.fontSize * 0.24)
+                .kerning(-0.5)
+            }
+            
           }
         } else {
           Text("\(hour):\(minute)")
@@ -270,7 +301,7 @@ struct EventRowView: View {
   let config: RowViewConfig
   
   var body: some View {
-    let (hour, minute) = event.date.formattedHourAndMinute()
+    let (hour, minute, ampm) = event.date.formattedHourAndMinute()
     
     
     let color = config.entry.configuration.features.contains(.calendarColors)

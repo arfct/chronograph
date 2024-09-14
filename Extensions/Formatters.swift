@@ -33,6 +33,12 @@ var relativeDateFormatter: RelativeDateTimeFormatter {
 }
 
 
+var amPmFormatter: DateFormatter {
+  let formatter = DateFormatter()
+  formatter.dateFormat = "a" // 'a' is used to get AM/PM
+  return formatter
+}
+
 var relativeDateFormatterDay: DateFormatter {
   let formatter = DateFormatter()
   

@@ -64,7 +64,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
       let now = Date()
       
       var timezones = configuration.timezones.compactMap({TimeZone(identifier: $0.id)})
-      
+      timezones.sort { a, b in
+        a.secondsFromGMT() < b.secondsFromGMT()
+      }
       for timeZone in timezones {
         
         let offset = timeZone.secondsFromGMT(for: now)
@@ -84,6 +86,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
         timezoneEntries.append(timezoneEntry)
         
       }
+
     }
     
     return timezoneEntries
@@ -112,7 +115,14 @@ struct TimelineProvider: AppIntentTimelineProvider {
    print("\nMaking timeline for \(identifier)" )
     
     let calendar = Calendar.current
-    let startDate = Date()
+    let startDate: Date
+    #if targetEnvironment(simulator)
+    let currentYear = calendar.component(.year, from: Date())
+      let januaryFirst = calendar.date(from: DateComponents(year: currentYear, month: 1, day: 1))!
+      startDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: januaryFirst)!
+    #else
+      startDate = Date()
+    #endif
     let endDate = calendar.date(byAdding: .day, value: 7, to: startDate)!
     
     let showAllDay = configuration.features.contains(.allDayEvents)
@@ -507,6 +517,8 @@ struct TimelineProvider: AppIntentTimelineProvider {
       AppIntentRecommendation(intent:ConfigurationIntent.remindersConfig, description: "Reminders"),
       AppIntentRecommendation(intent:ConfigurationIntent.comboConfig, description: "Combination"),
       AppIntentRecommendation(intent:ConfigurationIntent.combo2Config, description: "Combination (cont'd)"),
+      AppIntentRecommendation(intent:ConfigurationIntent.timezonesConfig, description: "Time Zones"),
+      AppIntentRecommendation(intent:ConfigurationIntent.weatherConfig, description: "Weather"),
     ]
     return recommendations
   }
