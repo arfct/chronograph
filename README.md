@@ -1,3 +1,3 @@
-# TXET
+# Chronograph
 
-txet is a pair of simple calendar and reminder widgets for iOS
+Chronograph is a set of simple text-based calendar and reminder widgets for iOS
