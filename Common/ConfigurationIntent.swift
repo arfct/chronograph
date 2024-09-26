@@ -170,6 +170,24 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     return config
   }
   
+  static var weatherCurrentConfig: ConfigurationIntent {
+    var config = weatherConfig
+    config.weatherStyle = .current
+    return config
+  }
+  
+  static var weatherHourlyConfig: ConfigurationIntent {
+    var config = weatherConfig
+    config.weatherStyle = .hourly
+    return config
+  }
+  
+  static var weatherDailyConfig: ConfigurationIntent {
+    var config = weatherConfig
+    config.weatherStyle = .daily
+    return config
+  }
+  
   static var comboConfig: ConfigurationIntent {
     let config = ConfigurationIntent()
     config.content = .calendar
@@ -245,6 +263,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
       Case(DisplayedContent.weather) {
         Summary {
           \.$content
+          \.$weatherStyle
           \.$fontStyle
           \.$fontSize
           \.$backgroundColor

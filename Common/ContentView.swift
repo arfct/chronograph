@@ -22,6 +22,8 @@ struct ContentView: View {
   @State var showSettings: Bool = false
   @AppStorage(Keys.hideIntroduction, store: UserDefaults(suiteName: Keys.suiteName)) private var hideIntroduction = false
   
+  @AppStorage(Keys.selectedTab) private var selectedTab: String = Values.infoTab
+  
   private func checkRemindersAccess(interactive: Bool = false) async {
     do {
       remindersAccessGranted = try await eventStore.requestFullAccessToReminders()
@@ -56,130 +58,171 @@ struct ContentView: View {
   var body: some View {
     let isCompact = horizontalSizeClass == .compact
     NavigationStack {
-      
-      VStack {
-        if !hideIntroduction {
-          VStack(alignment: .leading, spacing:10) {
-            Image("Wordmark")
-            Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed below. Add widgets from the home screen.")
-              .font(.caption)
-              .foregroundStyle(.secondary)
-            
-            HStack(alignment: .center) {
-              if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-              } else {
-                Button(action: {
-                  Task {
-                    await checkEventsAccess(interactive: true)
-                    eventsAccessGranted = true
-                  }
-                }) {
-                  VStack(spacing:10) {
-                    Image(systemName: "calendar")
-                      .font(.body)
-                    Text("Enable\nCalendar")
-                      .font(.caption)
-                  }.frame(maxWidth: .infinity)
-                }
-              }
-              
-              if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
-//                WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
-//                  .frame(minHeight: 120)
-              } else {
-                Button(action: {
-                  Task {
-                    await checkRemindersAccess(interactive: true)
-                    remindersAccessGranted = true
-                  }
-                }) {
-                  VStack(spacing:10) {
-                    Image(systemName: "checkmark.circle")
-                      .font(.body)
-                    Text("Enable\nReminders")
-                      .font(.caption)
-                  }.frame(maxWidth: .infinity)
-                }
-              }
-              
-              
-              if locationAccessGranted || LocationManager().isAuthorized {
-                
-              } else {
-                Button(action: {
-                  Task {
-                    LocationManager().checkAuthorization()
-                    locationAccessGranted = true
-                  }
-                }) {
-                  VStack(spacing:10) {
-                    Image(systemName: "map")
-                      .font(.body)
-                    Text("Enable\nWeather")
-                      .font(.caption)
-                  }.frame(maxWidth: .infinity)
-                }
-              }
-              
-              
-              
-            }
-            .padding(.top, 10)
-              .frame(maxWidth: .infinity, alignment:.center)
+      TabView(selection:$selectedTab) {
+        
+        
+        Tab("Calendar", systemImage: "calendar", value:Values.calendarTab) {
+          VStack {
+            WidgetPreviewView(config: ConfigurationIntent.comboConfig)
+              .navigationTitle("First Tab Title")
           }
-          .padding(.top,40)
-          .padding(.horizontal, 36)
-          .padding(.bottom, 10)
-          .padding()
-        }
-        ScrollView {
-          let previews = Group {
-            VStack {
-              WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
-
-              if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-                if (isCompact) {
-                  WidgetPreviewView(config: ConfigurationIntent.appComboConfig)
-                    .frame(minHeight: 1024)
-                    .padding(.leading, 20)
-                } else {
-                  WidgetPreviewView(config: ConfigurationIntent.bigAppComboConfig)
-                    .frame(minHeight: 1440)
-                  
-                }
-              } else {
-             
-              }
-            }.frame(maxWidth:isCompact ? 400 : 800)
-            
-            
-
-            
-            
-          }
-            .background(.background)
-          //          .cornerRadius(20)
-//          if horizontalSizeClass == .compact {
-            VStack(spacing:0) {
-              previews
-            }.padding()
-//          } else {
-//            HStack(spacing:0) {
-//              previews
-//            }.padding()
-//          }
-          
         }
         
-        .frame(maxWidth: .infinity)
-        .refreshable {
-          print("refresh")
-          reloadDate = Date()
+        Tab("Reminders", systemImage: "checkmark.square", value:Values.reminderTab) {
+          WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
         }
-        .background(.background)
+        
+        Tab("Timezones", systemImage: "globe", value:Values.timezoneTab) {
+          WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
+            .navigationTitle("TITE")
+        }
+        
+        Tab("Weather", systemImage: "cloud.sun", value:Values.weatherTab) {
+          Text("Today")
+          WidgetPreviewView(config: ConfigurationIntent.weatherCurrentConfig)
+          Text("This Week")
+          WidgetPreviewView(config: ConfigurationIntent.weatherDailyConfig)
+          
+        }
+
+        
+        
+        
+        Tab("Chronograph", systemImage: "info.circle", value:Values.infoTab) {
+          VStack {
+            if !hideIntroduction {
+              VStack(alignment: .leading, spacing:10) {
+                Image("Wordmark")
+                Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed below. Add widgets from the home screen.")
+                  .font(.caption)
+                  .foregroundStyle(.secondary)
+                
+                HStack(alignment: .center) {
+                  if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
+                  } else {
+                    Button(action: {
+                      Task {
+                        await checkEventsAccess(interactive: true)
+                        eventsAccessGranted = true
+                      }
+                    }) {
+                      VStack(spacing:10) {
+                        Image(systemName: "calendar")
+                          .font(.body)
+                        Text("Enable\nCalendar")
+                          .font(.caption)
+                      }.frame(maxWidth: .infinity)
+                    }
+                  }
+                  
+                  if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
+    //                WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+    //                  .frame(minHeight: 120)
+                  } else {
+                    Button(action: {
+                      Task {
+                        await checkRemindersAccess(interactive: true)
+                        remindersAccessGranted = true
+                      }
+                    }) {
+                      VStack(spacing:10) {
+                        Image(systemName: "checkmark.circle")
+                          .font(.body)
+                        Text("Enable\nReminders")
+                          .font(.caption)
+                      }.frame(maxWidth: .infinity)
+                    }
+                  }
+                  
+                  
+                  if locationAccessGranted || LocationManager().isAuthorized {
+                    
+                  } else {
+                    Button(action: {
+                      Task {
+                        LocationManager().checkAuthorization()
+                        locationAccessGranted = true
+                      }
+                    }) {
+                      VStack(spacing:10) {
+                        Image(systemName: "map")
+                          .font(.body)
+                        Text("Enable\nWeather")
+                          .font(.caption)
+                      }.frame(maxWidth: .infinity)
+                    }
+                  }
+                  
+                  
+                  
+                }
+                .padding(.top, 10)
+                  .frame(maxWidth: .infinity, alignment:.center)
+              }
+              .padding(.top,40)
+              .padding(.horizontal, 36)
+              .padding(.bottom, 10)
+              .padding()
+            }
+            ScrollView {
+              let previews = Group {
+                VStack {
+                  
+
+                  
+
+
+                  if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
+                    if (isCompact) {
+                      WidgetPreviewView(config: ConfigurationIntent.appComboConfig)
+                        .frame(minHeight: 1024)
+                        .padding(.leading, 20)
+                    } else {
+                      WidgetPreviewView(config: ConfigurationIntent.bigAppComboConfig)
+                        .frame(minHeight: 1440)
+                      
+                    }
+                  } else {
+                 
+                  }
+                }.frame(maxWidth:isCompact ? 400 : 800)
+                
+                
+
+                
+                
+              }
+                .background(.background)
+              //          .cornerRadius(20)
+    //          if horizontalSizeClass == .compact {
+                VStack(spacing:0) {
+                  //previews
+                }.padding()
+    //          } else {
+    //            HStack(spacing:0) {
+    //              previews
+    //            }.padding()
+    //          }
+              
+            }
+            
+            .frame(maxWidth: .infinity)
+            .refreshable {
+              print("refresh")
+              reloadDate = Date()
+            }
+            .background(.background)
+          }
+          .frame(maxWidth: .infinity)
+          .background(.regularMaterial)
+
+        }
+        
+
+ 
+        
+        
       }
-      .frame(maxWidth: .infinity)
-      .background(.regularMaterial)
       .toolbar {
         ToolbarItemGroup(placement: .primaryAction) {
           Button(action: {
@@ -202,6 +245,7 @@ struct ContentView: View {
           #endif
         }
       }
+
     }
     
     

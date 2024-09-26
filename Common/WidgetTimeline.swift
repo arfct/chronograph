@@ -96,7 +96,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
   
   func timeline(for configuration: ConfigurationIntent, context: Context? = nil) async -> Timeline<CalendarTimelineEntry> {
     
-    let identifier = "\(context?.family.description ?? "none").\(configuration.content)"
+    let identifier = "\(context?.family.description ?? "none").\(configuration.content).\(String(reflecting: configuration))"
     
     let now = Date()
     
@@ -106,11 +106,11 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     
     // Check if the cached timeline exists and if it's within the last minute
-    if let cachedData = TimelineProvider.cachedTimelines[identifier],
-       cachedData.timestamp > now.addingTimeInterval(-60) {
-      print("Returning cached timeline for \(identifier)" )
-      return(cachedData.timeline)
-    }
+//    if let cachedData = TimelineProvider.cachedTimelines[identifier],
+//       cachedData.timestamp > now.addingTimeInterval(-60) {
+//      print("Returning cached timeline for \(identifier)" )
+//      return(cachedData.timeline)
+//    }
     
    print("\nMaking timeline for \(identifier)" )
     
@@ -132,7 +132,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     let timezoneEntries = getTimezoneEntries(configuration:configuration)
     
     
-    let weather = showWeather ? await fetchWeather() : nil
+    let (weather, location) = (showWeather ? await fetchWeather() : nil) ?? (nil, nil)
     
     let reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
     let scheduledReminders = await fetchScheduledReminders(configuration: configuration, startDate: startDate, endDate: endDate)
@@ -407,18 +407,150 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
     
     
+    func upcomingWeatherEntries(weather: Weather, location: String?) -> [EventEntry] {
+      var entries: [EventEntry] = []
+      
+      let now = Date()
+      let in24Hr = Date().addingTimeInterval(24 * 60 * 60)
+      let forecast = weather.currentWeather
+      
+      let eventEntry = EventEntry(type: "weather",
+                                  title:"Weather",
+                                  startDate: weather.currentWeather.date,
+                                  endDate: weather.currentWeather.date.addingTimeInterval(3600),
+                                  weather: weather
+      )
+//      entries.append(eventEntry)
+      
+      if let location = location {
+        entries.append(EventEntry(type:"header", title:location))
+      }
+      
+//      UpcomingWeatherRow(date: Date(), temp: forecast.apparentTemperature, image: Image(systemName:forecast.symbolName), description: forecast.condition.description, config: config)
+      
+      let todayForecast = weather.dailyForecast.first
+      let tommorowForecast = weather.dailyForecast.first { $0.date > Date()}
+      
+      let _ = print (weather.hourlyForecast.map({$0.date}))
+      let rainForecast = weather.hourlyForecast.first { hour in
+        hour.precipitationChance > 0
+      }
+      
+      let sunrise = weather.dailyForecast.first?.sun.sunrise
+      let sunriseForecast = weather.hourlyForecast.first { hour in
+        hour.isDaylight
+      }
+      
+      if let forecast = sunriseForecast {
+        EventEntry(type: "weather",
+                   title:"Sunrise",
+                   startDate: forecast.date,
+                   endDate: forecast.date.addingTimeInterval(3600),
+                   hourForecast: forecast
+                  )
+      }
+      
+
+      
+      if let highTempTime = todayForecast?.highTemperatureTime,
+         let highTemp = todayForecast?.highTemperature {
+        
+        let hourForecast = weather.hourlyForecast.last(where: {$0.date < highTempTime})
+        entries.append(
+          EventEntry(type: "weather",
+                     title:"High",
+                     startDate: highTempTime,
+                     endDate: highTempTime.addingTimeInterval(3600),
+                     hourForecast: hourForecast
+                    )
+        )
+        
+        
+        
+      }
+      
+      if let lowTempTime = todayForecast?.lowTemperatureTime,
+         let lowTemp = todayForecast?.lowTemperature {
+        let hourForecast = weather.hourlyForecast.last(where: {$0.date < lowTempTime})
+        entries.append(
+          EventEntry(type: "weather",
+                     title:"Low",
+                     startDate: lowTempTime,
+                     endDate: lowTempTime.addingTimeInterval(3600),
+                     hourForecast: hourForecast
+                    )
+        )
+
+      }
+
+      if let sunset = weather.dailyForecast.first?.sun.sunset,
+         let sunsetForecast = weather.hourlyForecast.last(where: { $0.date < sunset }) {
+        entries.append(
+          EventEntry(type: "weather",
+                     title:"Low",
+                     startDate: sunset,
+                     endDate: sunset.addingTimeInterval(3600),
+                     hourForecast: sunsetForecast
+                    )
+        )
+      }
+      
+      if let forecast = rainForecast {
+        entries.append(
+          EventEntry(type: "weather",
+                     title:"Low",
+                     startDate: forecast.date,
+                     endDate: forecast.date.addingTimeInterval(3600),
+                     hourForecast: forecast
+                    )
+        )
+      } else {
+        
+      }
+      
+
+
+      
+      
+      
+      
+      print("entries", entries.map({$0.title}))
+      
+      return entries
+    }
+    
     if let weather = weather, configuration.content == .weather {
       
-      let hourlyForecast = weather.hourlyForecast
-      
-      for forecast in hourlyForecast.forecast.prefix(24) {
-        let eventEntry = EventEntry(type: "weather",
-                                    title:"Weather",
-                                    startDate: forecast.date,
-                                    endDate: forecast.date.addingTimeInterval(3600),
-                                    forecast: forecast
-        )
-        calendarEntries.append(eventEntry)
+      if configuration.weatherStyle == .current {
+        calendarEntries.append(contentsOf:upcomingWeatherEntries(weather: weather, location:location))
+        
+      } else if configuration.weatherStyle == .daily {
+        let dailyForecast = weather.dailyForecast
+        
+        for forecast in dailyForecast.forecast.prefix(10) {
+          let eventEntry = EventEntry(type: "weather",
+                                      title:"Weather",
+                                      startDate: forecast.date,
+                                      endDate: forecast.date.addingTimeInterval(3600),
+                                      dayForecast: forecast
+          )
+          calendarEntries.append(eventEntry)
+        }
+      } else if configuration.weatherStyle == .hourly {
+        
+          let currentWeather = weather.currentWeather
+        let hourlyForecast = weather.hourlyForecast
+        
+        for forecast in hourlyForecast.forecast.prefix(24) {
+          let eventEntry = EventEntry(type: "weather",
+                                      title:"Weather",
+                                      startDate: forecast.date,
+                                      endDate: forecast.date.addingTimeInterval(3600),
+                                      hourForecast: forecast
+                              
+          )
+          calendarEntries.append(eventEntry)
+        }
       }
     }
     
@@ -426,7 +558,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
     
     let fullMinuteDate = calendar.date(from: components)!
-    print("timezon \(timezoneEntries)")
+    
     for minuteOffset in 0 ..< 15 {
       let renderDate = calendar.date(byAdding: .minute,
                                      value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: fullMinuteDate)!
@@ -454,7 +586,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
   }
   
-  private func fetchWeather() async -> Weather? {
+  private func fetchWeather() async -> (Weather, String?)? {
     do {
       return try await weatherManager.fetchWeather()
     } catch {
@@ -518,7 +650,11 @@ struct TimelineProvider: AppIntentTimelineProvider {
       AppIntentRecommendation(intent:ConfigurationIntent.comboConfig, description: "Combination"),
       AppIntentRecommendation(intent:ConfigurationIntent.combo2Config, description: "Combination (cont'd)"),
       AppIntentRecommendation(intent:ConfigurationIntent.timezonesConfig, description: "Time Zones"),
-      AppIntentRecommendation(intent:ConfigurationIntent.weatherConfig, description: "Weather"),
+      AppIntentRecommendation(intent:ConfigurationIntent.weatherCurrentConfig, description: "Weather (Current)"),
+      
+      AppIntentRecommendation(intent:ConfigurationIntent.weatherHourlyConfig, description: "Weather (Hourly)"),
+      
+      AppIntentRecommendation(intent:ConfigurationIntent.weatherDailyConfig, description: "Weather (Daily")
     ]
     return recommendations
   }

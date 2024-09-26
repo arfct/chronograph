@@ -190,14 +190,12 @@ var tempFormatterTrailing: MeasurementFormatter {
   return formatter
 }
 
-struct WeatherRowView: View {
+struct HourlyWeatherRowView: View {
   let entry: EventEntry
   let forecast: HourWeather
   let config: RowViewConfig
-  
-  
+
   var body: some View {
-    
     if let date = entry.startDate {
       let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
@@ -205,10 +203,10 @@ struct WeatherRowView: View {
           Text(hour).font(config.font.monospacedDigit())
             .kerning(-0.5)
           Text(minute).font(config.smallFont.monospacedDigit())
-          //              .baselineOffset(fontSize * 0.24)
             .kerning(-0.5)
-          
         }
+        .frame(minWidth:config.keyline, alignment: .trailing)
+        
       }
       
       HStack {
@@ -224,17 +222,98 @@ struct WeatherRowView: View {
           .font(config.smallFont)
           .foregroundColor(.secondary)
       }
-      
       .padding(.vertical, 4)
       .padding(.horizontal, 8)
       .frame(maxHeight:config.lineHeight)
-      
-      
-      
     }
-    
-    
-    
+  }
+}
+
+struct DailyWeatherRowView: View {
+  let entry: EventEntry
+  let forecast: DayWeather
+  let config: RowViewConfig
+
+  var body: some View {
+    if let date = entry.startDate {
+      let (hour, minute, ampm) = date.formattedHourAndMinute()
+      let timeString = Group {
+        HStack(alignment:.center, spacing:0.5) {
+          Text(dayOfWeekFormat.string(for:date) ?? "")
+            .font(config.smallFont)
+        }
+        
+        .frame(minWidth:config.keyline, alignment: .trailing)
+      }
+      
+      HStack {
+        timeString
+        Image(systemName: forecast.symbolName)
+          .font(config.font)
+          .frame(minWidth:config.lineHeight * 1.125)
+        Spacer()
+        Text(forecast.lowTemperature.converted(to: .fahrenheit), formatter: tempFormatter)
+          .font(config.font)
+          .foregroundColor(.secondary)
+
+        Rectangle()
+          .fill(.tertiary)
+          
+          .frame(maxWidth:.infinity, maxHeight:2)
+
+        Text(forecast.highTemperature.converted(to: .fahrenheit), formatter: tempFormatter)
+          .font(config.font)
+          .foregroundColor(.secondary)
+
+        Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter)
+        
+          .font(config.smallFont)
+          .foregroundColor(.secondary)
+          .opacity(forecast.precipitationChance)
+      }
+      .padding(.vertical, 4)
+      .padding(.horizontal, 8)
+      .frame(maxHeight:config.lineHeight)
+    }
+  }
+}
+
+struct CurrentWeatherRowView: View {
+  let entry: EventEntry
+  let weather: Weather
+  let config: RowViewConfig
+
+  var body: some View {
+
+    if let date = entry.startDate {
+      let (hour, minute, ampm) = date.formattedHourAndMinute()
+      let timeString = Group {
+        HStack(alignment:.center, spacing:0.5) {
+          Text(hour).font(config.font.monospacedDigit())
+            .kerning(-0.5)
+          Text(minute).font(config.smallFont.monospacedDigit())
+            .kerning(-0.5)
+        }
+      }
+      let forecast = weather.currentWeather
+      HStack {
+        timeString
+        
+        Text("Current")
+        Image(systemName: forecast.symbolName)
+          .font(config.font)
+        Spacer()
+        Text(forecast.temperature.converted(to: .fahrenheit), formatter: tempFormatter)
+          .font(config.smallFont)
+          .foregroundColor(.secondary)
+//        Text(NSNumber(value:forecast.), formatter:percentFormatter)
+//          .font(config.smallFont)
+//          .foregroundColor(.secondary)
+      }
+      .padding(.vertical, 4)
+      .padding(.horizontal, 8)
+      .frame(maxHeight:config.lineHeight)
+    }
   }
 }
 
@@ -292,7 +371,7 @@ struct TimeBarView: View {
         .frame(maxWidth:SFRegularStrokeWidthMultiple * config.fontSize * 1.5)
       
     }
-    .padding(.vertical, config.fontSize / 8)
+    .padding(.vertical, config.fontSize / 16)
   }
 }
 struct EventRowView: View {
@@ -345,6 +424,8 @@ struct EventRowView: View {
       if (config.showTimeBars) {
         TimeBarView(entry: entry, config:config, color: color)
           .frame(minWidth:config.fontSize, maxHeight:.infinity)
+      } else {
+        Text("")
       }
       
       
@@ -662,7 +743,7 @@ struct HeaderRowView: View {
     let forecastView =  HStack(spacing:0) {
       Text("")
       if let forecast = entry.dayForecast {
-        
+        (
         Text(Image(systemName: forecast.symbolName))
         + Text(" ")
         + Text(tempFormatter.string(from: forecast.lowTemperature.converted(to: .fahrenheit)).replacingOccurrences(of: "°", with: ""))
@@ -672,6 +753,9 @@ struct HeaderRowView: View {
            Text(" ") + Text(Image(systemName: "drop")) +
            Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter)
            : Text(""))
+        )
+          .lineLimit(1)
+        
       }
     }.font(config.smallFont)
     

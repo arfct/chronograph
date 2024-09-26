@@ -231,8 +231,6 @@ struct ChronographWidgetView : View {
             EventRowView(event: event, entry: entry, config: row)
           } else if let reminder = entry.item as? EKReminder {
             ReminderRowView(reminder: reminder, entry: entry, config: row)
-          } else if let forecast = entry.forecast {
-            WeatherRowView(entry: entry, forecast: forecast, config: row)
           } else if entry.type == "error" {
             ErrorRowView(entry: entry, config: row)
           } else if entry.type == "header" {
@@ -246,6 +244,12 @@ struct ChronographWidgetView : View {
             FreeRowView(entry: entry, config: row)
           } else if entry.type == "timezone" {
             TimeZoneRowView(entry: entry, config: row)
+          } else if let weather = entry.weather {
+            CurrentWeatherRowView(entry: entry, weather: weather, config: row)
+          } else if let forecast = entry.hourForecast {
+            HourlyWeatherRowView(entry: entry, forecast: forecast, config: row)
+          } else if let forecast = entry.dayForecast {
+            DailyWeatherRowView(entry: entry, forecast: forecast, config: row)
           } else  {
             HeaderRowView(entry: entry, config: row, large: false)
           }

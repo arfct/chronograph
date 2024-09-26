@@ -7,18 +7,25 @@ class WeatherLocationManager: NSObject {
   private var cachedWeather: Weather?
 
   @MainActor
-  func fetchWeather() async throws -> Weather {
+  func fetchWeather() async throws -> (Weather, String?) {
 
     if let data = UserDefaults.standard.data(forKey: "cachedWeather") {
       cachedWeather = try JSONDecoder().decode(Weather.self, from: data)
     }
     
+    
+    let location = try await locationManager.currentLocation
+    let geocoder = CLGeocoder()
+    let placemarks = try await geocoder.reverseGeocodeLocation(location)
+    let locationName = placemarks.first?.locality  // e.g., city name
+    print(locationName)
+    
+    
     if let weather = cachedWeather, let date = cachedWeather?.currentWeather.date, Date().timeIntervalSince(date) <= 300 {
       print("Returning cached weather \(Date().timeIntervalSince(date) )")
-      return weather
+      return (weather, locationName)
     }
 
-    let location = try await locationManager.currentLocation
     let weatherService = WeatherService.shared
     print("Fetching Weather for \(location.coordinate.latitude), \(location.coordinate.longitude)")
 
@@ -28,6 +35,6 @@ class WeatherLocationManager: NSObject {
     cachedWeather = weather
     UserDefaults.standard.set(try? JSONEncoder().encode(weather), forKey: "cachedWeather")
 
-    return weather
+    return (weather, locationName)
   }
 }

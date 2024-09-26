@@ -9,14 +9,18 @@ struct Keys {
   static let tokenizeParens = "tokenizeParens"
   static let compactTime = "compactTime"
   static let hideIntroduction = "hideIntroduction"
+  
+  static let selectedTab = "selectedTab"
 }
 
 struct Values {
-  static let summary = "summary"
-  static let listen = "listen"
-  static let profile = "profile"
+  static let infoTab = "info"
+  static let calendarTab = "calendar"
+  static let reminderTab = "reminder"
+  static let timezoneTab = "timezone"
+  static let weatherTab = "weather"
   
 }
 struct Defaults {
-  static let serverAddress = "https://vermillion.ai/api/"
+  //  static let serverAddress = ""
 }
