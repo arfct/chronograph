@@ -69,8 +69,8 @@ struct ContentView: View {
             if !hideIntroduction {
               VStack(alignment: .leading, spacing:10) {
                 Image("Wordmark")
-                Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed below. Add widgets from the home screen.")
-                  .font(.caption)
+                Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed using the tabs below. Add widgets from the home screen.")
+                  .font(.body)
                   .foregroundStyle(.secondary)
                 
                 HStack(alignment: .center) {
@@ -126,8 +126,7 @@ struct ContentView: View {
                 .padding(.top, 10)
                 .frame(maxWidth: .infinity, alignment:.center)
               }
-              .padding(.top,40)
-              .padding(.horizontal, 36)
+              .padding(.top,32)
               .padding(.bottom, 10)
               .padding()
             }
