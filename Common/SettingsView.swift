@@ -23,9 +23,9 @@ struct SettingsView: View {
             Toggle(isOn: $compactTime) {
               Text("Compact Time")
             }
-            Toggle(isOn: $hideIntroduction) {
-              Text("Hide App Header")
-            }
+//            Toggle(isOn: $hideIntroduction) {
+//              Text("Hide App Header")
+//            }
           }
         }
         .toolbar {

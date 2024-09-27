@@ -116,13 +116,13 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     let calendar = Calendar.current
     let startDate: Date
-    #if targetEnvironment(simulator)
-    let currentYear = calendar.component(.year, from: Date())
-      let januaryFirst = calendar.date(from: DateComponents(year: currentYear, month: 1, day: 1))!
-      startDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: januaryFirst)!
-    #else
+//    #if targetEnvironment(simulator)
+//    let currentYear = calendar.component(.year, from: Date())
+//      let januaryFirst = calendar.date(from: DateComponents(year: currentYear, month: 1, day: 1))!
+//      startDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: januaryFirst)!
+//    #else
       startDate = Date()
-    #endif
+//    #endif
     let endDate = calendar.date(byAdding: .day, value: 7, to: startDate)!
     
     let showAllDay = configuration.features.contains(.allDayEvents)
@@ -134,8 +134,11 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     let (weather, location) = (showWeather ? await fetchWeather() : nil) ?? (nil, nil)
     
-    let reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
+    var reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
     let scheduledReminders = await fetchScheduledReminders(configuration: configuration, startDate: startDate, endDate: endDate)
+    
+    reminderEntries.removeAll(where: {scheduledReminders.firstIndex(of:$0.item as! EKReminder) != nil})
+    
     let events = await fetchEvents(configuration: configuration, startDate: startDate, endDate: endDate)
     
     var calendarItems: [EKCalendarItem] = []
@@ -185,10 +188,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     let debug = false
     var timelineEntries: [CalendarTimelineEntry] = []
-    
-    
     var calendarEntries: [EventEntry] = []
-    
     
     let distantPastEvent = EKEvent.init(eventStore: eventStore)
     distantPastEvent.startDate = .distantPast
@@ -196,196 +196,188 @@ struct TimelineProvider: AppIntentTimelineProvider {
     var headerIndex = -1
     
     let renderDate = now
-    
-    //    if (content != .reminders) {
-    //      calendarEntries.append(EventEntry(type:"header", title:relativeDateFormatterDay.string(from: renderDate), allDayItems: [],  children: []))
-    //    }
-    //
-    
-    for (i, item) in calendarItems.enumerated() {
-      
-      var lastDate: Date = .distantPast
-      if let previousItem = previousItem {
-        lastDate = renderDate > previousItem.date ? renderDate : previousItem.date
-      }
-      
-      let thisDate = renderDate > item.date ? renderDate : item.date
-      let dateHasChanged = !calendar.isDate(lastDate, inSameDayAs: thisDate)
-      
-      if (item.allDay) {
-        if (!showAllDay) { continue }
-        if !showMultiDay && !calendar.isDate(item.start ?? .distantPast, inSameDayAs: item.end ?? .distantFuture) { continue }
-      }
-      
-      // Insert header row on day changes
-      if (dateHasChanged) {
-        if (headerIndex >= 0) {
-          let priorHeader = calendarEntries[headerIndex]
-          if (priorHeader.children?.count ?? 0) == 0 {
-            calendarEntries.remove(at: headerIndex)
-          }
+  
+    if (configuration.content == .calendar) {
+      for (i, item) in calendarItems.enumerated() {
+        
+        var lastDate: Date = .distantPast
+        if let previousItem = previousItem {
+          lastDate = renderDate > previousItem.date ? renderDate : previousItem.date
         }
         
-        let title = calendar.isDateInToday(thisDate) || calendar.isDateInTomorrow(thisDate) ? relativeDateFormatterDay.string(from: thisDate) : dateFormatter.string(from: thisDate)
+        let thisDate = renderDate > item.date ? renderDate : item.date
+        let dateHasChanged = !calendar.isDate(lastDate, inSameDayAs: thisDate)
         
-        let startOfDay = calendar.startOfDay(for: item.date)
-        let days = max(0, calendar.dateComponents([.day],
-                                                  from: calendar.startOfDay(for: renderDate),
-                                                  to: calendar.startOfDay(for:item.date)).day!)
+        if (item.allDay) {
+          if (!showAllDay) { continue }
+          if !showMultiDay && !calendar.isDate(item.start ?? .distantPast, inSameDayAs: item.end ?? .distantFuture) { continue }
+        }
         
-        let forecast = weather?.dailyForecast[safe: days]
-        
-        let header = EventEntry(type: "header", title: title,
-                                startDate:calendar.startOfDay(for: thisDate), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [], children: [],
-                                removeIfOrphaned: true, dayForecast:forecast)
-        
-        headerIndex = calendarEntries.count
-        calendarEntries.append(header)
-      } else if (configuration.features.contains(.freeTime)){
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .abbreviated
-        formatter.allowedUnits = [.hour, .minute]
-        formatter.maximumUnitCount = 2
-        formatter.allowsFractionalUnits = true
-        formatter.includesApproximationPhrase = false
-        
-        if let thisStart = item.start {
-          let priorEnd = previousItem?.end ?? renderDate
-          let original = thisStart.timeIntervalSince(priorEnd)
-          let rounded = TimeInterval((original / 900.0).rounded(.toNearestOrEven) * 900.0)
+        // Insert header row on day changes
+        if (dateHasChanged) {
+          if (headerIndex >= 0) {
+            let priorHeader = calendarEntries[headerIndex]
+            if (priorHeader.children?.count ?? 0) == 0 {
+              calendarEntries.remove(at: headerIndex)
+            }
+          }
           
-          if let duration = formatter.string(from: rounded) {
+          let title = calendar.isDateInToday(thisDate) || calendar.isDateInTomorrow(thisDate) ? relativeDateFormatterDay.string(from: thisDate) : dateFormatter.string(from: thisDate)
+          
+          let startOfDay = calendar.startOfDay(for: item.date)
+          let days = max(0, calendar.dateComponents([.day],
+                                                    from: calendar.startOfDay(for: renderDate),
+                                                    to: calendar.startOfDay(for:item.date)).day!)
+          
+          let forecast = weather?.dailyForecast[safe: days]
+          
+          let header = EventEntry(type: "header", title: title,
+                                  startDate:calendar.startOfDay(for: thisDate), endDate:calendar.startOfDay(for: item.date).advanced(by: 24 * 60 * 60), allDayItems: [], children: [],
+                                  removeIfOrphaned: true, dayForecast:forecast)
+          
+          headerIndex = calendarEntries.count
+          calendarEntries.append(header)
+        } else if (configuration.features.contains(.freeTime)){
+          let formatter = DateComponentsFormatter()
+          formatter.unitsStyle = .abbreviated
+          formatter.allowedUnits = [.hour, .minute]
+          formatter.maximumUnitCount = 2
+          formatter.allowsFractionalUnits = true
+          formatter.includesApproximationPhrase = false
+          
+          if let thisStart = item.start {
+            let priorEnd = previousItem?.end ?? renderDate
+            let original = thisStart.timeIntervalSince(priorEnd)
+            let rounded = TimeInterval((original / 900.0).rounded(.toNearestOrEven) * 900.0)
             
-            // TODO: Hash the strategy off the timestamp
-            if rounded >= 30 * 60 {
-              let strategy = obliqueStrategies[Int(priorEnd.timeIntervalSince1970) % obliqueStrategies.count]
-              let free = EventEntry(type: "free", title: "\(duration) free - \(strategy)",
-                                    startDate:priorEnd, endDate:thisDate)
-              calendarEntries.append(free)
-            }
-          }
-        }
-      }
-      
-      
-      
-      
-      
-      var eventEntry = EventEntry(id: item.calendarItemIdentifier, startDate:item.start, endDate:item.end, item: item)
-      
-      if let event = item as? EKEvent {
-        
-        // Ignore duplicates
-        if let previousItem = previousItem, event.title == previousItem.title &&
-            calendar.isDate(event.startDate, equalTo: previousItem.date, toGranularity: .hour) {
-          //          previousItem.duplicates = [eventEntry]
-          continue
-        }
-        
-        if event.calendar != previousItem?.calendar {
-          eventEntry.suffix = String(event.calendar.title.prefix(1))
-        }
-        
-        
-        if event.isAllDay {
-          if true || calendar.isDateInToday(event.startDate)
-              && (renderDate.advanced(by: 60 * 60 * 3) < event.endDate) // remove all day events after 9
-          {
-            calendarEntries[headerIndex].allDayItems?.insert(eventEntry, at:0)
-            calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
-            calendarEntries[headerIndex].removeIfOrphaned = false
-          }
-        } else {
-          calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
-          let fetchDetails = event.startDate < calendar.date(byAdding: .hour, value: 4, to: renderDate)!
-          if (fetchDetails) {
-            if let location = event.location, location.count > 0 {
-              let locations = splitAndTrim(location)
-              let urls = locations.filter { $0.hasPrefix("http://") || $0.hasPrefix("https://") }
-              let remainder = locations.filter { !urls.contains($0) }.map({clean(location:$0)})
+            if let duration = formatter.string(from: rounded) {
               
-              
-              if let string = urls.first, let url = URL(string:string) {
-                eventEntry.meeting =  EventAttachment(url: url.absoluteString, title: "Zoom")
+              // TODO: Hash the strategy off the timestamp
+              if rounded >= 30 * 60 {
+                let strategy = obliqueStrategies[Int(priorEnd.timeIntervalSince1970) % obliqueStrategies.count]
+                let free = EventEntry(type: "free", title: "\(duration) free - \(strategy)",
+                                      startDate:priorEnd, endDate:thisDate)
+                calendarEntries.append(free)
               }
-              eventEntry.locations = remainder
             }
-            
-            //            let contactStore = CNContactStore()
-            if event.hasAttendees, let attendees = event.attendees {
-              
-              //              attendees.forEach { person in
-              //                let matches = try? contactStore.unifiedContacts(matching: person.contactPredicate, keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor])
-              //              }
-              //              print("attendees", attendees.compactMap({ person in
-              //                if person.isCurrentUser { return nil }
-              //              }))
-            }
-            
-            if event.hasNotes, let notes = event.notes,
-               let firstNote = notes.split(separator: CALENDAR_SEPARATOR).first
+          }
+        }
+        
+        var eventEntry = EventEntry(id: item.calendarItemIdentifier, startDate:item.start, endDate:item.end, item: item)
+        
+        if let event = item as? EKEvent {
+          
+          // Ignore duplicates
+          if let previousItem = previousItem, event.title == previousItem.title &&
+              calendar.isDate(event.startDate, equalTo: previousItem.date, toGranularity: .hour) {
+            //          previousItem.duplicates = [eventEntry]
+            continue
+          }
+          
+          if event.calendar != previousItem?.calendar {
+            eventEntry.suffix = String(event.calendar.title.prefix(1))
+          }
+          
+          if event.isAllDay {
+            if true || calendar.isDateInToday(event.startDate)
+                && (renderDate.advanced(by: 60 * 60 * 3) < event.endDate) // remove all day events after 9
             {
-              
-              if eventEntry.meeting == nil {
-                eventEntry.meeting = extractMeetingUrls(from: notes).first
-              }
-              
-              
-              
-              let note = removeMeetingMetadata(from: String(firstNote))
-              
-              
-              var (docs, noteWithoutDocs) = extractAttachments(from: note)
-              
-              docs = docs.filter({ !$0.urlString.contains("zoom.us")})
-              
-              if (eventEntry.meeting == nil) {
-                if let meeting = docs.filter({ $0.urlString.contains("meet.google.com")}).first {
-                  eventEntry.meeting = meeting
+              calendarEntries[headerIndex].allDayItems?.insert(eventEntry, at:0)
+              calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
+              calendarEntries[headerIndex].removeIfOrphaned = false
+            }
+          } else {
+            calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
+            let fetchDetails = event.startDate < calendar.date(byAdding: .hour, value: 4, to: renderDate)!
+            if (fetchDetails) {
+              if let location = event.location, location.count > 0 {
+                let locations = splitAndTrim(location)
+                let urls = locations.filter { $0.hasPrefix("http://") || $0.hasPrefix("https://") }
+                let remainder = locations.filter { !urls.contains($0) }.map({clean(location:$0)})
+                
+                
+                if let string = urls.first, let url = URL(string:string) {
+                  eventEntry.meeting =  EventAttachment(url: url.absoluteString, title: "Zoom")
                 }
+                eventEntry.locations = remainder
               }
               
-              noteWithoutDocs = noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines)
-              eventEntry.attachments = docs
-              
-              if (firstNote.contains("</")) {
-                eventEntry.notes = attributedString(from:noteWithoutDocs)
-              } else {
-                eventEntry.notes = AttributedString(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))
+              //            let contactStore = CNContactStore()
+              if event.hasAttendees, let attendees = event.attendees {
+                
+                //              attendees.forEach { person in
+                //                let matches = try? contactStore.unifiedContacts(matching: person.contactPredicate, keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor])
+                //              }
+                //              print("attendees", attendees.compactMap({ person in
+                //                if person.isCurrentUser { return nil }
+                //              }))
               }
               
-              //print("\n===\(event.title ?? "UNTITLED") ===")
-              if (docs.count > 0) { print("Docs \(docs.map({ "\($0.title) <\($0.urlString)>"}))")}
-              //              if (noteWithoutDocs.count > 0) { print("Note:[\(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))]\n \(note)")}
+              if event.hasNotes, let notes = event.notes,
+                 let firstNote = notes.split(separator: CALENDAR_SEPARATOR).first
+              {
+                
+                if eventEntry.meeting == nil {
+                  eventEntry.meeting = extractMeetingUrls(from: notes).first
+                }
+                
+                
+                
+                let note = removeMeetingMetadata(from: String(firstNote))
+                
+                
+                var (docs, noteWithoutDocs) = extractAttachments(from: note)
+                
+                docs = docs.filter({ !$0.urlString.contains("zoom.us")})
+                
+                if (eventEntry.meeting == nil) {
+                  if let meeting = docs.filter({ $0.urlString.contains("meet.google.com")}).first {
+                    eventEntry.meeting = meeting
+                  }
+                }
+                
+                noteWithoutDocs = noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines)
+                eventEntry.attachments = docs
+                
+                if (firstNote.contains("</")) {
+                  eventEntry.notes = attributedString(from:noteWithoutDocs)
+                } else {
+                  eventEntry.notes = AttributedString(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))
+                }
+                
+                //print("\n===\(event.title ?? "UNTITLED") ===")
+                if (docs.count > 0) { print("Docs \(docs.map({ "\($0.title) <\($0.urlString)>"}))")}
+                //              if (noteWithoutDocs.count > 0) { print("Note:[\(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))]\n \(note)")}
+                
+              }
+              
+              
+              if let url = event.url {
+                if eventEntry.attachments == nil {
+                  eventEntry.attachments = []
+                }
+                eventEntry.attachments?.append(EventAttachment(url: url.absoluteString))
+              }
               
             }
-            
-            
-            if let url = event.url {
-              if eventEntry.attachments == nil {
-                eventEntry.attachments = []
-              }
-              eventEntry.attachments?.append(EventAttachment(url: url.absoluteString))
-            }
+            calendarEntries.append(eventEntry)
             
           }
-          calendarEntries.append(eventEntry)
+        } else if let reminder = item as? EKReminder {
           
+          calendarEntries.append(eventEntry)
         }
-      } else if let reminder = item as? EKReminder {
         
-        calendarEntries.append(eventEntry)
+        previousItem = item
       }
-      
-      previousItem = item
     }
     
-    //#if os(iOS) || os(watchOS)
-    //    if context?.family == .accessoryRectangular
-    //        && calendarEntries.first?.allDayItems?.count == 0 {
-    //      calendarEntries.removeFirst()
-    //    }
-    //#endif
+    #if os(iOS) || os(watchOS)
+        if context?.family == .accessoryRectangular
+            && calendarEntries.first?.allDayItems?.count == 0 {
+          calendarEntries.removeFirst()
+        }
+    #endif
     
     
     // TODO: Sort these so that longer items are sorted after shorter items to correctly catch conflicts. Also sort by name to de-dup items on multiple calendars
@@ -508,14 +500,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
         
       }
       
-
-
-      
-      
-      
-      
       print("entries", entries.map({$0.title}))
-      
       return entries
     }
     
@@ -638,23 +623,20 @@ struct TimelineProvider: AppIntentTimelineProvider {
     let calendars: [EKCalendar] = calendarIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
     let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
     
-    print("Fetching Events")
-    return eventStore.events(matching: predicate)
+    let events = eventStore.events(matching: predicate)
+    print("Fetching Events", events)
+    return events
   }
   
   func recommendations() -> [AppIntentRecommendation<ConfigurationIntent>] {
     
-    var recommendations: [AppIntentRecommendation<ConfigurationIntent>]  = [
-      AppIntentRecommendation(intent:ConfigurationIntent.calendarConfig, description: "Events"),
+    let recommendations: [AppIntentRecommendation<ConfigurationIntent>]  = [
+      AppIntentRecommendation(intent:ConfigurationIntent.comboConfig, description: "Events - Combined"),
+      AppIntentRecommendation(intent:ConfigurationIntent.simpleCalendarConfig, description: "Events - Simple"),
       AppIntentRecommendation(intent:ConfigurationIntent.remindersConfig, description: "Reminders"),
-      AppIntentRecommendation(intent:ConfigurationIntent.comboConfig, description: "Combination"),
-      AppIntentRecommendation(intent:ConfigurationIntent.combo2Config, description: "Combination (cont'd)"),
-      AppIntentRecommendation(intent:ConfigurationIntent.timezonesConfig, description: "Time Zones"),
-      AppIntentRecommendation(intent:ConfigurationIntent.weatherCurrentConfig, description: "Weather (Current)"),
-      
-      AppIntentRecommendation(intent:ConfigurationIntent.weatherHourlyConfig, description: "Weather (Hourly)"),
-      
-      AppIntentRecommendation(intent:ConfigurationIntent.weatherDailyConfig, description: "Weather (Daily")
+      AppIntentRecommendation(intent:ConfigurationIntent.weatherCurrentConfig, description: "Weather - Today"),
+      AppIntentRecommendation(intent:ConfigurationIntent.weatherDailyConfig, description: "Weather - This Week"),
+      AppIntentRecommendation(intent:ConfigurationIntent.timezonesConfig, description: "Time Zones")
     ]
     return recommendations
   }

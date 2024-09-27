@@ -171,7 +171,7 @@ struct RowViewConfig {
   var heightIsLimited: Bool = false
   
   var showTimeBars: Bool = false
-  var columnSpacing: CGFloat = 4.0
+  var columnSpacing: CGFloat = 0.0
 }
 
 var tempFormatter: MeasurementFormatter {
@@ -371,7 +371,7 @@ struct TimeBarView: View {
         .frame(maxWidth:SFRegularStrokeWidthMultiple * config.fontSize * 1.5)
       
     }
-    .padding(.vertical, config.fontSize / 16)
+    .padding(.vertical, config.fontSize / 12)
   }
 }
 struct EventRowView: View {
@@ -383,7 +383,7 @@ struct EventRowView: View {
     let (hour, minute, ampm) = event.date.formattedHourAndMinute()
     
     
-    let color = config.entry.configuration.features.contains(.calendarColors)
+    let color = config.entry.configuration.viewOptions.contains(.showColors)
     ? event.color?.forScheme(scheme: config.colorScheme)
     : config.accentColor
     
@@ -455,7 +455,7 @@ struct EventRowView: View {
             .fixedSize(horizontal: false, vertical: true)
           
           
-          if (entry.hasConflict) {
+          if (entry.hasConflict && !config.widthIsLimited) {
             Image(systemName: "exclamationmark.triangle")
               .imageScale(.small)
               .font(config.font)
@@ -568,9 +568,9 @@ struct ReminderRowView: View {
       }
         .frame(minWidth:config.fontSize, maxHeight:.infinity, alignment: .center)
       
-      
+      let timeIsVisible = entry.startDate != nil && entry.item?.allDay == false
       if (!config.widthIsLimited) {
-        if (entry.startDate != nil && entry.item?.allDay == false) {
+        if (timeIsVisible) {
           TimeStringView(entry:entry, config:config)
             .foregroundColor(.secondary)
             .widgetAccentable(true)
@@ -612,19 +612,21 @@ struct ReminderRowView: View {
       }
       .buttonStyle(.plain)
       
-      if let components = reminder.dueDateComponents {
-        let dueDate = components.date
-        if components.hour != nil {
-          
-          Text(relativeDateFormatter.string(for: dueDate) ?? "due")
-            .foregroundColor(.secondary)
-            .font(config.font)
-          
-        } else if (config.entry.configuration.content == .reminders ){ // allDay
-          Text(relativeDateFormatterDay.string(for: dueDate) ?? "due")
-            .foregroundColor(.secondary)
-            .font(config.font)
-          
+      if (!config.widthIsLimited && !timeIsVisible) {
+        if let components = reminder.dueDateComponents {
+          let dueDate = components.date
+          if components.hour != nil {
+            
+            Text(relativeDateFormatter.string(for: dueDate) ?? "due")
+              .foregroundColor(.secondary)
+              .font(config.font)
+            
+          } else if (config.entry.configuration.content == .reminders ){ // allDay
+            Text(relativeDateFormatterDay.string(for: dueDate) ?? "due")
+              .foregroundColor(.secondary)
+              .font(config.font)
+            
+          }
         }
       }
       
@@ -779,7 +781,7 @@ struct HeaderRowView: View {
       let dayNumber = Text(shortDayNumber)
         .foregroundColor(config.accentColor)
       
-      if (large) {
+      if (large && config.showTimeBars) {
         HStack(alignment: .center, spacing: config.columnSpacing) {
           
           VStack() {
@@ -787,9 +789,11 @@ struct HeaderRowView: View {
               .font(.system(size: config.fontSize * 1.8).weight(.light))
           }.frame(width:config.keyline, alignment:.trailing)
           
-          TimeBarView(entry: entry, config:config, color: config.accentColor )
-            .frame(minWidth:config.fontSize, maxHeight:.infinity)
-          
+          if (config.showTimeBars) {
+            
+            TimeBarView(entry: entry, config:config, color: config.accentColor )
+              .frame(minWidth:config.fontSize, maxHeight:.infinity)
+          }
           
           VStack(alignment:.leading) {
             HStack(spacing:config.smallFontSize / 2) {

@@ -17,7 +17,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
   }
   
   func checkAuthorization() {
-    print(locationManager.authorizationStatus.rawValue)
+    
     switch locationManager.authorizationStatus {
     case .notDetermined:
       locationManager.requestWhenInUseAuthorization()

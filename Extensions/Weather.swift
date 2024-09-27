@@ -18,7 +18,7 @@ class WeatherLocationManager: NSObject {
     let geocoder = CLGeocoder()
     let placemarks = try await geocoder.reverseGeocodeLocation(location)
     let locationName = placemarks.first?.locality  // e.g., city name
-    print(locationName)
+    
     
     
     if let weather = cachedWeather, let date = cachedWeather?.currentWeather.date, Date().timeIntervalSince(date) <= 300 {

@@ -53,42 +53,18 @@ struct ContentView: View {
   }
   
   
-
+  
   
   var body: some View {
+    let eventsAccessible = eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess
+    let remindersAccessible = remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
+    let locationAccessible = locationAccessGranted || LocationManager().isAuthorized
+    
     let isCompact = horizontalSizeClass == .compact
     NavigationStack {
       TabView(selection:$selectedTab) {
         
-        
-        Tab("Calendar", systemImage: "calendar", value:Values.calendarTab) {
-          VStack {
-            WidgetPreviewView(config: ConfigurationIntent.comboConfig)
-              .navigationTitle("First Tab Title")
-          }
-        }
-        
-        Tab("Reminders", systemImage: "checkmark.square", value:Values.reminderTab) {
-          WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
-        }
-        
-        Tab("Timezones", systemImage: "globe", value:Values.timezoneTab) {
-          WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
-            .navigationTitle("TITE")
-        }
-        
-        Tab("Weather", systemImage: "cloud.sun", value:Values.weatherTab) {
-          Text("Today")
-          WidgetPreviewView(config: ConfigurationIntent.weatherCurrentConfig)
-          Text("This Week")
-          WidgetPreviewView(config: ConfigurationIntent.weatherDailyConfig)
-          
-        }
-
-        
-        
-        
-        Tab("Chronograph", systemImage: "info.circle", value:Values.infoTab) {
+        Tab(value:Values.infoTab) {
           VStack {
             if !hideIntroduction {
               VStack(alignment: .leading, spacing:10) {
@@ -98,8 +74,7 @@ struct ContentView: View {
                   .foregroundStyle(.secondary)
                 
                 HStack(alignment: .center) {
-                  if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-                  } else {
+                  if !eventsAccessible {
                     Button(action: {
                       Task {
                         await checkEventsAccess(interactive: true)
@@ -115,10 +90,7 @@ struct ContentView: View {
                     }
                   }
                   
-                  if remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
-    //                WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
-    //                  .frame(minHeight: 120)
-                  } else {
+                  if !remindersAccessible {
                     Button(action: {
                       Task {
                         await checkRemindersAccess(interactive: true)
@@ -134,10 +106,7 @@ struct ContentView: View {
                     }
                   }
                   
-                  
-                  if locationAccessGranted || LocationManager().isAuthorized {
-                    
-                  } else {
+                  if !locationAccessible {
                     Button(action: {
                       Task {
                         LocationManager().checkAuthorization()
@@ -152,12 +121,10 @@ struct ContentView: View {
                       }.frame(maxWidth: .infinity)
                     }
                   }
-                  
-                  
-                  
+
                 }
                 .padding(.top, 10)
-                  .frame(maxWidth: .infinity, alignment:.center)
+                .frame(maxWidth: .infinity, alignment:.center)
               }
               .padding(.top,40)
               .padding(.horizontal, 36)
@@ -167,10 +134,6 @@ struct ContentView: View {
             ScrollView {
               let previews = Group {
                 VStack {
-                  
-
-                  
-
 
                   if eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess {
                     if (isCompact) {
@@ -183,70 +146,134 @@ struct ContentView: View {
                       
                     }
                   } else {
-                 
+                    
                   }
                 }.frame(maxWidth:isCompact ? 400 : 800)
-                
-                
-
-                
-                
               }
-                .background(.background)
-              //          .cornerRadius(20)
-    //          if horizontalSizeClass == .compact {
-                VStack(spacing:0) {
-                  //previews
-                }.padding()
-    //          } else {
-    //            HStack(spacing:0) {
-    //              previews
-    //            }.padding()
-    //          }
+              
+              VStack(spacing:0) {
+                //previews
+              }.padding()
+              //          } else {
+              //            HStack(spacing:0) {
+              //              previews
+              //            }.padding()
+              //          }
               
             }
             
             .frame(maxWidth: .infinity)
             .refreshable {
-              print("refresh")
               reloadDate = Date()
             }
-            .background(.background)
-          }
-          .frame(maxWidth: .infinity)
-          .background(.regularMaterial)
-
-        }
-        
-
- 
-        
-        
-      }
-      .toolbar {
-        ToolbarItemGroup(placement: .primaryAction) {
-          Button(action: {
-            Task {
-              showSettings.toggle()
-            }
-          }) {
-            Label("Settings", systemImage: "ellipsis")
+            
           }
           
-          #if os(macOS)
-          .popover(isPresented: $showSettings) {
-            SettingsView().padding()
-          }
-          #else
-          .sheet(isPresented: $showSettings) {
-            SettingsView()
-              .presentationDetents([.medium, .fraction(0.35)])
-          }
-          #endif
+          .background(.regularMaterial)
+          .frame(maxWidth: .infinity)
+          
+        } label: {
+          Image(systemName: "info.circle")
+            .environment(\.symbolVariants, selectedTab == Values.infoTab ? .fill : .none)
+          
         }
+        
+        
+        
+        if (eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess) {
+          Tab(value:Values.calendarTab) {
+            VStack {
+              WidgetPreviewView(config: ConfigurationIntent.comboConfig)
+                .navigationTitle("First Tab Title")
+            }
+            .background(.regularMaterial)
+          } label: {
+            
+            Image(systemName: "31.square")
+              .environment(\.symbolVariants, selectedTab == Values.calendarTab ? .fill : .none)
+            
+          }
+        }
+        
+        
+        
+        if (remindersAccessible) {
+          Tab(value: Values.reminderTab) {
+            WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+              .background(.regularMaterial)
+              .environment(\.symbolVariants, .none)
+          } label: {
+            Image(systemName: "checkmark.circle")
+              .environment(\.symbolVariants, selectedTab == Values.reminderTab ? .fill : .none)
+          }
+        }
+        
+        if (locationAccessible) {
+          Tab(value:Values.timezoneTab) {
+            VStack {
+              Section(header: Text("Timezones")) {
+                WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
+                  .navigationTitle("TITE")
+              }
+            }
+            .background(.regularMaterial)
+          } label: {
+            Image(systemName: "globe.americas")
+              .environment(\.symbolVariants, selectedTab == Values.timezoneTab ? .fill : .none)
+          }
+          
+          Tab(value:Values.weatherTab) {
+            VStack {
+              Section(header: Text("Today")) {
+                WidgetPreviewView(config: ConfigurationIntent.weatherCurrentConfig)
+              }
+              Section(header: Text("This Week")) {
+                WidgetPreviewView(config: ConfigurationIntent.weatherDailyConfig)
+              }
+            }
+            .background(.regularMaterial)
+          } label: {
+            Image(systemName: "cloud.sun")
+              .environment(\.symbolVariants, selectedTab == Values.weatherTab ? .fill : .none)
+          }
+        }
+        
+        
+        
+        
+        
+        
+        
+        
       }
-
+      
+      
+        .toolbar {
+          ToolbarItemGroup(placement: .primaryAction) {
+            Button(action: {
+              Task {
+                showSettings.toggle()
+              }
+            }) {
+              Label("Settings", systemImage: "ellipsis")
+            }
+            
+#if os(macOS)
+            .popover(isPresented: $showSettings) {
+              SettingsView().padding()
+            }
+#else
+            .sheet(isPresented: $showSettings) {
+              SettingsView()
+                .presentationDetents([.medium, .fraction(0.35)])
+            }
+#endif
+          }
+          
+        }
+      
     }
+    
     
     
   }

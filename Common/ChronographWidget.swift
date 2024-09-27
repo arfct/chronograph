@@ -37,6 +37,7 @@ struct ChronographWidgetView : View {
   @Environment(\.widgetFamily) var widgetFamily
   @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
+  @AppStorage(Keys.fullBleed, store: UserDefaults(suiteName: Keys.suiteName)) private var wantsFullBleed = true
   
 //  @AppStorage("KEY", store: UserDefaults(suiteName: Keys.suiteName)) private var defaultValueTest1 = "test1"
   
@@ -99,20 +100,21 @@ struct ChronographWidgetView : View {
 #if os(macOS)
     self.fullBleed = entry.configuration.features.contains(.fullBleed)
 #else
-    self.fullBleed = widgetFamily == .accessoryRectangular || entry.configuration.features.contains(.fullBleed)
+    self.fullBleed = widgetFamily == .accessoryRectangular || entry.configuration.viewOptions.contains(.fullBleed)
 #endif
     
     let baseFont = UIFont.preferredFont(forTextStyle: textStyle)
     
     self.lineHeight = baseFont.lineHeight
     self.fontSize = baseFont.pointSize
-
+    
+    
     if let minLines = FontSize.caseMinLines[entry.configuration.fontSize],
        let height = entry.context?.displaySize.height {
       self.lineHeight = min(self.lineHeight, height / CGFloat(minLines))
       self.fontSize = self.lineHeight * baseFont.pointSize / baseFont.lineHeight
     }
-
+    
     self.lineHeight = self.lineHeight * (self.isAccessory ? 1.0 : 1.5)
     
   
@@ -162,7 +164,7 @@ struct ChronographWidgetView : View {
 //    }.hidden()
     
 
-    
+    let content = entry.configuration.content
     let now = Date()
     
     let backgroundColor = entry.configuration.backgroundColor.count > 0 ?
@@ -195,7 +197,7 @@ struct ChronographWidgetView : View {
         config.font = config.font.width(.standard)
       }
       
-      config.columnSpacing = fontSize / 8
+      config.columnSpacing = fontSize / 6
       config.defaultCalendar = eventStore.defaultCalendarForNewEvents
       // TODO: Infer default from number of events
       config.defaultRemindersList = eventStore.defaultCalendarForNewReminders()
@@ -205,12 +207,12 @@ struct ChronographWidgetView : View {
       return config
     }()
     
-    let hPadding = fullBleed ? margins.top / 3 : margins.leading
-    let vPadding = isAccessory ? margins.top / 3 : margins.top / 2
+    let hPadding = fullBleed ? margins.top / 8 : margins.leading
+    let vPadding = isAccessory ? 0 : (fullBleed ? margins.top / 8 : margins.top / 2)
     let insets = EdgeInsets(top: vPadding,
                             leading: min(hPadding, row.fontSize / 2),
                             bottom: vPadding,
-                            trailing: hPadding)
+                            trailing: min(hPadding, row.fontSize / 2))
     
     var items: [EventEntry] = []
     let _ = items.append(contentsOf: entry.timezones)
@@ -222,7 +224,8 @@ struct ChronographWidgetView : View {
     let clippedItems: [EventEntry] = Array(items[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
     let index = clippedItems.lastIndex { $0.removeIfOrphaned != true}
     let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
-    let extraSpacing =  extraSpace < (row.lineHeight) ? CGFloat(extraSpace) / CGFloat(visibleItemCount) : 0
+    let extraSpacing = 0.0 // extraSpace < (row.lineHeight) ? CGFloat(extraSpace) / CGFloat(visibleItemCount) : 0
+    
     
     GeometryReader { container in
       VStack(spacing: extraSpacing) {
@@ -235,7 +238,7 @@ struct ChronographWidgetView : View {
             ErrorRowView(entry: entry, config: row)
           } else if entry.type == "header" {
             #if !os(watchOS)
-            let large = !widthIsLimited && !heightIsLimited
+            let large = !widthIsLimited && !heightIsLimited && content == .calendar
             HeaderRowView(entry: entry, config: row, large: large)
             #else
             HeaderRowView(entry: entry, config: row, large: false)
@@ -259,6 +262,7 @@ struct ChronographWidgetView : View {
           Color.clear.preference(key: RowHeightPreferenceKey.self, value: [$0.frame(in: .named("stack")).maxY])
         })
       }
+      
       .frame(maxHeight: .infinity, alignment: .top)
       .frame(maxWidth: .infinity, alignment: .top)
       .padding(.top, insets.top)
@@ -284,7 +288,7 @@ struct ChronographWidgetView : View {
   private func updateVisibleRows(with rowMaxY: [CGFloat], containerHeight: CGFloat) {
     let visibleCount = rowMaxY.indices.last { index in
       let maxY = rowMaxY[index]
-      return maxY <= containerHeight
+      return maxY <= containerHeight + 2
     }
     
     if let visibleCount = visibleCount, visibleItemCount != visibleCount + 1 {

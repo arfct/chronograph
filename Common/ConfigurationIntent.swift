@@ -73,23 +73,28 @@ enum DisplayedContent: String, AppEnum {
 
 
 enum WidgetFeatures: String, AppEnum {
-    case allDayEvents, multiDayEvents, weather, calendarColors, timeBars, fullBleed, freeTime //, alternateCalendarIndicators
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Included Content"
+    case allDayEvents, multiDayEvents, weather, timeBars, freeTime //, alternateCalendarIndicators
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Calendar Content"
     static var caseDisplayRepresentations: [WidgetFeatures : DisplayRepresentation] = [
       .allDayEvents: DisplayRepresentation(title: "All-day", subtitle:"Events lasting all day", image: .init(systemName: "rectangle.grid.1x2")),
       .multiDayEvents: DisplayRepresentation(title: "Multi-day", subtitle:"Events spanning one day", image: .init(systemName: "square.grid.3x1.below.line.grid.1x2", tintColor: UIColor.blue, symbolConfiguration:.preferringMulticolor())),
       .weather: DisplayRepresentation(title: "Weather", image: .init(systemName: "cloud.sun.rain.fill", symbolConfiguration:.preferringMulticolor())),
-      .calendarColors: DisplayRepresentation(title: "Calendar Colors", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
       .timeBars: DisplayRepresentation(title: "Time Bars", image: .init(systemName: "calendar.day.timeline.leading", symbolConfiguration:.preferringMulticolor())),
-      
       .freeTime: DisplayRepresentation(title: "Free Time", image: .init(systemName: "water.waves", symbolConfiguration:.preferringMulticolor())),
-      .fullBleed: DisplayRepresentation(title: "Remove Padding", image: .init(systemName: "arrowshape.left.arrowshape.right", symbolConfiguration:.preferringMulticolor())),
      //.alternateCalendarIndicators: DisplayRepresentation(title: "Calendar Indicators", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
    ]
-  
-  
-
 }
+
+enum WidgetViewOptions: String, AppEnum {
+    case showColors, fullBleed //, alternateCalendarIndicators
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "View Options"
+    static var caseDisplayRepresentations: [WidgetViewOptions : DisplayRepresentation] = [
+      .showColors: DisplayRepresentation(title: "Show Colors", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
+      .fullBleed: DisplayRepresentation(title: "Remove Padding", image: .init(systemName: "arrowshape.left.arrowshape.right", symbolConfiguration:.preferringMulticolor())),
+   ]
+}
+
+
 
 
 struct ConfigurationIntent: WidgetConfigurationIntent {
@@ -99,13 +104,16 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Widget Type", default: .calendar)
    var content: DisplayedContent
   
-  @Parameter(title: "Options", default: [.allDayEvents, .timeBars])
+  @Parameter(title: "Show", default: [.allDayEvents, .timeBars])
    var features: [WidgetFeatures]
+  
+  @Parameter(title: "View Options", default: [])
+  var viewOptions: [WidgetViewOptions]
   
   @Parameter(title: "Calendars", default: [])
   var calendars: [CalendarSelectionEntity]
   
-  @Parameter(title: "Reminders", default: [])
+  @Parameter(title: "Lists", default: [])
   var reminders: [ReminderSelectionEntity]
   
   @Parameter(title: "Time Zones", default: [])
@@ -120,7 +128,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Font Size", default: .medium)
    var fontSize: FontSize
   
-  @Parameter(title: "Background (Hex)", default: "")
+  @Parameter(title: "Background (Hex)", description:"Hex", default: "")
   var backgroundColor: String
   
   @Parameter(title: "Accent (Hex)", default: "")
@@ -197,17 +205,22 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     
     return config
   }
-  
-  static var combo2Config: ConfigurationIntent {
-    let config = comboConfig
-    config.pageOffset = 1
+  static var simpleCalendarConfig: ConfigurationIntent {
+    let config = ConfigurationIntent()
+    config.content = .calendar
+    config.calendars = []
+    config.features = [.allDayEvents]
+    config.fontStyle = .normal
+    
     return config
   }
+  
   
   static var appComboConfig: ConfigurationIntent {
     let config = comboConfig
     config.accentColor = "#db4437"
-    config.features = config.features + [.calendarColors]
+    config.features = config.features
+    config.viewOptions = [.showColors]
     return config
   }
   
@@ -224,11 +237,11 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
       Case(DisplayedContent.calendar) {
         Summary {
           \.$content
-          \.$timezones
-          \.$features
           \.$calendars
+          \.$features
           \.$fontStyle
           \.$fontSize
+          \.$viewOptions
           \.$backgroundColor
           \.$accentColor
           
@@ -242,6 +255,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$reminders
           \.$fontStyle
           \.$fontSize
+          \.$viewOptions
           \.$backgroundColor
           \.$accentColor
           
@@ -254,6 +268,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$timezones
           \.$fontStyle
           \.$fontSize
+          \.$viewOptions
           \.$backgroundColor
           \.$accentColor
         }
@@ -266,6 +281,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$weatherStyle
           \.$fontStyle
           \.$fontSize
+          \.$viewOptions
           \.$backgroundColor
           \.$accentColor
         }

@@ -12,13 +12,22 @@ struct WidgetPreviewView: View {
   }
   @State private var timeline: Timeline<CalendarTimelineEntry>?
     var body: some View {
-      VStack {
+      ScrollView {
         if let entry = timeline?.entries.first {
           ChronographWidgetView(entry: entry)
         } else {
           Text("Loading...")
         }
-      }.onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged, object: eventStore)) {
+      }
+      .frame(maxWidth:.infinity)
+      .padding(28)
+      .background(.background)
+      .clipShape(RoundedRectangle(cornerRadius: 28))
+      .overlay(RoundedRectangle(cornerRadius: 28).stroke(.tertiary.opacity(0.8), lineWidth: 1))
+      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
+      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
+      .padding()
+      .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged, object: eventStore)) {
         (output) in
         
         if output.userInfo?["EKEventStoreCalendarDataChangedUserInfoKey"] as? Int == 1  &&  config.content != .reminders {
@@ -48,7 +57,8 @@ struct WidgetPreviewView: View {
     config.fontStyle = .normal
     config.fontSize = .tiny
     config.accentColor = "#FF5500"
-    config.features = [.allDayEvents, .calendarColors, .timeBars, .weather]
+    config.features = [.allDayEvents, .timeBars, .weather]
+    config.viewOptions = [.showColors]
     return config
   }
  

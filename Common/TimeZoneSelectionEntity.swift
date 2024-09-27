@@ -18,8 +18,9 @@ struct TimeZoneSelectionEntity: AppEntity {
   
   var displayRepresentation: DisplayRepresentation {
     DisplayRepresentation(title: "\(title)",
-                          subtitle: subtitle != nil ? "\(subtitle!)": nil,
-                          image: .init(systemName: "circle.fill",  tintColor: color, symbolConfiguration:.init(pointSize: 10, weight: .regular)))
+                          subtitle: subtitle != nil ? "\(subtitle!)": nil//,
+//                          image: .init(systemName: "circle.fill", tintColor: color, symbolConfiguration:.init(pointSize: 10, weight: .regular))
+    )
     
   }
   
@@ -55,8 +56,9 @@ struct TimeZoneQuery: EntityQuery {
     
     for timeZone in knownTimeZones {
       let identifier = timeZone.identifier
-      let abbreviation = timeZone.abbreviation()
-      let seconds = timeZone.secondsFromGMT()
+      let abbreviation = timeZone.localizedName(for:.standard, locale: Locale.current) ?? ""
+      let gmt = timeZone.localizedName(for:.shortStandard, locale: Locale.current) ?? ""
+      
        
       
       let components = identifier.components(separatedBy: "/")
@@ -66,9 +68,11 @@ struct TimeZoneQuery: EntityQuery {
           countries[country] = []
         }
         
+        let title = components[1].replacingOccurrences(of: "_", with: " ")
+        
         let timeZoneEntity = TimeZoneSelectionEntity(id: identifier,
-                                                     title: components[1],
-                                                     subtitle: "Abbreviation: \(abbreviation), Seconds from GMT: \(seconds)",
+                                                     title: "\(title) (\(gmt))\n\(abbreviation)",
+                                                     subtitle: nil,
                                                      color: nil)
         countries[country]?.append(timeZoneEntity)
       }
