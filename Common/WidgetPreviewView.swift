@@ -19,6 +19,7 @@ struct WidgetPreviewView: View {
           Text("Loading...")
         }
       }
+      .clipped()
       .frame(maxWidth:.infinity)
 //      .padding(28)
 //      .background(.background)

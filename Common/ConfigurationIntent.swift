@@ -107,9 +107,6 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Show", default: [.allDayEvents, .timeBars])
    var features: [WidgetFeatures]
   
-  @Parameter(title: "View Options", default: [])
-  var viewOptions: [WidgetViewOptions]
-  
   @Parameter(title: "Calendars", default: [])
   var calendars: [CalendarSelectionEntity]
   
@@ -118,13 +115,16 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   
   @Parameter(title: "Time Zones", default: [])
   var timezones: [TimeZoneSelectionEntity]
-
-  @Parameter(title: "Font Style", default: .normal)
-   var fontStyle: FontStyle
   
   @Parameter(title: "Weather Style", default: .current)
   var weatherStyle: WeatherStyle
-  
+
+  @Parameter(title: "View Options", default: [])
+  var viewOptions: [WidgetViewOptions]
+
+  @Parameter(title: "Font Style", default: .normal)
+   var fontStyle: FontStyle
+    
   @Parameter(title: "Font Size", default: .medium)
    var fontSize: FontSize
   
