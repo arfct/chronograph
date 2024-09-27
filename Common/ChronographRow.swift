@@ -196,6 +196,7 @@ struct HourlyWeatherRowView: View {
   let config: RowViewConfig
 
   var body: some View {
+    let title = entry.title
     if let date = entry.startDate {
       let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
@@ -204,23 +205,34 @@ struct HourlyWeatherRowView: View {
             .kerning(-0.5)
           Text(minute).font(config.smallFont.monospacedDigit())
             .kerning(-0.5)
+          
         }
+        .foregroundColor(.secondary)
         .frame(minWidth:config.keyline, alignment: .trailing)
         
       }
       
       HStack {
+        
         timeString
         Image(systemName: forecast.symbolName)
           .font(config.font)
-        Spacer()
+          .frame(minWidth:config.lineHeight * 1.125)
         Text(forecast.temperature.converted(to: .fahrenheit), formatter: tempFormatter)
-          .font(config.smallFont)
+          .font(config.font)
+        Text(title ?? forecast.condition.description)
+          .font(config.font)
           .foregroundColor(.secondary)
-        Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter)
+
+        if forecast.precipitationChance > 0 {
+          Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter)
+          
+            .font(config.smallFont)
+            .foregroundColor(.secondary)
+        }
+        Spacer()
+
         
-          .font(config.smallFont)
-          .foregroundColor(.secondary)
       }
       .padding(.vertical, 4)
       .padding(.horizontal, 8)
@@ -239,8 +251,11 @@ struct DailyWeatherRowView: View {
       let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
-          Text(dayOfWeekFormat.string(for:date) ?? "")
-            .font(config.smallFont)
+          Text(dayOfWeekFormat.string(for:date) ?? "").textCase(.uppercase)
+            .font(config.smallFont.monospaced())
+            .foregroundStyle(.secondary)
+          
+          .widgetAccentable()
         }
         
         .frame(minWidth:config.keyline, alignment: .trailing)
@@ -265,11 +280,13 @@ struct DailyWeatherRowView: View {
           .font(config.font)
           .foregroundColor(.secondary)
 
+        
         Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter)
         
           .font(config.smallFont)
           .foregroundColor(.secondary)
           .opacity(forecast.precipitationChance)
+          .frame(minWidth:config.keyline, alignment:.trailing)
       }
       .padding(.vertical, 4)
       .padding(.horizontal, 8)
@@ -284,28 +301,32 @@ struct CurrentWeatherRowView: View {
   let config: RowViewConfig
 
   var body: some View {
-
+    let currentMinute = weather.minuteForecast?.first(where: { $0.date > Date() })
+    
     if let date = entry.startDate {
       let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
-          Text(hour).font(config.font.monospacedDigit())
+          Text("NOW").font(config.smallFont.monospacedDigit())
             .kerning(-0.5)
-          Text(minute).font(config.smallFont.monospacedDigit())
-            .kerning(-0.5)
+            .foregroundStyle(.secondary)
+
         }
+
+        .frame(minWidth:config.keyline, alignment: .trailing)
       }
       let forecast = weather.currentWeather
       HStack {
         timeString
-        
-        Text("Current")
         Image(systemName: forecast.symbolName)
           .font(config.font)
-        Spacer()
+          .frame(minWidth:config.lineHeight * 1.125)
         Text(forecast.temperature.converted(to: .fahrenheit), formatter: tempFormatter)
-          .font(config.smallFont)
+          .font(config.font)
+        Text(forecast.condition.description)
+          .font(config.font)
           .foregroundColor(.secondary)
+        Spacer()
 //        Text(NSNumber(value:forecast.), formatter:percentFormatter)
 //          .font(config.smallFont)
 //          .foregroundColor(.secondary)

@@ -168,7 +168,7 @@ struct ContentView: View {
             }
             
           }
-          
+          .padding()
           .background(.regularMaterial)
           .frame(maxWidth: .infinity)
           
@@ -186,6 +186,7 @@ struct ContentView: View {
               WidgetPreviewView(config: ConfigurationIntent.comboConfig)
                 .navigationTitle("First Tab Title")
             }
+            .padding()
             .background(.regularMaterial)
           } label: {
             
@@ -200,6 +201,7 @@ struct ContentView: View {
         if (remindersAccessible) {
           Tab(value: Values.reminderTab) {
             WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+              .padding()
               .background(.regularMaterial)
               .environment(\.symbolVariants, .none)
           } label: {
@@ -216,6 +218,7 @@ struct ContentView: View {
                   .navigationTitle("TITE")
               }
             }
+            .padding()
             .background(.regularMaterial)
           } label: {
             Image(systemName: "globe.americas")
@@ -226,6 +229,9 @@ struct ContentView: View {
             VStack {
               Section(header: Text("Today")) {
                 WidgetPreviewView(config: ConfigurationIntent.weatherCurrentConfig)
+              }
+              Section(header: Text("Hourly")) {
+                WidgetPreviewView(config: ConfigurationIntent.weatherHourlyConfig)
               }
               Section(header: Text("This Week")) {
                 WidgetPreviewView(config: ConfigurationIntent.weatherDailyConfig)

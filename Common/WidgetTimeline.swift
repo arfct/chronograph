@@ -412,7 +412,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
                                   endDate: weather.currentWeather.date.addingTimeInterval(3600),
                                   weather: weather
       )
-//      entries.append(eventEntry)
+      entries.append(eventEntry)
       
       if let location = location {
         entries.append(EventEntry(type:"header", title:location))
@@ -425,7 +425,8 @@ struct TimelineProvider: AppIntentTimelineProvider {
       
       let _ = print (weather.hourlyForecast.map({$0.date}))
       let rainForecast = weather.hourlyForecast.first { hour in
-        hour.precipitationChance > 0
+        hour.precipitationChance > 0.5 && hour.date > Date()
+        // TODO: Also check minute forecasts.
       }
       
       let sunrise = weather.dailyForecast.first?.sun.sunrise
@@ -446,7 +447,6 @@ struct TimelineProvider: AppIntentTimelineProvider {
       
       if let highTempTime = todayForecast?.highTemperatureTime,
          let highTemp = todayForecast?.highTemperature {
-        
         let hourForecast = weather.hourlyForecast.last(where: {$0.date < highTempTime})
         entries.append(
           EventEntry(type: "weather",
@@ -475,11 +475,11 @@ struct TimelineProvider: AppIntentTimelineProvider {
 
       }
 
-      if let sunset = weather.dailyForecast.first?.sun.sunset,
+      if let sunset = weather.dailyForecast.first(where: { $0.sun.sunset ?? .distantPast > Date() })?.sun.sunset,
          let sunsetForecast = weather.hourlyForecast.last(where: { $0.date < sunset }) {
         entries.append(
           EventEntry(type: "weather",
-                     title:"Low",
+                     title:"Sunset",
                      startDate: sunset,
                      endDate: sunset.addingTimeInterval(3600),
                      hourForecast: sunsetForecast
@@ -487,10 +487,34 @@ struct TimelineProvider: AppIntentTimelineProvider {
         )
       }
       
+      if let sunrise = weather.dailyForecast.first(where: { $0.sun.sunrise ?? .distantPast > Date() })?.sun.sunrise,
+         let sunsetForecast = weather.hourlyForecast.last(where: { $0.date < sunrise }) {
+        entries.append(
+          EventEntry(type: "weather",
+                     title:"Sunrise",
+                     startDate: sunrise,
+                     endDate: sunrise.addingTimeInterval(3600),
+                     hourForecast: sunsetForecast
+                    )
+        )
+      }
+      
+      if let night = weather.dailyForecast.first?.sun.astronomicalDusk,
+         let nightForecast = weather.hourlyForecast.last(where: { $0.date < night }) {
+        entries.append(
+          EventEntry(type: "weather",
+                     title:"Night",
+                     startDate: night,
+                     endDate: night.addingTimeInterval(3600),
+                     hourForecast: nightForecast
+                    )
+        )
+      }
+      
       if let forecast = rainForecast {
         entries.append(
           EventEntry(type: "weather",
-                     title:"Low",
+                     title:"Rain",
                      startDate: forecast.date,
                      endDate: forecast.date.addingTimeInterval(3600),
                      hourForecast: forecast
@@ -500,6 +524,8 @@ struct TimelineProvider: AppIntentTimelineProvider {
         
       }
       
+      
+      entries.sort(by: { $0.startDate ?? .distantPast < $1.startDate ?? .distantPast })
       print("entries", entries.map({$0.title}))
       return entries
     }
@@ -526,9 +552,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
           let currentWeather = weather.currentWeather
         let hourlyForecast = weather.hourlyForecast
         
-        for forecast in hourlyForecast.forecast.prefix(24) {
+        for forecast in hourlyForecast.forecast.filter({$0.date >= Date()}).prefix(24) {
           let eventEntry = EventEntry(type: "weather",
-                                      title:"Weather",
+                                      title:nil,
                                       startDate: forecast.date,
                                       endDate: forecast.date.addingTimeInterval(3600),
                                       hourForecast: forecast

@@ -20,13 +20,13 @@ struct WidgetPreviewView: View {
         }
       }
       .frame(maxWidth:.infinity)
-      .padding(28)
-      .background(.background)
-      .clipShape(RoundedRectangle(cornerRadius: 28))
-      .overlay(RoundedRectangle(cornerRadius: 28).stroke(.tertiary.opacity(0.8), lineWidth: 1))
-      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
-      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
-      .padding()
+//      .padding(28)
+//      .background(.background)
+//      .clipShape(RoundedRectangle(cornerRadius: 28))
+//      .overlay(RoundedRectangle(cornerRadius: 28).stroke(.tertiary.opacity(0.8), lineWidth: 1))
+//      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
+//      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
+//      .padding()
       .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged, object: eventStore)) {
         (output) in
         
