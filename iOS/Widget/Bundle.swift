@@ -1,10 +1,3 @@
-//
-//  widgetBundle.swift
-//  widget
-//
-//  Created by Nicholas Jitkoff on 6/13/24.
-//
-
 import WidgetKit
 import SwiftUI
 
@@ -12,5 +5,8 @@ import SwiftUI
 struct widgetBundle: WidgetBundle {
   var body: some Widget {
     ChronographWidget()
+    #if os(iOS)
+    ClockWidget()
+          #endif
   }
 }

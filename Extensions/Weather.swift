@@ -10,7 +10,8 @@ class WeatherLocationManager: NSObject {
   func fetchWeather() async throws -> (Weather, String?) {
 
     if let data = UserDefaults.standard.data(forKey: "cachedWeather") {
-      cachedWeather = try JSONDecoder().decode(Weather.self, from: data)
+      print("getting cached weather \(data)")
+      cachedWeather = try? JSONDecoder().decode(Weather.self, from: data)
     }
     
     

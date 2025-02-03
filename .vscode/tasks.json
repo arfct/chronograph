@@ -1,0 +1,111 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build iOS App",
+            "type": "shell",
+            "command": "xcodebuild",
+            "args": [
+                "-scheme",
+                "${config:SchemeName}",
+                "-configuration",
+                "Debug",
+                "-destination",
+                "platform=iOS Simulator,name=${config:SimulatorName}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true,
+                "showReuseMessage": false,
+                "focus": true
+            }
+        },
+        {
+            "label": "Run iOS App",
+            "type": "shell",
+            "command": "printf '\\n=== Starting App [%s] ===\\n\\n' \"$(date)\" && xcrun simctl launch --console-pty booted ${config:iOSBundleIdentifier} | tee /dev/tty",
+            "dependsOn": [
+                "Build iOS App"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true,
+                "showReuseMessage": false,
+                "focus": true,
+                "promptOnClose": false
+            },
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "label": "Build iOS App (Device)",
+            "type": "shell",
+            "command": "xcodebuild",
+            "args": [
+                "-scheme",
+                "${config:SchemeName}",
+                "-configuration",
+                "Debug",
+                "-destination",
+                "platform=iOS,name=${config:DeviceName}"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true,
+                "showReuseMessage": false,
+                "focus": true
+            }
+        },
+        {
+            "label": "Run iOS App (Device)",
+            "type": "shell",
+            "command": "printf '\\n=== Starting App [%s] on Device ===\\n\\n' \"$(date)\" && xcrun devicectl device run --device ${config:DeviceUDID} ${config:iOSBundleIdentifier}",
+            "dependsOn": [
+                "Build iOS App (Device)"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true,
+                "showReuseMessage": false,
+                "focus": true,
+                "promptOnClose": false
+            },
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "label": "Run in Xcode",
+            "type": "shell",
+            "command": "osascript -e 'tell application \"Xcode\" to activate' -e 'tell application \"System Events\" to keystroke \"r\" using {command down}'",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "clear": true,
+                "showReuseMessage": false,
+                "focus": false
+            },
+            "problemMatcher": []
+        }
+    ]
+} 

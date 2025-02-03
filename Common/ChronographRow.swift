@@ -62,7 +62,7 @@ struct TimeZoneRowView: View {
       }
     }
     
-    var color: Color {
+    var color: Color? {
       switch self {
       case .dawn:
         return Color.withHex("041D80")
@@ -115,7 +115,7 @@ struct TimeZoneRowView: View {
   var body: some View {
     let hour = calendar.component(.hour, from: Date())
     
-    let daylightGradient = LinearGradient(colors: [Color.withHex(daylightColors[hour * 2]), Color.withHex(daylightColors[hour * 2 + 1])], startPoint: .top, endPoint: .bottom)
+    let daylightGradient = LinearGradient(colors: [Color.withHex(daylightColors[hour * 2]) ?? .white, Color.withHex(daylightColors[hour * 2 + 1]) ?? .black], startPoint: .top, endPoint: .bottom)
       
     HStack(spacing: config.columnSpacing) {
       HStack {
@@ -753,10 +753,6 @@ struct HeaderRowView: View {
                 .font(config.smallFont)
                 .foregroundColor(Color.secondary)
                 .lineLimit(1)
-              //              if emoji.count > 0 {
-              //                Text(emoji)
-              //                  .font(config.smallFont)
-              //              }
             }
           }
         }
@@ -823,8 +819,9 @@ struct HeaderRowView: View {
             }
             allDayItems
           }
-          .padding(.vertical, config.lineHeight / 2)
+          .padding(.vertical, config.lineHeight / 4)
         }
+        .padding(.top, config.lineHeight / 4)
         .frame(maxWidth:.infinity, minHeight: config.lineHeight, alignment: .leading)
         .fixedSize(horizontal: false, vertical: true)
         

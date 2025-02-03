@@ -27,7 +27,11 @@ extension Color {
     }
   }
   
-  static func withHex(_ hex: String) -> Color{
+  static func withHex(_ hex: String) -> Color? {
+    
+    if hex.isEmpty {
+      return nil
+    }
     
     switch(hex) {
     case "white":

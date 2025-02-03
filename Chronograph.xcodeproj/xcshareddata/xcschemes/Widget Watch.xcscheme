@@ -45,8 +45,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2C6BA2E92C1B6A4F00F22C21"
-               BuildableName = "Chronograph-ios.app"
-               BlueprintName = "Chronograph-ios"
+               BuildableName = "Chronograph.app"
+               BlueprintName = "Chronograph"
                ReferencedContainer = "container:Chronograph.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

@@ -3,197 +3,27 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C0561202C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
-		2C0561212C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
-		2C0561222C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
-		2C0561232C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
-		2C0561242C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
-		2C0561252C5556EE00435969 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C05611F2C5556EE00435969 /* Extensions.swift */; };
-		2C0EA2DF2C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
-		2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
-		2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
-		2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
-		2C0EA2E52C272A5800177026 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */; };
-		2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
-		2C1573F12C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
-		2C1573F22C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
-		2C1573F32C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
-		2C1573F42C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
-		2C1573F52C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
-		2C1573F62C4C0BAE00D4CA45 /* FacePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */; };
-		2C24A5322C4A9F100000EE32 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5312C4A9F100000EE32 /* StatusBarController.swift */; };
-		2C24A53B2C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
-		2C24A53C2C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
-		2C24A53D2C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
-		2C24A53E2C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
-		2C24A53F2C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
-		2C24A5402C4AA20D0000EE32 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A53A2C4AA20D0000EE32 /* Weather.swift */; };
-		2C24A5422C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
-		2C24A5432C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
-		2C24A5442C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
-		2C24A5452C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
-		2C24A5462C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
-		2C24A5472C4AAD990000EE32 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C24A5412C4AAD990000EE32 /* LocationManager.swift */; };
-		2C26F60E2C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
-		2C26F60F2C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
-		2C26F6102C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
-		2C26F6112C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
-		2C26F6122C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
-		2C26F6132C549D74001F893E /* ConcatenatedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C26F60D2C549D74001F893E /* ConcatenatedText.swift */; };
-		2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
-		2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
-		2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
-		2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
-		2C5A1D212C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
-		2C5A1D222C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
-		2C5A1D232C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
-		2C5A1D242C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
-		2C5A1D252C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
-		2C5A1D262C4C793F002A1586 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */; };
-		2C5A1D282C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
-		2C5A1D292C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
-		2C5A1D2A2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
-		2C5A1D2B2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
-		2C5A1D2C2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
-		2C5A1D2D2C4F7A19002A1586 /* Font+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D272C4F7A19002A1586 /* Font+Features.swift */; };
-		2C5A1D2F2C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
-		2C5A1D302C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
-		2C5A1D312C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
-		2C5A1D322C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
-		2C5A1D332C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
-		2C5A1D342C4F8500002A1586 /* ObliqueStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */; };
-		2C656A452C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
-		2C656A462C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
-		2C656A472C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
-		2C656A482C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
-		2C656A492C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
-		2C656A4A2C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */; };
-		2C6BA2EE2C1B6A4F00F22C21 /* ChronographApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */; };
-		2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
-		2C6BA2F22C1B6A5000F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */; };
-		2C6BA2F52C1B6A5000F22C21 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA2F42C1B6A5000F22C21 /* Preview Assets.xcassets */; };
 		2C6BA2FB2C1B6A5000F22C21 /* Chronograph-watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2C6BA3002C1B6A5000F22C21 /* ChronographWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2FF2C1B6A5000F22C21 /* ChronographWatchApp.swift */; };
-		2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3012C1B6A5000F22C21 /* ContentView.swift */; };
-		2C6BA3042C1B6A5100F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */; };
-		2C6BA3072C1B6A5100F22C21 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA3062C1B6A5100F22C21 /* Preview Assets.xcassets */; };
 		2C6BA3182C1B6A9600F22C21 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */; };
 		2C6BA31A2C1B6A9600F22C21 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */; };
-		2C6BA3212C1B6A9700F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA3202C1B6A9700F22C21 /* Assets.xcassets */; };
 		2C6BA3252C1B6A9700F22C21 /* Widget-watch.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2C6BA32F2C1B6ABB00F22C21 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */; };
 		2C6BA3302C1B6ABB00F22C21 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */; };
-		2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
-		2C6BA3392C1B6ABB00F22C21 /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
-		2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
-		2C6BA33D2C1B6ABC00F22C21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */; };
 		2C6BA3412C1B6ABC00F22C21 /* Widget-ios.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C6BA32E2C1B6ABB00F22C21 /* Widget-ios.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
-		2C6BA3482C1B6F6900F22C21 /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
-		2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
-		2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
-		2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
-		2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
-		2C6BA36D2C1C8AEF00F22C21 /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
-		2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
-		2C6BA36F2C1C8B3700F22C21 /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
-		2C6BA3702C1C8B3700F22C21 /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
-		2C6BA37A2C1C99C900F22C21 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
-		2C6BA37B2C1C99C900F22C21 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
-		2C6BA37C2C1C99F900F22C21 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
-		2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
-		2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
-		2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
-		2C72C0582C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
-		2C72C0592C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
-		2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0602C3F854800AB3A1A /* ChronographMacApp.swift */; };
-		2C72C0652C3F854900AB3A1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C72C0642C3F854900AB3A1A /* Assets.xcassets */; };
-		2C72C0682C3F854900AB3A1A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C72C0672C3F854900AB3A1A /* Preview Assets.xcassets */; };
 		2C72C0722C3F857E00AB3A1A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */; };
 		2C72C0732C3F857E00AB3A1A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */; };
-		2C72C07C2C3F857E00AB3A1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C72C07B2C3F857E00AB3A1A /* Assets.xcassets */; };
 		2C72C0812C3F857E00AB3A1A /* Widget-mac.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2C72C0862C3F86FC00AB3A1A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */; };
-		2C72C0872C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
-		2C72C0882C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
-		2C72C0892C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
-		2C72C08A2C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
-		2C72C08B2C3F874000AB3A1A /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
-		2C72C08C2C3F875800AB3A1A /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
-		2C72C08D2C3F875800AB3A1A /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
-		2C72C08E2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
-		2C72C08F2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */; };
-		2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
-		2C72C0912C3F87BC00AB3A1A /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3792C1C99C700F22C21 /* Formatters.swift */; };
-		2C72C0922C3F87C500AB3A1A /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
-		2C72C0932C3F87C500AB3A1A /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
-		2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
-		2C72C0952C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */; };
-		2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
-		2C72C0972C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */; };
-		2C72C0982C3F8AAF00AB3A1A /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
-		2C72C0992C3F8AAF00AB3A1A /* EventEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */; };
-		2C72C09B2C3F8FEB00AB3A1A /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */; };
-		2C8B68C72C49C0720059E0D2 /* StringProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */; };
-		2C8B68C82C49C0720059E0D2 /* StringProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */; };
-		2C8B68C92C49C0720059E0D2 /* StringProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */; };
-		2C8B68CA2C49C0720059E0D2 /* StringProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */; };
-		2C8B68CB2C49C0720059E0D2 /* StringProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */; };
-		2C8B68CC2C49C0720059E0D2 /* StringProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */; };
-		2CB314F62C2474FE0064BF6C /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
-		2CB314F72C2474FE0064BF6C /* ChronographWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */; };
-		2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
-		2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */; };
-		2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
-		2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */; };
-		2CB314FC2C2475AE0064BF6C /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
-		2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */; };
-		2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
-		2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */; };
-		2CBA09922C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
-		2CBA09932C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
-		2CBA09942C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
-		2CBA09952C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
-		2CBA09962C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
-		2CBA09972C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */; };
-		2CC35E782C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
-		2CC35E792C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
-		2CC35E7A2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
-		2CC35E7B2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
-		2CC35E7C2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
-		2CC35E7D2C52AE3500774244 /* ChronographRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC35E772C52AE3500774244 /* ChronographRow.swift */; };
 		2CC8A1EE2C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2CC8A1EF2C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2CC8A1F02C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2CC8A1F12C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2CC8A1F22C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2CC8A1F32C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
-		2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
-		2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
-		2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
-		2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
-		2CCC62012C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
-		2CCC62022C470B2300F2882A /* GradientMaskedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */; };
 		2CDC5ABE2C4C779A008B3139 /* Colorful in Frameworks */ = {isa = PBXBuildFile; productRef = 2CDC5ABD2C4C779A008B3139 /* Colorful */; };
-		2CDFDC792C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
-		2CDFDC7A2C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
-		2CDFDC7B2C457FF800C5DF11 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC772C457FF800C5DF11 /* SettingsView.swift */; };
-		2CDFDC7D2C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
-		2CDFDC7E2C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
-		2CDFDC7F2C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
-		2CDFDC802C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
-		2CDFDC812C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
-		2CDFDC822C45827600C5DF11 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CDFDC7C2C45827400C5DF11 /* Keys.swift */; };
-		50C93C3B2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
-		50C93C3C2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
-		50C93C3D2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
-		50C93C3E2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
-		50C93C3F2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
-		50C93C402C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -275,72 +105,138 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2C05611F2C5556EE00435969 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTimeline.swift; sourceTree = "<group>"; };
-		2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
-		2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacePile.swift; sourceTree = "<group>"; };
-		2C24A5312C4A9F100000EE32 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
-		2C24A53A2C4AA20D0000EE32 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
-		2C24A5412C4AAD990000EE32 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		2C26F60D2C549D74001F893E /* ConcatenatedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcatenatedText.swift; sourceTree = "<group>"; };
 		2C41B9C52C56BDAB007D4519 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
-		2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventKit+Async.swift"; sourceTree = "<group>"; };
-		2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
-		2C5A1D272C4F7A19002A1586 /* Font+Features.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Features.swift"; sourceTree = "<group>"; };
-		2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObliqueStrategies.swift; sourceTree = "<group>"; };
-		2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
-		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographApp.swift; sourceTree = "<group>"; };
-		2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2C6BA2F42C1B6A5000F22C21 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C6BA2FF2C1B6A5000F22C21 /* ChronographWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographWatchApp.swift; sourceTree = "<group>"; };
-		2C6BA3012C1B6A5000F22C21 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2C6BA3062C1B6A5100F22C21 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Widget-watch.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		2C6BA3202C1B6A9700F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2C6BA3222C1B6A9700F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C6BA32E2C1B6ABB00F22C21 /* Widget-ios.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Widget-ios.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
-		2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographWidget.swift; sourceTree = "<group>"; };
-		2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationIntent.swift; sourceTree = "<group>"; };
-		2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2C6BA33E2C1B6ABC00F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C6BA3462C1B6AF600F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2C6BA3492C1B769D00F22C21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarSelectionEntity.swift; sourceTree = "<group>"; };
-		2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Utils.swift"; sourceTree = "<group>"; };
-		2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEntries.swift; sourceTree = "<group>"; };
-		2C6BA3792C1C99C700F22C21 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
-		2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenizedTextView.swift; sourceTree = "<group>"; };
 		2C72C05E2C3F854800AB3A1A /* Chronograph-mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C72C0602C3F854800AB3A1A /* ChronographMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographMacApp.swift; sourceTree = "<group>"; };
-		2C72C0642C3F854900AB3A1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2C72C0672C3F854900AB3A1A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2C72C0692C3F854900AB3A1A /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
 		2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Widget-mac.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C72C07B2C3F857E00AB3A1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2C72C07D2C3F857E00AB3A1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C72C07E2C3F857E00AB3A1A /* widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = widget.entitlements; sourceTree = "<group>"; };
-		2C72C09A2C3F8D7F00AB3A1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringProcessing.swift; sourceTree = "<group>"; };
-		2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreviewView.swift; sourceTree = "<group>"; };
-		2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersSelectionEntity.swift; sourceTree = "<group>"; };
-		2CC35E772C52AE3500774244 /* ChronographRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronographRow.swift; sourceTree = "<group>"; };
-		2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientMaskedHStack.swift; sourceTree = "<group>"; };
-		2CDFDC772C457FF800C5DF11 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		2CDFDC7C2C45827400C5DF11 /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
-		2CDFDC8A2C46188100C5DF11 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
-		2CDFDC8B2C46194600C5DF11 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
-		2CF51FB92C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
-		2CF51FBA2C25B82700955300 /* Entitlements.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Entitlements.entitlements; sourceTree = "<group>"; };
-		50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeZoneSelectionEntity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2CD091AD2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ChronographTabView.swift,
+				ClockWidget.swift,
+			);
+			target = 2C6BA2F92C1B6A5000F22C21 /* Chronograph-watch */;
+		};
+		2CD091AE2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ClockWidget.swift,
+			);
+			target = 2C72C05D2C3F854800AB3A1A /* Chronograph-mac */;
+		};
+		2CD091AF2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ChronographTabView.swift,
+				Settings/CalendarSettingsView.swift,
+				WidgetPreviewView.swift,
+			);
+			target = 2C6BA32D2C1B6ABB00F22C21 /* Widget-ios */;
+		};
+		2CD091B02D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ChronographTabView.swift,
+				ClockWidget.swift,
+				Settings/CalendarSettingsView.swift,
+				WidgetPreviewView.swift,
+			);
+			target = 2C6BA3142C1B6A9600F22C21 /* Widget-watch */;
+		};
+		2CD091B12D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ChronographTabView.swift,
+				ClockWidget.swift,
+				Settings/CalendarSettingsView.swift,
+				WidgetPreviewView.swift,
+			);
+			target = 2C72C0702C3F857E00AB3A1A /* Widget-mac */;
+		};
+		2CD092282D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				ChronographApp.swift,
+				"Launch Screen.storyboard",
+				"Preview Content/Preview Assets.xcassets",
+			);
+			target = 2C6BA2E92C1B6A4F00F22C21 /* Chronograph */;
+		};
+		2CD092292D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Widget/Assets.xcassets,
+				Widget/Bundle.swift,
+			);
+			target = 2C6BA32D2C1B6ABB00F22C21 /* Widget-ios */;
+		};
+		2CD0922A2D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Widget/Bundle.swift,
+			);
+			target = 2C6BA3142C1B6A9600F22C21 /* Widget-watch */;
+		};
+		2CD0922B2D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Widget/Bundle.swift,
+			);
+			target = 2C72C0702C3F857E00AB3A1A /* Widget-mac */;
+		};
+		2CD0923D2D29D18300563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				ChronographWatchApp.swift,
+				ContentView.swift,
+				"Preview Content/Preview Assets.xcassets",
+			);
+			target = 2C6BA2F92C1B6A5000F22C21 /* Chronograph-watch */;
+		};
+		2CD0923E2D29D18300563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Widget/Assets.xcassets,
+			);
+			target = 2C6BA3142C1B6A9600F22C21 /* Widget-watch */;
+		};
+		2CD092502D29D19700563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				ChronographMacApp.swift,
+				"Preview Content/Preview Assets.xcassets",
+				StatusBarController.swift,
+			);
+			target = 2C72C05D2C3F854800AB3A1A /* Chronograph-mac */;
+		};
+		2CD092512D29D19700563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Widget/Assets.xcassets,
+			);
+			target = 2C72C0702C3F857E00AB3A1A /* Widget-mac */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2CD091462D29D12800563241 /* Common */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CD091AD2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091AE2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091AF2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091B02D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091B12D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Common; sourceTree = "<group>"; };
+		2CD091BE2D29D12C00563241 /* Extensions */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Extensions; sourceTree = "<group>"; };
+		2CD0921F2D29D16800563241 /* iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CD092282D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD092292D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD0922A2D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD0922B2D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = iOS; sourceTree = "<group>"; };
+		2CD092372D29D18300563241 /* Watch */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CD0923D2D29D18300563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD0923E2D29D18300563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Watch; sourceTree = "<group>"; };
+		2CD0924A2D29D19700563241 /* Mac */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CD092502D29D19700563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD092512D29D19700563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Mac; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		2C6BA2E72C1B6A4F00F22C21 /* Frameworks */ = {
@@ -395,25 +291,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2C0EFA3C2C226BA200012A78 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				2C4EAFEE2C370FAB004BBC6D /* EventKit+Async.swift */,
-				2C05611F2C5556EE00435969 /* Extensions.swift */,
-				2C26F60D2C549D74001F893E /* ConcatenatedText.swift */,
-				2C6BA3692C1BDD1000F22C21 /* Color+Utils.swift */,
-				2C5A1D202C4C793F002A1586 /* ColorGenerator.swift */,
-				2C8B68C62C49C0690059E0D2 /* StringProcessing.swift */,
-				2C6BA3792C1C99C700F22C21 /* Formatters.swift */,
-				2C72C0552C3EF79600AB3A1A /* TokenizedTextView.swift */,
-				2C24A53A2C4AA20D0000EE32 /* Weather.swift */,
-				2C24A5412C4AAD990000EE32 /* LocationManager.swift */,
-				2C656A442C48103F00AE4A48 /* SingleAxisGeometryReader.swift */,
-				2CCC61FC2C470B2100F2882A /* GradientMaskedHStack.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		2C0EFA3D2C226BB900012A78 /* Experiments */ = {
 			isa = PBXGroup;
 			children = (
@@ -433,11 +310,11 @@
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
-				2CDFDC782C457FF800C5DF11 /* Common */,
-				2C0EFA3C2C226BA200012A78 /* Extensions */,
-				2C6BA2EC2C1B6A4F00F22C21 /* iOS */,
-				2C6BA2FE2C1B6A5000F22C21 /* Watch */,
-				2C72C05F2C3F854800AB3A1A /* Mac */,
+				2CD091462D29D12800563241 /* Common */,
+				2CD091BE2D29D12C00563241 /* Extensions */,
+				2CD0921F2D29D16800563241 /* iOS */,
+				2CD092372D29D18300563241 /* Watch */,
+				2CD0924A2D29D19700563241 /* Mac */,
 				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
 				2C41B9C42C56BDAB007D4519 /* Packages */,
@@ -448,7 +325,7 @@
 		2C6BA2EB2C1B6A4F00F22C21 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */,
+				2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */,
 				2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */,
 				2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */,
 				2C6BA32E2C1B6ABB00F22C21 /* Widget-ios.appex */,
@@ -456,50 +333,6 @@
 				2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		2C6BA2EC2C1B6A4F00F22C21 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				2C6BA2ED2C1B6A4F00F22C21 /* ChronographApp.swift */,
-				2C0EA2E42C272A5800177026 /* Launch Screen.storyboard */,
-				2C6BA3312C1B6ABB00F22C21 /* Widget */,
-				2C6BA2F12C1B6A5000F22C21 /* Assets.xcassets */,
-				2CF51FB92C25B82700955300 /* Entitlements.entitlements */,
-				2C6BA3462C1B6AF600F22C21 /* Info.plist */,
-				2C6BA2F32C1B6A5000F22C21 /* Preview Content */,
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
-		2C6BA2F32C1B6A5000F22C21 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				2C6BA2F42C1B6A5000F22C21 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		2C6BA2FE2C1B6A5000F22C21 /* Watch */ = {
-			isa = PBXGroup;
-			children = (
-				2C6BA3492C1B769D00F22C21 /* Info.plist */,
-				2C6BA2FF2C1B6A5000F22C21 /* ChronographWatchApp.swift */,
-				2C6BA3012C1B6A5000F22C21 /* ContentView.swift */,
-				2C6BA31B2C1B6A9600F22C21 /* Widget */,
-				2C6BA3032C1B6A5100F22C21 /* Assets.xcassets */,
-				2C6BA3052C1B6A5100F22C21 /* Preview Content */,
-				2CDFDC8A2C46188100C5DF11 /* Entitlements.entitlements */,
-			);
-			path = Watch;
-			sourceTree = "<group>";
-		};
-		2C6BA3052C1B6A5100F22C21 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				2C6BA3062C1B6A5100F22C21 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		2C6BA3162C1B6A9600F22C21 /* Frameworks */ = {
@@ -511,87 +344,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2C6BA31B2C1B6A9600F22C21 /* Widget */ = {
-			isa = PBXGroup;
-			children = (
-				2C6BA3202C1B6A9700F22C21 /* Assets.xcassets */,
-				2CDFDC8B2C46194600C5DF11 /* Entitlements.entitlements */,
-				2C6BA3222C1B6A9700F22C21 /* Info.plist */,
-			);
-			path = Widget;
-			sourceTree = "<group>";
-		};
-		2C6BA3312C1B6ABB00F22C21 /* Widget */ = {
-			isa = PBXGroup;
-			children = (
-				2C6BA3342C1B6ABB00F22C21 /* Bundle.swift */,
-				2C6BA33C2C1B6ABC00F22C21 /* Assets.xcassets */,
-				2CF51FBA2C25B82700955300 /* Entitlements.entitlements */,
-				2C6BA33E2C1B6ABC00F22C21 /* Info.plist */,
-			);
-			path = Widget;
-			sourceTree = "<group>";
-		};
-		2C72C05F2C3F854800AB3A1A /* Mac */ = {
-			isa = PBXGroup;
-			children = (
-				2C72C0602C3F854800AB3A1A /* ChronographMacApp.swift */,
-				2C24A5312C4A9F100000EE32 /* StatusBarController.swift */,
-				2C72C0642C3F854900AB3A1A /* Assets.xcassets */,
-				2C72C0692C3F854900AB3A1A /* Entitlements.entitlements */,
-				2C72C09A2C3F8D7F00AB3A1A /* Info.plist */,
-				2C72C0742C3F857E00AB3A1A /* Widget */,
-				2C72C0662C3F854900AB3A1A /* Preview Content */,
-			);
-			path = Mac;
-			sourceTree = "<group>";
-		};
-		2C72C0662C3F854900AB3A1A /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				2C72C0672C3F854900AB3A1A /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		2C72C0742C3F857E00AB3A1A /* Widget */ = {
-			isa = PBXGroup;
-			children = (
-				2C72C07B2C3F857E00AB3A1A /* Assets.xcassets */,
-				2C72C07D2C3F857E00AB3A1A /* Info.plist */,
-				2C72C07E2C3F857E00AB3A1A /* widget.entitlements */,
-			);
-			path = Widget;
-			sourceTree = "<group>";
-		};
-		2CDFDC782C457FF800C5DF11 /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				2C6BA2EF2C1B6A4F00F22C21 /* ContentView.swift */,
-				2CB314FE2C24847A0064BF6C /* WidgetPreviewView.swift */,
-				2C6BA3382C1B6ABB00F22C21 /* ChronographWidget.swift */,
-				2CC35E772C52AE3500774244 /* ChronographRow.swift */,
-				2C1573F02C4C0BAE00D4CA45 /* FacePile.swift */,
-				2C0EA2DE2C27295300177026 /* WidgetTimeline.swift */,
-				2C6BA36C2C1C8AE300F22C21 /* EventEntries.swift */,
-				2C6BA33A2C1B6ABB00F22C21 /* ConfigurationIntent.swift */,
-				2C6BA3642C1BB93A00F22C21 /* CalendarSelectionEntity.swift */,
-				2CBA09912C50B6C800D324DE /* RemindersSelectionEntity.swift */,
-				50C93C3A2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift */,
-				2CDFDC772C457FF800C5DF11 /* SettingsView.swift */,
-				2CDFDC7C2C45827400C5DF11 /* Keys.swift */,
-				2C5A1D272C4F7A19002A1586 /* Font+Features.swift */,
-				2C5A1D2E2C4F8500002A1586 /* ObliqueStrategies.swift */,
-			);
-			path = Common;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2C6BA2E92C1B6A4F00F22C21 /* Chronograph-ios */ = {
+		2C6BA2E92C1B6A4F00F22C21 /* Chronograph */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph-ios" */;
+			buildConfigurationList = 2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph" */;
 			buildPhases = (
 				2C6BA2E62C1B6A4F00F22C21 /* Sources */,
 				2C6BA2E72C1B6A4F00F22C21 /* Frameworks */,
@@ -605,9 +363,13 @@
 				2C6BA2FD2C1B6A5000F22C21 /* PBXTargetDependency */,
 				2C6BA3402C1B6ABC00F22C21 /* PBXTargetDependency */,
 			);
-			name = "Chronograph-ios";
+			fileSystemSynchronizedGroups = (
+				2CD091462D29D12800563241 /* Common */,
+				2CD091BE2D29D12C00563241 /* Extensions */,
+			);
+			name = Chronograph;
 			productName = txet;
-			productReference = 2C6BA2EA2C1B6A4F00F22C21 /* Chronograph-ios.app */;
+			productReference = 2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2C6BA2F92C1B6A5000F22C21 /* Chronograph-watch */ = {
@@ -623,6 +385,10 @@
 			);
 			dependencies = (
 				2C6BA3242C1B6A9700F22C21 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2CD091462D29D12800563241 /* Common */,
+				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
 			name = "Chronograph-watch";
 			productName = "txet Watch App";
@@ -641,6 +407,10 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				2CD091462D29D12800563241 /* Common */,
+				2CD091BE2D29D12C00563241 /* Extensions */,
+			);
 			name = "Widget-watch";
 			productName = widgetExtension;
 			productReference = 2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */;
@@ -657,6 +427,10 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2CD091462D29D12800563241 /* Common */,
+				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
 			name = "Widget-ios";
 			productName = widgetExtension;
@@ -677,6 +451,10 @@
 			dependencies = (
 				2C72C0802C3F857E00AB3A1A /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				2CD091462D29D12800563241 /* Common */,
+				2CD091BE2D29D12C00563241 /* Extensions */,
+			);
 			name = "Chronograph-mac";
 			productName = txet.mac;
 			productReference = 2C72C05E2C3F854800AB3A1A /* Chronograph-mac.app */;
@@ -693,6 +471,10 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2CD091462D29D12800563241 /* Common */,
+				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
 			name = "Widget-mac";
 			productName = widgetExtension;
@@ -745,7 +527,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2C6BA2E92C1B6A4F00F22C21 /* Chronograph-ios */,
+				2C6BA2E92C1B6A4F00F22C21 /* Chronograph */,
 				2C6BA2F92C1B6A5000F22C21 /* Chronograph-watch */,
 				2C72C05D2C3F854800AB3A1A /* Chronograph-mac */,
 				2C6BA32D2C1B6ABB00F22C21 /* Widget-ios */,
@@ -760,9 +542,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C0EA2E52C272A5800177026 /* Launch Screen.storyboard in Resources */,
-				2C6BA2F52C1B6A5000F22C21 /* Preview Assets.xcassets in Resources */,
-				2C6BA2F22C1B6A5000F22C21 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -770,8 +549,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C6BA3072C1B6A5100F22C21 /* Preview Assets.xcassets in Resources */,
-				2C6BA3042C1B6A5100F22C21 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,7 +556,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C6BA3212C1B6A9700F22C21 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -787,7 +563,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C6BA33D2C1B6ABC00F22C21 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -795,8 +570,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C72C0682C3F854900AB3A1A /* Preview Assets.xcassets in Resources */,
-				2C72C0652C3F854900AB3A1A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -804,7 +577,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C72C07C2C3F857E00AB3A1A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -815,35 +587,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C0EA2DF2C27295800177026 /* WidgetTimeline.swift in Sources */,
-				2C0561242C5556EE00435969 /* Extensions.swift in Sources */,
-				2C6BA36F2C1C8B3700F22C21 /* EventEntries.swift in Sources */,
-				2CC35E7D2C52AE3500774244 /* ChronographRow.swift in Sources */,
-				2CCC61FF2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
-				2C4EAFEF2C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
-				2C26F6132C549D74001F893E /* ConcatenatedText.swift in Sources */,
-				2C24A53B2C4AA20D0000EE32 /* Weather.swift in Sources */,
-				2C72C0572C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
-				2CB314F82C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
-				2C6BA2F02C1B6A4F00F22C21 /* ContentView.swift in Sources */,
-				50C93C3B2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2CC8A1EE2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
-				2CB314F62C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
-				2C8B68C72C49C0720059E0D2 /* StringProcessing.swift in Sources */,
-				2CDFDC7A2C457FF800C5DF11 /* SettingsView.swift in Sources */,
-				2CB314FF2C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
-				2C5A1D222C4C793F002A1586 /* ColorGenerator.swift in Sources */,
-				2C5A1D282C4F7A19002A1586 /* Font+Features.swift in Sources */,
-				2CB314FC2C2475AE0064BF6C /* Color+Utils.swift in Sources */,
-				2CB314FA2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
-				2CDFDC822C45827600C5DF11 /* Keys.swift in Sources */,
-				2C6BA37C2C1C99F900F22C21 /* Formatters.swift in Sources */,
-				2C6BA2EE2C1B6A4F00F22C21 /* ChronographApp.swift in Sources */,
-				2C24A5472C4AAD990000EE32 /* LocationManager.swift in Sources */,
-				2C5A1D2F2C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
-				2CBA09942C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
-				2C1573F52C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
-				2C656A4A2C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -851,35 +595,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C0EA2E22C27295800177026 /* WidgetTimeline.swift in Sources */,
-				2C0561252C5556EE00435969 /* Extensions.swift in Sources */,
-				2C6BA3702C1C8B3700F22C21 /* EventEntries.swift in Sources */,
-				2CC35E782C52AE3500774244 /* ChronographRow.swift in Sources */,
-				2CCC61FD2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
-				2C4EAFF22C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
-				2C26F6112C549D74001F893E /* ConcatenatedText.swift in Sources */,
-				2C24A53F2C4AA20D0000EE32 /* Weather.swift in Sources */,
-				2C72C0562C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
-				2CB314FB2C2475260064BF6C /* CalendarSelectionEntity.swift in Sources */,
-				2C6BA3022C1B6A5000F22C21 /* ContentView.swift in Sources */,
-				50C93C3C2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
 				2CC8A1EF2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
-				2CB314F92C2475170064BF6C /* ConfigurationIntent.swift in Sources */,
-				2C8B68C82C49C0720059E0D2 /* StringProcessing.swift in Sources */,
-				2CDFDC792C457FF800C5DF11 /* SettingsView.swift in Sources */,
-				2CB314F72C2474FE0064BF6C /* ChronographWidget.swift in Sources */,
-				2C5A1D212C4C793F002A1586 /* ColorGenerator.swift in Sources */,
-				2C5A1D2B2C4F7A19002A1586 /* Font+Features.swift in Sources */,
-				2C6BA37D2C1C99F900F22C21 /* Formatters.swift in Sources */,
-				2C6BA3002C1B6A5000F22C21 /* ChronographWatchApp.swift in Sources */,
-				2CDFDC7D2C45827600C5DF11 /* Keys.swift in Sources */,
-				2CB315002C24847A0064BF6C /* WidgetPreviewView.swift in Sources */,
-				2CB314FD2C2475AF0064BF6C /* Color+Utils.swift in Sources */,
-				2C24A5452C4AAD990000EE32 /* LocationManager.swift in Sources */,
-				2C5A1D322C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
-				2CBA09962C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
-				2C1573F12C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
-				2C656A462C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -887,32 +603,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C6BA3472C1B6D4800F22C21 /* ConfigurationIntent.swift in Sources */,
-				2C0EFA3E2C2270B300012A78 /* Bundle.swift in Sources */,
-				2C656A492C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
-				2CBA09932C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
-				2C5A1D2A2C4F7A19002A1586 /* Font+Features.swift in Sources */,
-				2C4EAFF12C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
-				2C24A5462C4AAD990000EE32 /* LocationManager.swift in Sources */,
-				2C24A53D2C4AA20D0000EE32 /* Weather.swift in Sources */,
-				2C0EA2E12C27295800177026 /* WidgetTimeline.swift in Sources */,
-				2CDFDC7E2C45827600C5DF11 /* Keys.swift in Sources */,
-				2CC35E7A2C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CC8A1F22C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
-				2CCC62022C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
-				2C26F60F2C549D74001F893E /* ConcatenatedText.swift in Sources */,
-				2C6BA3682C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
-				2C6BA3482C1B6F6900F22C21 /* ChronographWidget.swift in Sources */,
-				2C6BA36B2C1BDD8A00F22C21 /* Color+Utils.swift in Sources */,
-				2C72C0592C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
-				2C5A1D312C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
-				2C6BA36D2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
-				2C0561202C5556EE00435969 /* Extensions.swift in Sources */,
-				2C6BA37B2C1C99C900F22C21 /* Formatters.swift in Sources */,
-				50C93C3F2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
-				2C5A1D252C4C793F002A1586 /* ColorGenerator.swift in Sources */,
-				2C8B68C92C49C0720059E0D2 /* StringProcessing.swift in Sources */,
-				2C1573F22C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -920,32 +611,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C6BA33B2C1B6ABB00F22C21 /* ConfigurationIntent.swift in Sources */,
-				2C6BA3352C1B6ABB00F22C21 /* Bundle.swift in Sources */,
-				2C656A452C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
-				2CBA09952C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
-				2C5A1D292C4F7A19002A1586 /* Font+Features.swift in Sources */,
-				2C4EAFF02C370FAB004BBC6D /* EventKit+Async.swift in Sources */,
-				2C24A5422C4AAD990000EE32 /* LocationManager.swift in Sources */,
-				2C24A5402C4AA20D0000EE32 /* Weather.swift in Sources */,
-				2C0EA2E02C27295800177026 /* WidgetTimeline.swift in Sources */,
-				2CDFDC812C45827600C5DF11 /* Keys.swift in Sources */,
-				2CC35E7B2C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CC8A1F12C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
-				2CCC61FE2C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
-				2C26F60E2C549D74001F893E /* ConcatenatedText.swift in Sources */,
-				2C6BA36E2C1C8AEF00F22C21 /* EventEntries.swift in Sources */,
-				2C6BA3672C1BBACD00F22C21 /* CalendarSelectionEntity.swift in Sources */,
-				2C6BA3392C1B6ABB00F22C21 /* ChronographWidget.swift in Sources */,
-				2C72C0582C3EF79A00AB3A1A /* TokenizedTextView.swift in Sources */,
-				2C5A1D332C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
-				2C6BA37A2C1C99C900F22C21 /* Formatters.swift in Sources */,
-				2C0561232C5556EE00435969 /* Extensions.swift in Sources */,
-				2C6BA36A2C1BDD1000F22C21 /* Color+Utils.swift in Sources */,
-				50C93C3E2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
-				2C5A1D242C4C793F002A1586 /* ColorGenerator.swift in Sources */,
-				2C8B68CC2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
-				2C1573F32C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -953,36 +619,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C72C0862C3F86FC00AB3A1A /* ContentView.swift in Sources */,
-				2CBA09972C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
-				2C26F6122C549D74001F893E /* ConcatenatedText.swift in Sources */,
-				2C72C0982C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
-				2CCC62002C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
-				2C72C0962C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
-				2C72C0892C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
-				2C1573F42C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
-				2C72C0942C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
-				2CC35E792C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CC8A1F02C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
-				2C72C0902C3F87BC00AB3A1A /* Formatters.swift in Sources */,
-				2C72C0612C3F854800AB3A1A /* ChronographMacApp.swift in Sources */,
-				2C8B68CA2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
-				2CDFDC7B2C457FF800C5DF11 /* SettingsView.swift in Sources */,
-				2C72C08E2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
-				50C93C3D2C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
-				2C72C08B2C3F874000AB3A1A /* WidgetPreviewView.swift in Sources */,
-				2C24A5442C4AAD990000EE32 /* LocationManager.swift in Sources */,
-				2C5A1D342C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
-				2C72C0872C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
-				2C5A1D232C4C793F002A1586 /* ColorGenerator.swift in Sources */,
-				2C24A5322C4A9F100000EE32 /* StatusBarController.swift in Sources */,
-				2C5A1D2D2C4F7A19002A1586 /* Font+Features.swift in Sources */,
-				2CDFDC7F2C45827600C5DF11 /* Keys.swift in Sources */,
-				2C24A53C2C4AA20D0000EE32 /* Weather.swift in Sources */,
-				2C72C08C2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
-				2C72C0922C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
-				2C656A472C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
-				2C0561222C5556EE00435969 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -990,32 +627,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C72C0992C3F8AAF00AB3A1A /* EventEntries.swift in Sources */,
-				2C72C0972C3F8A9D00AB3A1A /* WidgetTimeline.swift in Sources */,
-				2C656A482C48103F00AE4A48 /* SingleAxisGeometryReader.swift in Sources */,
-				2CBA09922C50B6C800D324DE /* RemindersSelectionEntity.swift in Sources */,
-				2C5A1D2C2C4F7A19002A1586 /* Font+Features.swift in Sources */,
-				2C72C0952C3F87CB00AB3A1A /* EventKit+Async.swift in Sources */,
-				2C24A5432C4AAD990000EE32 /* LocationManager.swift in Sources */,
-				2C24A53E2C4AA20D0000EE32 /* Weather.swift in Sources */,
-				2C72C09B2C3F8FEB00AB3A1A /* Bundle.swift in Sources */,
-				2CDFDC802C45827600C5DF11 /* Keys.swift in Sources */,
-				2CC35E7C2C52AE3500774244 /* ChronographRow.swift in Sources */,
 				2CC8A1F32C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
-				2CCC62012C470B2300F2882A /* GradientMaskedHStack.swift in Sources */,
-				2C26F6102C549D74001F893E /* ConcatenatedText.swift in Sources */,
-				2C72C0912C3F87BC00AB3A1A /* Formatters.swift in Sources */,
-				2C72C08A2C3F872200AB3A1A /* CalendarSelectionEntity.swift in Sources */,
-				2C72C08F2C3F876E00AB3A1A /* TokenizedTextView.swift in Sources */,
-				2C72C0882C3F870F00AB3A1A /* ConfigurationIntent.swift in Sources */,
-				2C5A1D302C4F8500002A1586 /* ObliqueStrategies.swift in Sources */,
-				2C72C08D2C3F875800AB3A1A /* ChronographWidget.swift in Sources */,
-				2C0561212C5556EE00435969 /* Extensions.swift in Sources */,
-				2C72C0932C3F87C500AB3A1A /* Color+Utils.swift in Sources */,
-				50C93C402C8C8A5500D4906E /* TimeZoneSelectionEntity.swift in Sources */,
-				2C5A1D262C4C793F002A1586 /* ColorGenerator.swift in Sources */,
-				2C8B68CB2C49C0720059E0D2 /* StringProcessing.swift in Sources */,
-				2C1573F62C4C0BAE00D4CA45 /* FacePile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1166,25 +778,27 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Watch/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Watch/Preview Content\"";
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.blacktree.txet;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.artifact.chronograph;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.watch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1200,25 +814,27 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Watch/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Watch/Preview Content\"";
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.blacktree.txet;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.artifact.chronograph;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.watch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1235,14 +851,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = iOS/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1257,8 +875,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1276,14 +895,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = iOS/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1298,8 +919,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1318,9 +940,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = Watch/Widget/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
@@ -1333,8 +956,9 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet.watchkitapp.widget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.watch.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1350,9 +974,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = Watch/Widget/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
@@ -1365,8 +990,9 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet.watchkitapp.widget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.watch.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1383,9 +1009,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = iOS/Widget/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
@@ -1397,8 +1024,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet.widget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1417,9 +1045,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = iOS/Widget/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOS/Widget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
@@ -1431,8 +1060,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.blacktree.txet.widget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1452,11 +1082,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Mac/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mac/Preview Content\"";
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1472,8 +1103,9 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac";
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1487,11 +1119,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Mac/Entitlements.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Mac/Preview Content\"";
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1507,8 +1140,9 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac";
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.mac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1522,9 +1156,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = Mac/Widget/widget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Widget/Info.plist;
@@ -1537,8 +1172,9 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac.widget";
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.mac.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1552,9 +1188,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = Mac/Widget/widget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A7X888RRVJ;
+				DEVELOPMENT_TEAM = TVA9Z8LD95;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Widget/Info.plist;
@@ -1567,8 +1204,9 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blacktree.txet-mac.widget";
+				PRODUCT_BUNDLE_IDENTIFIER = com.artifact.chronograph.mac.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1597,7 +1235,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph-ios" */ = {
+		2C6BA30E2C1B6A5100F22C21 /* Build configuration list for PBXNativeTarget "Chronograph" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C6BA30F2C1B6A5100F22C21 /* Debug */,

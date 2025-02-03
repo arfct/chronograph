@@ -18,7 +18,11 @@ struct CalendarTimelineEntry: TimelineEntry {
 
 struct TimelineProvider: AppIntentTimelineProvider {
   
-  @AppStorage("state") private var state = false
+  @AppStorage("state")
+  private var state = false
+  
+  @AppStorage(Keys.enabledCalendars, store: UserDefaults(suiteName: Keys.suiteName))
+  private var selectedCalendarIds: [String] = []
   
   var weatherManager = WeatherLocationManager()
   var eventStore = EKEventStore()
@@ -645,8 +649,15 @@ struct TimelineProvider: AppIntentTimelineProvider {
   private func fetchEvents(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EKEvent] {
     guard configuration.content == .calendar else { return [] }
     
-    let calendarIDs = configuration.calendars.map({$0.id})
+    var calendarIDs = configuration.calendars.map({$0.id})
+    if (calendarIDs.count == 0) {
+      calendarIDs = selectedCalendarIds
+    }
+    
     let calendars: [EKCalendar] = calendarIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
+    
+    print("Getting Calendars: \(calendars.map(\.title))")
+    
     let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
     
     let events = eventStore.events(matching: predicate)

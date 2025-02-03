@@ -11,42 +11,40 @@ struct WidgetPreviewView: View {
     }
   }
   @State private var timeline: Timeline<CalendarTimelineEntry>?
-    var body: some View {
-      ScrollView {
-        if let entry = timeline?.entries.first {
-          ChronographWidgetView(entry: entry)
-        } else {
-          Text("Loading...")
-        }
+  var body: some View {
+    ScrollView {
+      if let entry = timeline?.entries.first {
+        ChronographWidgetView(entry: entry)
+      } else {
+        Text("Loading...")
       }
-      .clipped()
-      .frame(maxWidth:.infinity)
-//      .padding(28)
-//      .background(.background)
-//      .clipShape(RoundedRectangle(cornerRadius: 28))
-//      .overlay(RoundedRectangle(cornerRadius: 28).stroke(.tertiary.opacity(0.8), lineWidth: 1))
-//      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
-//      .shadow(color: .black.opacity(0.05), radius: 10.0, x: 0.0, y:10.0)
-//      .padding()
-      .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged, object: eventStore)) {
-        (output) in
-        
-        if output.userInfo?["EKEventStoreCalendarDataChangedUserInfoKey"] as? Int == 1  &&  config.content != .reminders {
-          reloadTimeline()
-          print("Updating Calendar")
-        }
-        if output.userInfo?["EKEventStoreRemindersDataChangedUserInfoKey"] as? Int == 1 && config.content != .calendar {
-          reloadTimeline()
-          print("Updating Reminders")
-        }
-        
-        WidgetCenter.shared.reloadAllTimelines()
-      }
-      .task {
-        reloadTimeline() 
-      }
-     
     }
+    .clipped()
+    .frame(maxWidth:.infinity)
+    .padding(28)
+    .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged, object: eventStore)) {
+      (output) in
+      
+      if output.userInfo?["EKEventStoreCalendarDataChangedUserInfoKey"] as? Int == 1  &&  config.content != .reminders {
+        reloadTimeline()
+        print("Updating Calendar")
+      }
+      if output.userInfo?["EKEventStoreRemindersDataChangedUserInfoKey"] as? Int == 1 && config.content != .calendar {
+        reloadTimeline()
+        print("Updating Reminders")
+      }
+      
+      WidgetCenter.shared.reloadAllTimelines()
+    }
+    .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { change in
+      reloadTimeline()
+      print("Updating due to UserDefaults change \(change.userInfo)")
+    }
+    .task {
+      reloadTimeline()
+    }
+    
+  }
 }
 
 #Preview("Calendar") {
@@ -62,11 +60,11 @@ struct WidgetPreviewView: View {
     config.viewOptions = [.showColors]
     return config
   }
- 
+  
   WidgetPreviewView(config: testConfig)
     .frame(minWidth:240, maxHeight: 555)
     .padding()
-
+  
 }
 
 #Preview("Reminders", traits: .fixedLayout(width: 160, height: 160)) {

@@ -167,8 +167,7 @@ struct ChronographWidgetView : View {
     let content = entry.configuration.content
     let now = Date()
     
-    let backgroundColor = entry.configuration.backgroundColor.count > 0 ?
-    Color.withHex(entry.configuration.backgroundColor) : .clear
+    let backgroundColor = Color.withHex(entry.configuration.backgroundColor) ?? .clear
     
     let isDark = backgroundColor == .clear ? colorScheme == .dark : backgroundColor.isDark()
     

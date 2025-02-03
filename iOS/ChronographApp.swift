@@ -6,7 +6,7 @@ import SwiftUI
 struct ChronographApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ChronographTabView()
             .onOpenURL { url in
               var urlToOpen = url
               if urlToOpen.absoluteString.starts(with:"settings:") {

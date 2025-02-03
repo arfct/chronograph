@@ -8,16 +8,16 @@ import AppKit
 #endif
 
 enum FontStyle: String, AppEnum {
-    case normal, rounded, serif, monospace, condensed, compressed
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Font Style"
-    static var caseDisplayRepresentations: [FontStyle : DisplayRepresentation] = [
-        .normal: "Normal",
-        .rounded: "Rounded",
-        .serif: "Serif",
-        .monospace: "Monospace",
-        .condensed: "Condensed",
-        .compressed: "Compressed",
-    ]
+  case normal, rounded, serif, monospace, condensed, compressed
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Font Style"
+  static var caseDisplayRepresentations: [FontStyle : DisplayRepresentation] = [
+    .normal: "Normal",
+    .rounded: "Rounded",
+    .serif: "Serif",
+    .monospace: "Monospace",
+    .condensed: "Condensed",
+    .compressed: "Compressed",
+  ]
 }
 
 
@@ -32,8 +32,8 @@ enum WeatherStyle: String, AppEnum {
 }
 
 enum FontSize: String, AppEnum {
-    case tiny, small, medium, large, huge
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Font Size"
+  case tiny, small, medium, large, huge
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Font Size"
   static var caseDisplayRepresentations: [FontSize : DisplayRepresentation] = [
     .tiny: "Tiny",
     .small: "Small",
@@ -49,6 +49,7 @@ enum FontSize: String, AppEnum {
     .large: .title3,
     .huge: .title1,
   ]
+  
   static var caseMinLines: [FontSize : Int] = [
     .tiny: 6,
     .small: 5,
@@ -59,39 +60,39 @@ enum FontSize: String, AppEnum {
 }
 
 enum DisplayedContent: String, AppEnum {
-    case calendar, reminders, timezones, weather
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Displayed Content"
-    static var caseDisplayRepresentations: [DisplayedContent : DisplayRepresentation] = [
-      .calendar: "Calendar",
-      .reminders: "Reminders",
-      .timezones: "World Clock",
-      .weather: "Weather"
-    ]
+  case calendar, reminders, timezones, weather
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Displayed Content"
+  static var caseDisplayRepresentations: [DisplayedContent : DisplayRepresentation] = [
+    .calendar: "Calendar",
+    .reminders: "Reminders",
+    .timezones: "World Clock",
+    .weather: "Weather"
+  ]
 }
 
 
 
 
 enum WidgetFeatures: String, AppEnum {
-    case allDayEvents, multiDayEvents, weather, timeBars, freeTime //, alternateCalendarIndicators
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Calendar Content"
-    static var caseDisplayRepresentations: [WidgetFeatures : DisplayRepresentation] = [
-      .allDayEvents: DisplayRepresentation(title: "All-day", subtitle:"Events lasting all day", image: .init(systemName: "rectangle.grid.1x2")),
-      .multiDayEvents: DisplayRepresentation(title: "Multi-day", subtitle:"Events spanning one day", image: .init(systemName: "square.grid.3x1.below.line.grid.1x2", tintColor: UIColor.blue, symbolConfiguration:.preferringMulticolor())),
-      .weather: DisplayRepresentation(title: "Weather", image: .init(systemName: "cloud.sun.rain.fill", symbolConfiguration:.preferringMulticolor())),
-      .timeBars: DisplayRepresentation(title: "Time Bars", image: .init(systemName: "calendar.day.timeline.leading", symbolConfiguration:.preferringMulticolor())),
-      .freeTime: DisplayRepresentation(title: "Free Time", image: .init(systemName: "water.waves", symbolConfiguration:.preferringMulticolor())),
-     //.alternateCalendarIndicators: DisplayRepresentation(title: "Calendar Indicators", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
-   ]
+  case allDayEvents, multiDayEvents, weather, timeBars, freeTime //, alternateCalendarIndicators
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Calendar Content"
+  static var caseDisplayRepresentations: [WidgetFeatures : DisplayRepresentation] = [
+    .allDayEvents: DisplayRepresentation(title: "All-day", subtitle:"Events lasting all day", image: .init(systemName: "rectangle.grid.1x2")),
+    .multiDayEvents: DisplayRepresentation(title: "Multi-day", subtitle:"Events spanning one day", image: .init(systemName: "square.grid.3x1.below.line.grid.1x2", tintColor: UIColor.blue, symbolConfiguration:.preferringMulticolor())),
+    .weather: DisplayRepresentation(title: "Weather", image: .init(systemName: "cloud.sun.rain.fill", symbolConfiguration:.preferringMulticolor())),
+    .timeBars: DisplayRepresentation(title: "Time Bars", image: .init(systemName: "calendar.day.timeline.leading", symbolConfiguration:.preferringMulticolor())),
+    .freeTime: DisplayRepresentation(title: "Free Time", image: .init(systemName: "water.waves", symbolConfiguration:.preferringMulticolor())),
+    //.alternateCalendarIndicators: DisplayRepresentation(title: "Calendar Indicators", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
+  ]
 }
 
 enum WidgetViewOptions: String, AppEnum {
-    case showColors, fullBleed //, alternateCalendarIndicators
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "View Options"
-    static var caseDisplayRepresentations: [WidgetViewOptions : DisplayRepresentation] = [
-      .showColors: DisplayRepresentation(title: "Show Colors", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
-      .fullBleed: DisplayRepresentation(title: "Remove Padding", image: .init(systemName: "arrowshape.left.arrowshape.right", symbolConfiguration:.preferringMulticolor())),
-   ]
+  case showColors, fullBleed //, alternateCalendarIndicators
+  static var typeDisplayRepresentation: TypeDisplayRepresentation = "View Options"
+  static var caseDisplayRepresentations: [WidgetViewOptions : DisplayRepresentation] = [
+    .showColors: DisplayRepresentation(title: "Show Colors", image: .init(systemName: "paintpalette", symbolConfiguration:.preferringMulticolor())),
+    .fullBleed: DisplayRepresentation(title: "Remove Padding", image: .init(systemName: "arrowshape.left.arrowshape.right", symbolConfiguration:.preferringMulticolor())),
+  ]
 }
 
 
@@ -102,10 +103,10 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   static var description = IntentDescription("Chronograph")
   
   @Parameter(title: "Widget Type", default: .calendar)
-   var content: DisplayedContent
+  var content: DisplayedContent
   
   @Parameter(title: "Show", default: [.allDayEvents, .timeBars])
-   var features: [WidgetFeatures]
+  var features: [WidgetFeatures]
   
   @Parameter(title: "Calendars", default: [])
   var calendars: [CalendarSelectionEntity]
@@ -118,25 +119,25 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   
   @Parameter(title: "Weather Style", default: .current)
   var weatherStyle: WeatherStyle
-
+  
   @Parameter(title: "View Options", default: [])
   var viewOptions: [WidgetViewOptions]
-
+  
   @Parameter(title: "Font Style", default: .normal)
-   var fontStyle: FontStyle
-    
+  var fontStyle: FontStyle
+  
   @Parameter(title: "Font Size", default: .medium)
-   var fontSize: FontSize
+  var fontSize: FontSize
   
   @Parameter(title: "Background (Hex)", description:"Hex", default: "")
   var backgroundColor: String
   
   @Parameter(title: "Accent (Hex)", default: "")
   var accentColor: String
-
   
-//  @Parameter(title: "Draw to Edges", default: false)
-//  var fullBleed: Bool
+  
+  //  @Parameter(title: "Draw to Edges", default: false)
+  //  var fullBleed: Bool
   
   @Parameter(title: "Skip Pages", default: 0)
   var pageOffset: Int
@@ -168,7 +169,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
       TimeZoneSelectionEntity(id: "America/New_York", title: "New York City", subtitle:nil, color:nil),
       TimeZoneSelectionEntity(id: "Europe/London", title: "London", subtitle:nil, color:nil),
       TimeZoneSelectionEntity(id: "Asia/Tokyo", title: "Tokyo", subtitle:nil, color:nil)
-      ]
+    ]
     return config
   }
   
@@ -230,7 +231,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
     return config
   }
   
-
+  
   
   static var parameterSummary: some ParameterSummary {
     Switch(\.$content) {
@@ -247,7 +248,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           
         }
       }
-
+      
       
       Case(DisplayedContent.reminders) {
         Summary {
@@ -261,7 +262,7 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           
         }
       }
-
+      
       Case(DisplayedContent.timezones) {
         Summary {
           \.$content
@@ -286,13 +287,13 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
           \.$accentColor
         }
       }
-
+      
       DefaultCase {
         Summary {
           \.$content
         }
       }
     }
-
+    
   }
 }

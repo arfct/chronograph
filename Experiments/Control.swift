@@ -10,7 +10,7 @@ import SwiftUI
 import WidgetKit
 
 struct widgetControl: ControlWidget {
-    static let kind: String = "com.blacktree.txet.widget"
+    static let kind: String = "com.artifact.chronograph.widget"
 
     var body: some ControlWidgetConfiguration {
         AppIntentControlConfiguration(
