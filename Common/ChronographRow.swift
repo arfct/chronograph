@@ -130,7 +130,7 @@ struct TimeZoneRowView: View {
       .foregroundColor(isLikelySleeping ? .secondary : .primary)
 //        .foregroundStyle(daylightGradient)
       
-      Text(entry.title ?? "Timezone")
+      Text((entry.title ?? "Timezone").apply(config.brailleMode ? braille : nil))
         .font(config.font)
         .foregroundColor(isLikelySleeping ? .secondary : .primary)
         .italic(isLikelySleeping)
@@ -166,6 +166,7 @@ struct RowViewConfig {
   var defaultCalendar: EKCalendar? = nil
   var defaultRemindersList: EKCalendar? = nil
   var compactTime: Bool = false
+  var brailleMode: Bool = false
   var tokenize: Bool = false
   var widthIsLimited: Bool = false
   var heightIsLimited: Bool = false
@@ -369,7 +370,7 @@ struct TimeStringView: View {
             
           }
         } else {
-          Text("\(hour):\(minute)")
+          Text("\(hour)\(config.brailleMode ? "" : ":")\(minute)".apply(config.brailleMode ? braille : nil))
             .font(config.font.monospacedDigit())
             .kerning(-0.5)
         }
@@ -400,6 +401,9 @@ struct EventRowView: View {
   let entry: EventEntry
   let config: RowViewConfig
   
+  
+  @Environment(\.widgetRenderingMode) var widgetRenderingMode
+  
   var body: some View {
     let (hour, minute, ampm) = event.date.formattedHourAndMinute()
     
@@ -426,7 +430,9 @@ struct EventRowView: View {
 //                  "\ncid:", event.calendarItemExternalIdentifier ?? "",
 //                  "\ndid:", event.eventIdentifier)
     
-    let title = (event.title.count > 0 ? event.title : nil) ?? "Untitled"
+    var titleString = (event.title.count > 0 ? event.title : nil) ?? "Untitled"
+    let title = config.brailleMode ? convertToBraille(titleString) : titleString
+    
     
     HStack(alignment: .top, spacing:config.columnSpacing) {
       VStack(spacing: 0) {
@@ -435,7 +441,7 @@ struct EventRowView: View {
             
           } else {
             TimeStringView(entry:entry, config:config)
-              .foregroundColor(.secondary)
+              .foregroundColor(widgetRenderingMode == .fullColor ? .secondary : .primary)
               .widgetAccentable(true)
           }
         }
@@ -461,7 +467,7 @@ struct EventRowView: View {
               TokenizedTextView(text:remaining, font:config.font, tokenFont:config.font)
             } else {
               HStack(alignment: .center, spacing:1) {
-                Text(remaining)
+                Text("\(remaining)")
                 if emoji.count > 0 {
                   Text(emoji)
                     .font(config.smallFont)
@@ -488,6 +494,7 @@ struct EventRowView: View {
               .imageScale(.small)
               .font(config.font)
               .foregroundColor(color)
+            
               .widgetAccentable()
             
               .layoutPriority(1)
@@ -519,7 +526,7 @@ struct EventRowView: View {
                     }
                     .buttonStyle(.plain)
                   }
-                  Text("\(locations.joined(separator: ", "))")
+                  Text("\(locations.joined(separator: ", "))".apply(config.brailleMode ? braille : nil))
                     .foregroundStyle(.secondary)
                     .italic()
                 }
@@ -573,6 +580,7 @@ struct ReminderRowView: View {
   let reminder: EKReminder
   let entry: EventEntry
   let config: RowViewConfig
+  @Environment(\.widgetRenderingMode) var widgetRenderingMode
   
   var body: some View {
     let hoursAway = Double(entry.startDate?.timeIntervalSince(config.entry.date) ?? 0.0) / 60.0 / 60.0
@@ -593,7 +601,7 @@ struct ReminderRowView: View {
       if (!config.widthIsLimited) {
         if (timeIsVisible) {
           TimeStringView(entry:entry, config:config)
-            .foregroundColor(.secondary)
+            .foregroundColor(widgetRenderingMode == .fullColor ? .secondary : .primary)
             .widgetAccentable(true)
             .frame(minWidth:config.keyline, alignment: .trailing)
         } else {
@@ -621,7 +629,7 @@ struct ReminderRowView: View {
             if (config.tokenize) {
               Text(reminder.title ?? "No Title")
             } else {
-              Text(reminder.title)
+              Text(reminder.title.apply(config.brailleMode ? braille : nil))
             }
           }
           .font(config.font)
@@ -638,12 +646,12 @@ struct ReminderRowView: View {
           let dueDate = components.date
           if components.hour != nil {
             
-            Text(relativeDateFormatter.string(for: dueDate) ?? "due")
+            Text((relativeDateFormatter.string(for: dueDate) ?? "due").apply(config.brailleMode ? braille : nil))
               .foregroundColor(.secondary)
               .font(config.font)
             
           } else if (config.entry.configuration.content == .reminders ){ // allDay
-            Text(relativeDateFormatterDay.string(for: dueDate) ?? "due")
+            Text((relativeDateFormatterDay.string(for: dueDate) ?? "due").apply(config.brailleMode ? braille : nil))
               .foregroundColor(.secondary)
               .font(config.font)
             
@@ -694,7 +702,7 @@ struct FreeRowView: View {
         .frame(minWidth:config.fontSize)
       }
       
-      Text(entry.title ?? "Free")
+      Text((entry.title ?? "Free").apply(config.brailleMode ? braille : nil))
         .font(config.smallFont)
         .italic()
         .foregroundColor(.secondary)
@@ -729,6 +737,19 @@ struct ErrorRowView: View {
   }
 }
 
+extension String {
+  func apply(_ transform: ((String) -> String)? = nil) -> String {
+    if let transform = transform {
+      return transform(self)
+    }
+    return self
+  }
+}
+
+func braille(_ string: String) -> String {
+  return convertToBraille(string)
+}
+
 struct HeaderRowView: View {
   let entry: EventEntry
   let config: RowViewConfig
@@ -736,7 +757,7 @@ struct HeaderRowView: View {
   
   var body: some View {
     let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
+    let opacity = 1.0 // max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
     
     
     
@@ -749,7 +770,7 @@ struct HeaderRowView: View {
           ForEach(visibleItems) { item in
             if let title = item.item?.title {
               let (emoji, remaining) = extractEmoji(from: title)
-              Text(sanitizeAllDayEvents(remaining))
+              Text(sanitizeAllDayEvents(remaining).apply(config.brailleMode ? braille : nil))
                 .font(config.smallFont)
                 .foregroundColor(Color.secondary)
                 .lineLimit(1)
@@ -786,12 +807,12 @@ struct HeaderRowView: View {
     {
       
       let dayName =
-      Text(shortDayName)
+      Text(shortDayName.apply(config.brailleMode ? braille : nil))
         .font(config.smallFont)
         .textCase(.uppercase)
         .lineLimit(1)
         .kerning(1)
-        .monospaced()
+        
         .widgetAccentable()
         .frame(minWidth:config.widthIsLimited ? config.keyline : 0, alignment:.trailing)
       
@@ -830,6 +851,7 @@ struct HeaderRowView: View {
           
           VStack() {
             dayName
+              .font(config.smallFont)
           }.frame(minWidth:config.keyline, alignment:.trailing)
           
           if (!config.widthIsLimited) {

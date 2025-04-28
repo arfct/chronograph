@@ -4,11 +4,18 @@ import AppIntents
 import EventKit
 
 struct ContentView: View {
+  @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName))
+  private var brailleMode = false
+
   var body: some View {
     
     ScrollView {
       
       VStack {
+        Toggle(isOn: $brailleMode) {
+          Text("Braille Mode")
+        }
+        
       Image("Wordmark")
         .resizable()
         .aspectRatio(contentMode: .fit)

@@ -37,6 +37,7 @@ struct ChronographWidgetView : View {
   @Environment(\.widgetFamily) var widgetFamily
   @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
+  @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName)) private var brailleMode = false
   @AppStorage(Keys.fullBleed, store: UserDefaults(suiteName: Keys.suiteName)) private var wantsFullBleed = true
   
 //  @AppStorage("KEY", store: UserDefaults(suiteName: Keys.suiteName)) private var defaultValueTest1 = "test1"
@@ -183,10 +184,13 @@ struct ChronographWidgetView : View {
       config.heightIsLimited = heightIsLimited
       
       let design = designForFontStyle(entry.configuration.fontStyle)
-      config.font = Font.system(size: config.fontSize, design: design).width(.standard)
-      config.smallFont = Font.system(size: config.fontSize * 0.66, design: design).weight(.semibold)
+      
+      config.font = brailleMode ? Font.custom("Ishihara", size: config.fontSize) :
+      Font.system(size: config.fontSize, design: design).width(.standard)
+      config.smallFont =  brailleMode ? Font.custom("Ishihara", size: config.fontSize) :
+      Font.system(size: config.fontSize * 0.66, design: design).weight(.semibold)
       config.smallLineHeight = config.lineHeight * 0.66
-      config.smallFontSize = config.fontSize * 0.66
+      config.smallFontSize = config.fontSize * (brailleMode ? 1.0 : 0.66)
       
       switch entry.configuration.fontStyle {
       case .compressed, .condensed:
@@ -200,7 +204,8 @@ struct ChronographWidgetView : View {
       config.defaultCalendar = eventStore.defaultCalendarForNewEvents
       // TODO: Infer default from number of events
       config.defaultRemindersList = eventStore.defaultCalendarForNewReminders()
-      config.compactTime = compactTime
+      config.compactTime = compactTime && !brailleMode
+      config.brailleMode = brailleMode
       config.tokenize = tokenize
       config.showTimeBars = entry.configuration.features.contains(.timeBars) && !widthIsLimited
       return config
@@ -331,14 +336,73 @@ let widgetFamilies: [WidgetFamily] = [
 struct ChronographWidget: Widget {
   let kind: String = "calendar"
   var body: some WidgetConfiguration {
-    let configuration = AppIntentConfiguration(
+    AppIntentConfiguration(
       kind: kind,
       intent: ConfigurationIntent.self,
-      provider: TimelineProvider()) { ChronographWidgetView(entry: $0) }
+      provider: TimelineProvider(kind: kind)) { ChronographWidgetView(entry: $0) }
       .contentMarginsDisabled()
-      .configurationDisplayName("Events + Reminders")
-      .description("A text view of events or reminders")
+      .configurationDisplayName("Calendar")
+//      .description("A text view of events or reminders")
       .supportedFamilies(widgetFamilies)
-    return configuration
+#if os(iOS)
+      .disfavoredLocations([.homeScreen], for: [.systemSmall, .systemLarge, .systemExtraLarge])
+#endif
+  }
+}
+
+struct RemindersWidget: Widget {
+  let kind: String = "reminders"
+  var body: some WidgetConfiguration {
+    AppIntentConfiguration(
+      kind: kind,
+      intent: ConfigurationIntent.self,
+      provider: TimelineProvider(kind: kind)) {
+        ChronographWidgetView(entry: $0)
+      }
+      .contentMarginsDisabled()
+      .configurationDisplayName("Reminders")
+//      .description("A text view of events or reminders")
+      .supportedFamilies(widgetFamilies)
+#if os(iOS)
+      .disfavoredLocations([.homeScreen], for: [.systemSmall, .systemLarge, .systemExtraLarge])
+#endif
+  }
+}
+
+struct TimezonesWidget: Widget {
+  let kind: String = "timezones"
+  var body: some WidgetConfiguration {
+    AppIntentConfiguration(
+      kind: kind,
+      intent: ConfigurationIntent.self,
+      provider: TimelineProvider(kind: kind)) {
+        ChronographWidgetView(entry: $0)
+      }
+      .contentMarginsDisabled()
+      .configurationDisplayName("Timezones")
+//      .description("A text view of timezones")
+      .supportedFamilies(widgetFamilies)
+#if os(iOS)
+      .disfavoredLocations([.homeScreen], for: [.systemSmall, .systemLarge, .systemExtraLarge])
+#endif
+  }
+}
+
+struct WeatherWidget: Widget {
+  let kind: String = "weather"
+  var body: some WidgetConfiguration {
+    AppIntentConfiguration(
+      kind: kind,
+      intent: ConfigurationIntent.self,
+      provider: TimelineProvider(kind: kind)) {
+        ChronographWidgetView(entry: $0)
+      }
+      .contentMarginsDisabled()
+      .configurationDisplayName("Weather")
+//      .description("A text view of weather")
+      .supportedFamilies(widgetFamilies)
+#if os(iOS)
+      .disfavoredLocations([.homeScreen], for: [.systemSmall, .systemLarge, .systemExtraLarge])
+#endif
   }
 }

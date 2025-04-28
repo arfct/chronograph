@@ -21,6 +21,7 @@ struct ClockWidget: Widget {
     .supportedFamilies([
       .systemSmall,
     ])
+    .disfavoredLocations([.lockScreen, .homeScreen], for: [.systemSmall])
   }
 }
 

@@ -9,5 +9,9 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Ishihara-Regular.otf</string>
+	</array>
 </dict>
 </plist>

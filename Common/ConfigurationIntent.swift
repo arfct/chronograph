@@ -96,7 +96,28 @@ enum WidgetViewOptions: String, AppEnum {
 }
 
 
-
+struct RemindersConfigurationIntent: WidgetConfigurationIntent {
+  static var title: LocalizedStringResource = "Configuration"
+  static var description = IntentDescription("Reminders")
+  
+  @Parameter(title: "Lists", default: [])
+  var reminders: [ReminderSelectionEntity]
+  
+  @Parameter(title: "View Options", default: [])
+  var viewOptions: [WidgetViewOptions]
+  
+  @Parameter(title: "Font Style", default: .normal)
+  var fontStyle: FontStyle
+  
+  @Parameter(title: "Font Size", default: .medium)
+  var fontSize: FontSize
+  
+  @Parameter(title: "Background (Hex)", description:"Hex", default: "")
+  var backgroundColor: String
+  
+  @Parameter(title: "Accent (Hex)", default: "")
+  var accentColor: String
+}
 
 struct ConfigurationIntent: WidgetConfigurationIntent {
   static var title: LocalizedStringResource = "Configuration"
@@ -134,10 +155,6 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   
   @Parameter(title: "Accent (Hex)", default: "")
   var accentColor: String
-  
-  
-  //  @Parameter(title: "Draw to Edges", default: false)
-  //  var fullBleed: Bool
   
   @Parameter(title: "Skip Pages", default: 0)
   var pageOffset: Int
@@ -232,68 +249,68 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
   }
   
   
-  
-  static var parameterSummary: some ParameterSummary {
-    Switch(\.$content) {
-      Case(DisplayedContent.calendar) {
-        Summary {
-          \.$content
-          \.$calendars
-          \.$features
-          \.$fontStyle
-          \.$fontSize
-          \.$viewOptions
-          \.$backgroundColor
-          \.$accentColor
-          
-        }
-      }
-      
-      
-      Case(DisplayedContent.reminders) {
-        Summary {
-          \.$content
-          \.$reminders
-          \.$fontStyle
-          \.$fontSize
-          \.$viewOptions
-          \.$backgroundColor
-          \.$accentColor
-          
-        }
-      }
-      
-      Case(DisplayedContent.timezones) {
-        Summary {
-          \.$content
-          \.$timezones
-          \.$fontStyle
-          \.$fontSize
-          \.$viewOptions
-          \.$backgroundColor
-          \.$accentColor
-        }
-      }
-      
-      
-      Case(DisplayedContent.weather) {
-        Summary {
-          \.$content
-          \.$weatherStyle
-          \.$fontStyle
-          \.$fontSize
-          \.$viewOptions
-          \.$backgroundColor
-          \.$accentColor
-        }
-      }
-      
-      DefaultCase {
-        Summary {
-          \.$content
-        }
-      }
-    }
+//  
+//  static var parameterSummary: some ParameterSummary {
+//    Switch(\.$content) {
+//      Case(DisplayedContent.calendar) {
+//        Summary {
+//          \.$content
+//          \.$calendars
+//          \.$features
+//          \.$fontStyle
+//          \.$fontSize
+//          \.$viewOptions
+//          \.$backgroundColor
+//          \.$accentColor
+//          
+//        }
+//      }
+//      
+//      
+//      Case(DisplayedContent.reminders) {
+//        Summary {
+//          \.$content
+//          \.$reminders
+//          \.$fontStyle
+//          \.$fontSize
+//          \.$viewOptions
+//          \.$backgroundColor
+//          \.$accentColor
+//          
+//        }
+//      }
+//      
+//      Case(DisplayedContent.timezones) {
+//        Summary {
+//          \.$content
+//          \.$timezones
+//          \.$fontStyle
+//          \.$fontSize
+//          \.$viewOptions
+//          \.$backgroundColor
+//          \.$accentColor
+//        }
+//      }
+//      
+//      
+//      Case(DisplayedContent.weather) {
+//        Summary {
+//          \.$content
+//          \.$weatherStyle
+//          \.$fontStyle
+//          \.$fontSize
+//          \.$viewOptions
+//          \.$backgroundColor
+//          \.$accentColor
+//        }
+//      }
+//      
+//      DefaultCase {
+//        Summary {
+//          \.$content
+//        }
+//      }
+//    }
     
-  }
+//  }
 }

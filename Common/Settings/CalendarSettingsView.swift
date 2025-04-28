@@ -89,6 +89,8 @@ struct CalendarSettingsView: View {
   private var tokenize = false
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName))
   private var compactTime = true
+  @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName))
+  private var brailleMode = false
   @AppStorage(Keys.enabledCalendars, store: UserDefaults(suiteName: Keys.suiteName))
   private var selectedCalendarIds: [String] = []
   @State private var calendars: [EKCalendar] = []
@@ -107,6 +109,9 @@ struct CalendarSettingsView: View {
           }
           Toggle(isOn: $compactTime) {
             Text("Compact Time")
+          }
+          Toggle(isOn: $brailleMode) {
+            Text("Braille Mode")
           }
         }
         

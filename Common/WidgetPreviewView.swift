@@ -4,10 +4,11 @@ import AppIntents
 import EventKit
 struct WidgetPreviewView: View {
   var config: ConfigurationIntent
+  let kind: String = "calendar"
   var eventStore = EKEventStore()
   func reloadTimeline()  {
     Task {
-      timeline = await TimelineProvider().timeline(for: config)
+      timeline = await TimelineProvider(kind:kind).timeline(for: config)
     }
   }
   @State private var timeline: Timeline<CalendarTimelineEntry>?
@@ -68,8 +69,22 @@ struct WidgetPreviewView: View {
 }
 
 #Preview("Reminders", traits: .fixedLayout(width: 160, height: 160)) {
-  WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
-    .frame(minWidth:160, maxHeight: 160)
-    .border(.white)
-    .padding()
+  VStack {
+    WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
+      .frame(minWidth:160, maxHeight: 160)
+      .background(.regularMaterial)
+      .padding()
+    WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+      .frame(minWidth:160, maxHeight: 160)
+      .background(.regularMaterial)
+      .padding()
+    WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
+      .frame(minWidth:160, maxHeight: 160)
+      .background(.regularMaterial)
+      .padding()
+    WidgetPreviewView(config: ConfigurationIntent.weatherConfig)
+      .frame(minWidth:160, maxHeight: 160)
+      .background(.regularMaterial)
+      .padding()
+  }.background(.tertiary)
 }

@@ -231,6 +231,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		2C12D5502DA1532800EA3DBE /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
 		2CD091462D29D12800563241 /* Common */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CD091AD2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091AE2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091AF2D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091B02D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD091B12D29D12800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Common; sourceTree = "<group>"; };
 		2CD091BE2D29D12C00563241 /* Extensions */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Extensions; sourceTree = "<group>"; };
 		2CD0921F2D29D16800563241 /* iOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CD092282D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD092292D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD0922A2D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2CD0922B2D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = iOS; sourceTree = "<group>"; };
@@ -315,6 +316,7 @@
 				2CD0921F2D29D16800563241 /* iOS */,
 				2CD092372D29D18300563241 /* Watch */,
 				2CD0924A2D29D19700563241 /* Mac */,
+				2C12D5502DA1532800EA3DBE /* Resources */,
 				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
 				2C41B9C42C56BDAB007D4519 /* Packages */,
@@ -364,6 +366,7 @@
 				2C6BA3402C1B6ABC00F22C21 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				2C12D5502DA1532800EA3DBE /* Resources */,
 				2CD091462D29D12800563241 /* Common */,
 				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
@@ -387,6 +390,7 @@
 				2C6BA3242C1B6A9700F22C21 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				2C12D5502DA1532800EA3DBE /* Resources */,
 				2CD091462D29D12800563241 /* Common */,
 				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
@@ -408,6 +412,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				2C12D5502DA1532800EA3DBE /* Resources */,
 				2CD091462D29D12800563241 /* Common */,
 				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
@@ -429,6 +434,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				2C12D5502DA1532800EA3DBE /* Resources */,
 				2CD091462D29D12800563241 /* Common */,
 				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
@@ -452,6 +458,7 @@
 				2C72C0802C3F857E00AB3A1A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				2C12D5502DA1532800EA3DBE /* Resources */,
 				2CD091462D29D12800563241 /* Common */,
 				2CD091BE2D29D12C00563241 /* Extensions */,
 			);
@@ -473,6 +480,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				2C12D5502DA1532800EA3DBE /* Resources */,
 				2CD091462D29D12800563241 /* Common */,
 				2CD091BE2D29D12C00563241 /* Extensions */,
 			);

@@ -5,8 +5,11 @@ import SwiftUI
 struct widgetBundle: WidgetBundle {
   var body: some Widget {
     ChronographWidget()
-    #if os(iOS)
+    RemindersWidget()
+    TimezonesWidget()
+    WeatherWidget()
+#if os(iOS)
     ClockWidget()
-          #endif
+#endif
   }
 }

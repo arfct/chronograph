@@ -8,13 +8,14 @@ struct Keys {
 
   static let tokenizeParens = "tokenizeParens"
   static let compactTime = "compactTime"
+  static let brailleMode = "brailleMode"
   static let hideIntroduction = "hideIntroduction"
 
   static let fullBleed = "fullBleed"
   static let selectedTab = "selectedTab"
   
   static let enabledCalendars = "enabledCalendars"
-  
+  static let enabledReminders = "enabledReminders"
   static let favoriteTimezones = "favoriteTimezones"
   
   // View options

@@ -17,12 +17,16 @@ struct CalendarTimelineEntry: TimelineEntry {
 
 
 struct TimelineProvider: AppIntentTimelineProvider {
+  let kind: String
   
   @AppStorage("state")
   private var state = false
   
   @AppStorage(Keys.enabledCalendars, store: UserDefaults(suiteName: Keys.suiteName))
   private var selectedCalendarIds: [String] = []
+  
+  @AppStorage(Keys.enabledReminders, store: UserDefaults(suiteName: Keys.suiteName))
+  private var selectedReminderIds: [String] = []
   
   var weatherManager = WeatherLocationManager()
   var eventStore = EKEventStore()
@@ -141,7 +145,12 @@ struct TimelineProvider: AppIntentTimelineProvider {
     var reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
     let scheduledReminders = await fetchScheduledReminders(configuration: configuration, startDate: startDate, endDate: endDate)
     
-    reminderEntries.removeAll(where: {scheduledReminders.firstIndex(of:$0.item as! EKReminder) != nil})
+    reminderEntries.removeAll(where: { item in
+        if let reminder = item.item as? EKReminder {
+            return scheduledReminders.firstIndex(of: reminder) != nil
+        }
+        return false
+    })
     
     let events = await fetchEvents(configuration: configuration, startDate: startDate, endDate: endDate)
     
@@ -613,7 +622,11 @@ struct TimelineProvider: AppIntentTimelineProvider {
   private func fetchReminders(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EventEntry] {
     guard configuration.content == .reminders else { return [] }
     
-    let reminderIDs = configuration.reminders.map({$0.id})
+    var reminderIDs = configuration.reminders.map({$0.id})
+    if (reminderIDs.count == 0) {
+      reminderIDs = selectedReminderIds
+      print("REMINDERS \(reminderIDs)")
+    }
     let calendars: [EKCalendar] = reminderIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
     let reminderPredicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: calendars)
     
