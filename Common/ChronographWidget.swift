@@ -205,7 +205,7 @@ struct ChronographWidgetView : View {
       // TODO: Infer default from number of events
       config.defaultRemindersList = eventStore.defaultCalendarForNewReminders()
       config.compactTime = compactTime && !brailleMode
-      config.brailleMode = brailleMode
+      config.brailleMode = false
       config.tokenize = tokenize
       config.showTimeBars = entry.configuration.features.contains(.timeBars) && !widthIsLimited
       return config
