@@ -12,9 +12,7 @@ struct ContentView: View {
     ScrollView {
       
       VStack {
-        Toggle(isOn: $brailleMode) {
-          Text("Braille Mode")
-        }
+       
         
       Image("Wordmark")
         .resizable()
@@ -32,6 +30,9 @@ struct ContentView: View {
       .padding(.bottom, 16)
       .background(.white.opacity(0.1))
       
+      Toggle(isOn: $brailleMode) {
+        Text("Braille Mode")
+      }
       
       VStack(spacing:10) {
         if EKEventStore.authorizationStatus(for: .event) == .fullAccess {

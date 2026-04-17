@@ -8,5 +8,9 @@
 	<string>Show calender events in a widget</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>Show reminders in a widget</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Ishihara-Regular.otf</string>
+	</array>
 </dict>
 </plist>

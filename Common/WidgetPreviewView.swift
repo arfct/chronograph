@@ -22,7 +22,11 @@ struct WidgetPreviewView: View {
     }
     .clipped()
     .frame(maxWidth:.infinity)
+    
+#if !os(watchOS)
     .padding(28)
+#endif
+    
     .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged, object: eventStore)) {
       (output) in
       
