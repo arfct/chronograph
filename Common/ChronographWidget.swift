@@ -339,7 +339,10 @@ struct ChronographWidget: Widget {
     AppIntentConfiguration(
       kind: kind,
       intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) { ChronographWidgetView(entry: $0) }
+      provider: TimelineProvider(kind: kind)) { ChronographWidgetView(entry: $0)
+          
+              .containerBackground(.clear, for: .widget)
+      }
       .contentMarginsDisabled()
       .configurationDisplayName("Calendar")
 //      .description("A text view of events or reminders")

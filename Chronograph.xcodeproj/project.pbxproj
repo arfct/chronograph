@@ -174,9 +174,13 @@
 		};
 		2CD092292D29D16800563241 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			additionalCompilerFlagsByRelativePath = {
+				Widget/FooObject.mm = "-fno-objc-arc";
+			};
 			membershipExceptions = (
 				Widget/Assets.xcassets,
 				Widget/Bundle.swift,
+				Widget/FooObject.mm,
 			);
 			target = 2C6BA32D2C1B6ABB00F22C21 /* Widget-ios */;
 		};

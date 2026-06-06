@@ -71,7 +71,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCWidgetKind"
-            value = "clock"
+            value = "calendar"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
