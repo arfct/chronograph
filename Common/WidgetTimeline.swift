@@ -316,10 +316,6 @@ struct TimelineEngine {
   private func upcomingWeatherEntries(weather: Weather, location: String?) -> [EventEntry] {
     var entries: [EventEntry] = []
 
-    let now = Date()
-    let in24Hr = Date().addingTimeInterval(24 * 60 * 60)
-    let forecast = weather.currentWeather
-
     let eventEntry = EventEntry(type: "weather",
                                 title:"Weather",
                                 startDate: weather.currentWeather.date,
@@ -335,32 +331,14 @@ struct TimelineEngine {
 //      UpcomingWeatherRow(date: Date(), temp: forecast.apparentTemperature, image: Image(systemName:forecast.symbolName), description: forecast.condition.description, config: config)
 
     let todayForecast = weather.dailyForecast.first
-    let tommorowForecast = weather.dailyForecast.first { $0.date > Date()}
 
-    let _ = print (weather.hourlyForecast.map({$0.date}))
     let rainForecast = weather.hourlyForecast.first { hour in
       hour.precipitationChance > 0.5 && hour.date > Date()
       // TODO: Also check minute forecasts.
     }
 
-    let sunrise = weather.dailyForecast.first?.sun.sunrise
-    let sunriseForecast = weather.hourlyForecast.first { hour in
-      hour.isDaylight
-    }
-
-    if let forecast = sunriseForecast {
-      EventEntry(type: "weather",
-                 title:"Sunrise",
-                 startDate: forecast.date,
-                 endDate: forecast.date.addingTimeInterval(3600),
-                 hourForecast: forecast
-                )
-    }
-
-
-
     if let highTempTime = todayForecast?.highTemperatureTime,
-       let highTemp = todayForecast?.highTemperature {
+       let _ = todayForecast?.highTemperature {
       let hourForecast = weather.hourlyForecast.last(where: {$0.date < highTempTime})
       entries.append(
         EventEntry(type: "weather",
@@ -376,7 +354,7 @@ struct TimelineEngine {
     }
 
     if let lowTempTime = todayForecast?.lowTemperatureTime,
-       let lowTemp = todayForecast?.lowTemperature {
+       let _ = todayForecast?.lowTemperature {
       let hourForecast = weather.hourlyForecast.last(where: {$0.date < lowTempTime})
       entries.append(
         EventEntry(type: "weather",
@@ -440,7 +418,6 @@ struct TimelineEngine {
 
 
     entries.sort(by: { $0.startDate ?? .distantPast < $1.startDate ?? .distantPast })
-    print("entries", entries.map({$0.title}))
     return entries
   }
 
