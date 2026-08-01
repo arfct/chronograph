@@ -60,7 +60,7 @@ struct ChronographWidgetView : View {
   private var fontSize: CGFloat = 16.0
   
   let textStyle: UIFont.TextStyle
-  var entry: TimelineProvider.Entry
+  var entry: CalendarTimelineEntry
   var context: TimelineProviderContext?
   
   func designForFontStyle(_ style: FontStyle) -> Font.Design {
@@ -73,10 +73,10 @@ struct ChronographWidgetView : View {
   }
   
   // MARK: init
-  init(entry: TimelineProvider.Entry) {
+  init(entry: CalendarTimelineEntry) {
     self.entry = entry
     self.context = entry.context
-    self.textStyle = FontSize.caseSize[entry.configuration.fontSize] ?? .body
+    self.textStyle = FontSize.caseSize[entry.config.fontSize] ?? .body
     
     let widgetFamily = context?.family
     
@@ -99,9 +99,9 @@ struct ChronographWidgetView : View {
     
     
 #if os(macOS)
-    self.fullBleed = entry.configuration.features.contains(.fullBleed)
+    self.fullBleed = entry.config.viewOptions.contains(.fullBleed)
 #else
-    self.fullBleed = widgetFamily == .accessoryRectangular || entry.configuration.viewOptions.contains(.fullBleed)
+    self.fullBleed = widgetFamily == .accessoryRectangular || entry.config.viewOptions.contains(.fullBleed)
 #endif
     
     let baseFont = UIFont.preferredFont(forTextStyle: textStyle)
@@ -110,7 +110,7 @@ struct ChronographWidgetView : View {
     self.fontSize = baseFont.pointSize
     
     
-    if let minLines = FontSize.caseMinLines[entry.configuration.fontSize],
+    if let minLines = FontSize.caseMinLines[entry.config.fontSize],
        let height = entry.context?.displaySize.height {
       self.lineHeight = min(self.lineHeight, height / CGFloat(minLines))
       self.fontSize = self.lineHeight * baseFont.pointSize / baseFont.lineHeight
@@ -127,7 +127,7 @@ struct ChronographWidgetView : View {
     _visibleItemCount = State(initialValue: visibleCount)
     
     
-    //    print("\n Init view \(widgetFamily).\(entry.configuration.content) \(shortTimeFormatter.string(from:entry.date)) ")
+    //    print("\n Init view \(widgetFamily).\(entry.config.content) \(shortTimeFormatter.string(from:entry.date)) ")
   }
   
   var defaults = UserDefaults.standard
@@ -165,25 +165,25 @@ struct ChronographWidgetView : View {
 //    }.hidden()
     
 
-    let content = entry.configuration.content
+    let content = entry.config.content
     let now = Date()
     
-    let backgroundColor = Color.withHex(entry.configuration.backgroundColor) ?? .clear
+    let backgroundColor = Color.withHex(entry.config.backgroundColor) ?? .clear
     
     let isDark = backgroundColor == .clear ? colorScheme == .dark : backgroundColor.isDark()
     
     let row = {
-      var config = RowViewConfig(entry: entry)
+      var config = RowViewConfig(widget: entry.config, date: entry.date)
       config.fontSize = fontSize
       config.lineHeight = lineHeight
-      config.accentColor = entry.configuration.accentColor.count > 0 ?
-      Color.withHex(entry.configuration.accentColor) : .secondary
+      config.accentColor = entry.config.accentColor.count > 0 ?
+      Color.withHex(entry.config.accentColor) : .secondary
       config.colorScheme = isDark ? .dark : .light
       config.keyline = config.fontSize * (compactTime ? 2.25 : 2.6)
       config.widthIsLimited = widthIsLimited
       config.heightIsLimited = heightIsLimited
       
-      let design = designForFontStyle(entry.configuration.fontStyle)
+      let design = designForFontStyle(entry.config.fontStyle)
       
       config.font = brailleMode ? Font.custom("Ishihara", size: config.fontSize) :
       Font.system(size: config.fontSize, design: design).width(.standard)
@@ -192,7 +192,7 @@ struct ChronographWidgetView : View {
       config.smallLineHeight = config.lineHeight * 0.66
       config.smallFontSize = config.fontSize * (brailleMode ? 1.0 : 0.66)
       
-      switch entry.configuration.fontStyle {
+      switch entry.config.fontStyle {
       case .compressed, .condensed:
         config.font = config.font.width(.compressed)
         config.smallFont = config.smallFont.width(.compressed)
@@ -207,7 +207,7 @@ struct ChronographWidgetView : View {
       config.compactTime = compactTime && !brailleMode
       config.brailleMode = false
       config.tokenize = tokenize
-      config.showTimeBars = entry.configuration.features.contains(.timeBars) && !widthIsLimited
+      config.showTimeBars = entry.config.features.contains(.timeBars) && !widthIsLimited
       return config
     }()
     
@@ -221,10 +221,10 @@ struct ChronographWidgetView : View {
     var items: [EventEntry] = []
     let _ = items.append(contentsOf: entry.timezones)
     let _ = items.append(contentsOf: entry.events)
-    let _ = items.append(contentsOf: entry.reminders.prefix(entry.configuration.content == .calendar ? (visibleItemCount / 2) : visibleItemCount))
+    let _ = items.append(contentsOf: entry.reminders.prefix(entry.config.content == .calendar ? (visibleItemCount / 2) : visibleItemCount))
     let filteredItems = items.filter { $0.isVisible() }
     
-    let offsetCount = entry.configuration.pageOffset * visibleItemCount
+    let offsetCount = entry.config.pageOffset * visibleItemCount
     let clippedItems: [EventEntry] = Array(items[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
     let index = clippedItems.lastIndex { $0.removeIfOrphaned != true}
     let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
@@ -286,7 +286,7 @@ struct ChronographWidgetView : View {
     }
     
       .containerBackground(.clear, for: .widget)
-    //    let _ = print("Rendered \(widgetFamily).\(entry.configuration.content) for \(shortTimeFormatter.string(from:entry.date)) \(visibleItemCount) in \(round(-now.timeIntervalSinceNow * 1000))ms")
+    //    let _ = print("Rendered \(widgetFamily).\(entry.config.content) for \(shortTimeFormatter.string(from:entry.date)) \(visibleItemCount) in \(round(-now.timeIntervalSinceNow * 1000))ms")
   }
   
   private func updateVisibleRows(with rowMaxY: [CGFloat], containerHeight: CGFloat) {
@@ -338,9 +338,9 @@ struct ChronographWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) { ChronographWidgetView(entry: $0)
-          
+      intent: CalendarWidgetIntent.self,
+      provider: ChronographTimelineProvider<CalendarWidgetIntent>()) { ChronographWidgetView(entry: $0)
+
               .containerBackground(.clear, for: .widget)
       }
       .contentMarginsDisabled()
@@ -358,8 +358,8 @@ struct RemindersWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) {
+      intent: RemindersWidgetIntent.self,
+      provider: ChronographTimelineProvider<RemindersWidgetIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()
@@ -377,8 +377,8 @@ struct TimezonesWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) {
+      intent: TimezonesWidgetIntent.self,
+      provider: ChronographTimelineProvider<TimezonesWidgetIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()
@@ -396,8 +396,8 @@ struct WeatherWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) {
+      intent: WeatherWidgetIntent.self,
+      provider: ChronographTimelineProvider<WeatherWidgetIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()

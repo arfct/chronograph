@@ -165,7 +165,7 @@ struct ChronographTabView: View {
       Tab(value:Values.calendarTab) {
         if (eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess) {
           NavigationStack {
-            WidgetPreviewView(config: ConfigurationIntent.appComboConfig)
+            WidgetPreviewView(config: .appCombo)
               .background(.regularMaterial)
               .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -192,7 +192,7 @@ struct ChronographTabView: View {
       Tab(value: Values.reminderTab) {
         if (remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess) {
           NavigationStack {
-            WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+            WidgetPreviewView(config: .reminders)
               .background(.regularMaterial)
               .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -218,7 +218,7 @@ struct ChronographTabView: View {
       
       Tab(value:Values.timezoneTab) {
           NavigationStack {
-            WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
+            WidgetPreviewView(config: .timezones)
               .background(.regularMaterial)
               .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -242,7 +242,7 @@ struct ChronographTabView: View {
       Tab(value:Values.weatherTab) {
         if locationAccessGranted || LocationManager().isAuthorized {
           NavigationStack {
-            WidgetPreviewView(config: ConfigurationIntent.weatherCurrentConfig)
+            WidgetPreviewView(config: .weatherCurrent)
               .background(.regularMaterial)
               .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {

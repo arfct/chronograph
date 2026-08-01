@@ -153,7 +153,8 @@ struct TimeZoneRowView: View {
 
 
 struct RowViewConfig {
-  var entry: TimelineProvider.Entry
+  var widget: WidgetConfig
+  var date: Date = Date()
   var font: Font = .system(size: 14)
   var smallFont: Font = .system(size: 12)
   var fontSize: CGFloat = 14
@@ -302,10 +303,7 @@ struct CurrentWeatherRowView: View {
   let config: RowViewConfig
 
   var body: some View {
-    let currentMinute = weather.minuteForecast?.first(where: { $0.date > Date() })
-    
-    if let date = entry.startDate {
-      let (hour, minute, ampm) = date.formattedHourAndMinute()
+    if entry.startDate != nil {
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
           Text("NOW").font(config.smallFont.monospacedDigit())
@@ -408,12 +406,12 @@ struct EventRowView: View {
     let (hour, minute, ampm) = event.date.formattedHourAndMinute()
     
     
-    let color = config.entry.configuration.viewOptions.contains(.showColors)
+    let color = config.widget.viewOptions.contains(.showColors)
     ? event.color?.forScheme(scheme: config.colorScheme)
     : config.accentColor
     
     
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.entry.date) ?? 0.0) / 60.0 / 60.0
+    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.date) ?? 0.0) / 60.0 / 60.0
     let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
     
     let isHappening = entry.isHappening()
@@ -583,7 +581,7 @@ struct ReminderRowView: View {
   @Environment(\.widgetRenderingMode) var widgetRenderingMode
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.entry.date) ?? 0.0) / 60.0 / 60.0
+    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.date) ?? 0.0) / 60.0 / 60.0
     let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
     
     HStack(alignment:.center, spacing: config.columnSpacing) {
@@ -650,7 +648,7 @@ struct ReminderRowView: View {
               .foregroundColor(.secondary)
               .font(config.font)
             
-          } else if (config.entry.configuration.content == .reminders ){ // allDay
+          } else if (config.widget.content == .reminders ){ // allDay
             Text((relativeDateFormatterDay.string(for: dueDate) ?? "due").apply(config.brailleMode ? braille : nil))
               .foregroundColor(.secondary)
               .font(config.font)

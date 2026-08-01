@@ -3,12 +3,12 @@ import WidgetKit
 import AppIntents
 import EventKit
 struct WidgetPreviewView: View {
-  var config: ConfigurationIntent
+  var config: WidgetConfig
   let kind: String = "calendar"
   var eventStore = EKEventStore()
   func reloadTimeline()  {
     Task {
-      timeline = await TimelineProvider(kind:kind).timeline(for: config)
+      timeline = await TimelineEngine().timeline(config: config)
     }
   }
   @State private var timeline: Timeline<CalendarTimelineEntry>?
@@ -53,40 +53,39 @@ struct WidgetPreviewView: View {
 }
 
 #Preview("Calendar") {
-  var config = ConfigurationIntent.comboConfig
-  var testConfig: ConfigurationIntent {
-    let config = ConfigurationIntent()
-    config.content = .calendar
-    config.calendars = []
-    config.fontStyle = .normal
-    config.fontSize = .tiny
-    config.accentColor = "#FF5500"
-    config.features = [.allDayEvents, .timeBars, .weather]
-    config.viewOptions = [.showColors]
-    return config
+  var config = WidgetConfig.combo
+  var testConfig: WidgetConfig {
+    var c = WidgetConfig.calendar
+    c.calendars = []
+    c.fontStyle = .normal
+    c.fontSize = .tiny
+    c.accentColor = "#FF5500"
+    c.features = [.allDayEvents, .timeBars, .weather]
+    c.viewOptions = [.showColors]
+    return c
   }
-  
+
   WidgetPreviewView(config: testConfig)
     .frame(minWidth:240, maxHeight: 555)
     .padding()
-  
+
 }
 
 #Preview("Reminders", traits: .fixedLayout(width: 160, height: 160)) {
   VStack {
-    WidgetPreviewView(config: ConfigurationIntent.calendarConfig)
+    WidgetPreviewView(config: .calendar)
       .frame(minWidth:160, maxHeight: 160)
       .background(.regularMaterial)
       .padding()
-    WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+    WidgetPreviewView(config: .reminders)
       .frame(minWidth:160, maxHeight: 160)
       .background(.regularMaterial)
       .padding()
-    WidgetPreviewView(config: ConfigurationIntent.timezonesConfig)
+    WidgetPreviewView(config: .timezones)
       .frame(minWidth:160, maxHeight: 160)
       .background(.regularMaterial)
       .padding()
-    WidgetPreviewView(config: ConfigurationIntent.weatherConfig)
+    WidgetPreviewView(config: .weatherCurrent)
       .frame(minWidth:160, maxHeight: 160)
       .background(.regularMaterial)
       .padding()
