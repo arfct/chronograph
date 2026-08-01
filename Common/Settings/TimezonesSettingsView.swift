@@ -27,7 +27,7 @@ struct TimezonesSettingsView: View {
   @State private var searchText = ""
   
   
-  @AppStorage(Keys.favoriteTimezones)
+  @AppStorage(Keys.favoriteTimezones, store: UserDefaults(suiteName: Keys.suiteName))
   private var favoriteTimezones: [String] = []
   
   var groupedTimezones: [String: [TimeZone]] {
@@ -115,26 +115,6 @@ struct TimezonesSettingsView: View {
       }
       .searchable(text: $searchText)
     }
-  }
-}
-
-struct TimeZoneSelectionView: View {
-  @State private var searchText = ""
-  
-  var filteredTimeZones: [TimeZone] {
-    let allTimeZones = TimeZone.knownTimeZoneIdentifiers.map { TimeZone(identifier: $0)! }
-    if searchText.isEmpty {
-      return allTimeZones
-    }
-    return allTimeZones.filter { $0.identifier.localizedCaseInsensitiveContains(searchText) }
-  }
-  
-  var body: some View {
-    List(filteredTimeZones, id: \.identifier) { timezone in
-      Text(timezone.identifier)
-    }
-    .navigationTitle("Time Zone")
-    .searchable(text: $searchText)
   }
 }
 

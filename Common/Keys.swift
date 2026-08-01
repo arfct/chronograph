@@ -17,14 +17,14 @@ struct Keys {
   static let enabledCalendars = "enabledCalendars"
   static let enabledReminders = "enabledReminders"
   static let favoriteTimezones = "favoriteTimezones"
+
+  // Weather
+  static let weatherUseCurrentLocation = "weatherUseCurrentLocation"
+  static let weatherZipCode = "weatherZipCode"
+  static let cachedWeatherPrefix = "cachedWeather."
+  static let geocodedZipPrefix = "geocodedZip."
+  static let lastKnownLocation = "lastKnownLocation"
   
-  // View options
-  static let foregroundColor = "foregroundColor"
-  static let backgroundColor = "backgroundColor"
-  static let fontSize = "fontSize"
-  static let fontStyle = "fontStyle"
-  static let multicolor = "multicolor"
-  static let padding = "padding"
 }
 
 struct Values {

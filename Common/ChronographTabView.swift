@@ -29,7 +29,31 @@ struct ChronographTabView: View {
   @AppStorage(Keys.hideIntroduction, store: UserDefaults(suiteName: Keys.suiteName)) private var hideIntroduction = false
   
   @AppStorage(Keys.selectedTab) private var selectedTab: String = Values.calendarTab
-  
+
+  @AppStorage(Keys.weatherUseCurrentLocation, store: UserDefaults(suiteName: Keys.suiteName))
+  private var weatherUseCurrentLocation = true
+  @AppStorage(Keys.weatherZipCode, store: UserDefaults(suiteName: Keys.suiteName))
+  private var weatherZipCode = ""
+  @AppStorage(Keys.favoriteTimezones, store: UserDefaults(suiteName: Keys.suiteName))
+  private var favoriteTimezones: [String] = []
+
+  private var weatherPreviewConfig: WidgetConfig {
+    var config = WidgetConfig.weatherCurrent
+    if !weatherUseCurrentLocation {
+      config.weatherLocation = weatherZipCode.trimmingCharacters(in: .whitespaces)
+    }
+    return config
+  }
+
+  private var timezonesPreviewConfig: WidgetConfig {
+    var config = WidgetConfig.timezones
+    let favorites = favoriteTimezones.compactMap { TimeZone(identifier: $0) }
+    if !favorites.isEmpty {
+      config.timezones = favorites.map { TimeZoneSelectionEntity.with(timeZone: $0) }
+    }
+    return config
+  }
+
   @State var calendarSettingsVisible: Bool = false
   @State var reminderSettingsVisible: Bool = false
   @State var timezoneSettingsVisible: Bool = false
@@ -218,7 +242,7 @@ struct ChronographTabView: View {
       
       Tab(value:Values.timezoneTab) {
           NavigationStack {
-            WidgetPreviewView(config: .timezones)
+            WidgetPreviewView(config: timezonesPreviewConfig)
               .background(.regularMaterial)
               .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -240,9 +264,10 @@ struct ChronographTabView: View {
       }
       
       Tab(value:Values.weatherTab) {
-        if locationAccessGranted || LocationManager().isAuthorized {
+        let hasFixedLocation = !weatherUseCurrentLocation && !weatherZipCode.isEmpty
+        if locationAccessible || hasFixedLocation {
           NavigationStack {
-            WidgetPreviewView(config: .weatherCurrent)
+            WidgetPreviewView(config: weatherPreviewConfig)
               .background(.regularMaterial)
               .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -259,7 +284,16 @@ struct ChronographTabView: View {
               }
           }
         } else {
-          enableLocationButton
+          VStack(spacing: 16) {
+            enableLocationButton
+            Button("Use a Zip Code Instead") {
+              weatherSettingsVisible = true
+            }
+          }
+          .sheet(isPresented: $weatherSettingsVisible) {
+            WeatherSettingsView()
+              .presentationDetents([.medium, .fraction(0.35), .large])
+          }
         }
       } label: {
         Image(systemName: "cloud.sun")

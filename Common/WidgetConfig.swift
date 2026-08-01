@@ -10,6 +10,8 @@ struct WidgetConfig {
   var reminderLists: [ReminderSelectionEntity] = []
   var timezones: [TimeZoneSelectionEntity] = []
   var weatherStyle: WeatherStyle = .current
+  /// Empty string means current location; otherwise a zip/postal code.
+  var weatherLocation: String = ""
   var viewOptions: [WidgetViewOptions] = []
   var fontStyle: FontStyle = .normal
   var fontSize: FontSize = .medium

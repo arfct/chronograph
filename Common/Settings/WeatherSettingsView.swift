@@ -1,51 +1,48 @@
 import SwiftUI
-import WeatherKit
 
 struct WeatherSettingsView: View {
-    @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
-    @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
-    
-    var body: some View {
-        Form {
-            Section(header: Text("Display Options")) {
-                Toggle("Compact Time", isOn: $compactTime)
-                Toggle("Tokenize Parentheses", isOn: $tokenize)
-            }
-            
-            Section(header: Text("Weather Style")) {
-                NavigationLink {
-                    List {
-                        Text("Current")
-                        Text("Hourly")
-                        Text("Daily")
-                    }
-                } label: {
-                    Text("View Style")
-                }
-                
-                NavigationLink {
-                    LocationSelectionView()
-                } label: {
-                    Text("Location")
-                }
-            }
-        }
-    }
-}
+  @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName))
+  private var tokenize = false
+  @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName))
+  private var compactTime = true
+  @AppStorage(Keys.weatherUseCurrentLocation, store: UserDefaults(suiteName: Keys.suiteName))
+  private var useCurrentLocation = true
+  @AppStorage(Keys.weatherZipCode, store: UserDefaults(suiteName: Keys.suiteName))
+  private var zipCode = ""
+  @State private var zipCodeDraft = ""
 
-struct LocationSelectionView: View {
-    @State private var searchText = ""
-    
-    var body: some View {
-        List {
-            Text("Current Location")
-            Text("Search Locations...")
+  var body: some View {
+    Form {
+      Section {
+        Toggle("Use Current Location", isOn: $useCurrentLocation)
+        if !useCurrentLocation {
+          // Draft + commit-on-submit so each keystroke doesn't trigger a
+          // geocode and forecast fetch.
+          TextField("Zip Code", text: $zipCodeDraft)
+            .onAppear { zipCodeDraft = zipCode }
+            .onSubmit { zipCode = zipCodeDraft.trimmingCharacters(in: .whitespaces) }
+            .onDisappear { zipCode = zipCodeDraft.trimmingCharacters(in: .whitespaces) }
+#if os(iOS)
+            .keyboardType(.numbersAndPunctuation)
+            .textInputAutocapitalization(.characters)
+            .autocorrectionDisabled()
+            .submitLabel(.done)
+#endif
         }
-        .searchable(text: $searchText)
-        .navigationTitle("Location")
+      } header: {
+        Text("Location")
+      } footer: {
+        Text("Applies to this preview. Each widget can choose its own location when editing the widget.")
+      }
+
+      Section(header: Text("Display Options")) {
+        Toggle("Compact Time", isOn: $compactTime)
+        Toggle("Wrap Parentheses", isOn: $tokenize)
+      }
     }
+  }
 }
 
 #Preview {
-    WeatherSettingsView()
-} 
+  WeatherSettingsView()
+}

@@ -20,14 +20,27 @@ struct CalendarWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent 
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background (Hex)", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent (Hex)", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
   var accentColor: String
 
-  @Parameter(title: "Skip Pages", default: 0)
+  @Parameter(title: "Skip Pages", description: "Pages of items to skip. Lets side-by-side widgets continue where the previous one left off.", default: 0)
   var pageOffset: Int
+
+  static var parameterSummary: some ParameterSummary {
+    Summary {
+      \.$calendars
+      \.$features
+      \.$viewOptions
+      \.$fontStyle
+      \.$fontSize
+      \.$backgroundColor
+      \.$accentColor
+      \.$pageOffset
+    }
+  }
 
   var widgetConfig: WidgetConfig {
     var config = WidgetConfig(content: .calendar)
@@ -67,14 +80,26 @@ struct RemindersWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background (Hex)", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent (Hex)", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
   var accentColor: String
 
-  @Parameter(title: "Skip Pages", default: 0)
+  @Parameter(title: "Skip Pages", description: "Pages of items to skip. Lets side-by-side widgets continue where the previous one left off.", default: 0)
   var pageOffset: Int
+
+  static var parameterSummary: some ParameterSummary {
+    Summary {
+      \.$reminderLists
+      \.$fontStyle
+      \.$fontSize
+      \.$backgroundColor
+      \.$accentColor
+      \.$fullBleed
+      \.$pageOffset
+    }
+  }
 
   var widgetConfig: WidgetConfig {
     var config = WidgetConfig(content: .reminders)
@@ -109,11 +134,22 @@ struct TimezonesWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background (Hex)", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent (Hex)", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
   var accentColor: String
+
+  static var parameterSummary: some ParameterSummary {
+    Summary {
+      \.$timezones
+      \.$fontStyle
+      \.$fontSize
+      \.$backgroundColor
+      \.$accentColor
+      \.$fullBleed
+    }
+  }
 
   var widgetConfig: WidgetConfig {
     var config = WidgetConfig(content: .timezones)
@@ -135,8 +171,14 @@ struct WeatherWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent {
   static var title: LocalizedStringResource = "Weather"
   static var description = IntentDescription("Forecast as text")
 
-  @Parameter(title: "Weather Style", default: .current)
+  @Parameter(title: "Forecast", default: .current)
   var weatherStyle: WeatherStyle
+
+  @Parameter(title: "Use Current Location", default: true)
+  var useCurrentLocation: Bool
+
+  @Parameter(title: "Zip Code", description: "Zip or postal code to show weather for.", default: "")
+  var zipCode: String
 
   @Parameter(title: "Remove Padding", default: false)
   var fullBleed: Bool
@@ -147,15 +189,41 @@ struct WeatherWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent {
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background (Hex)", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent (Hex)", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
   var accentColor: String
+
+  static var parameterSummary: some ParameterSummary {
+    When(\.$useCurrentLocation, .equalTo, true) {
+      Summary {
+        \.$weatherStyle
+        \.$useCurrentLocation
+        \.$fontStyle
+        \.$fontSize
+        \.$backgroundColor
+        \.$accentColor
+        \.$fullBleed
+      }
+    } otherwise: {
+      Summary {
+        \.$weatherStyle
+        \.$useCurrentLocation
+        \.$zipCode
+        \.$fontStyle
+        \.$fontSize
+        \.$backgroundColor
+        \.$accentColor
+        \.$fullBleed
+      }
+    }
+  }
 
   var widgetConfig: WidgetConfig {
     var config = WidgetConfig(content: .weather)
     config.weatherStyle = weatherStyle
+    config.weatherLocation = useCurrentLocation ? "" : zipCode.trimmingCharacters(in: .whitespaces)
     config.features = [.weather]
     config.viewOptions = fullBleed ? [.fullBleed] : []
     config.fontStyle = fontStyle

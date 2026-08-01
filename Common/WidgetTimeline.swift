@@ -4,6 +4,9 @@ import AppIntents
 import EventKit
 import Contacts
 import WeatherKit
+import os
+
+let widgetLog = Logger(subsystem: "com.artifact.chronograph", category: "timeline")
 
 struct CalendarTimelineEntry: TimelineEntry {
   let date: Date
@@ -442,7 +445,6 @@ struct TimelineEngine {
       }
     } else if config.weatherStyle == .hourly {
 
-        let currentWeather = weather.currentWeather
       let hourlyForecast = weather.hourlyForecast
 
       for forecast in hourlyForecast.forecast.filter({$0.date >= Date()}).prefix(24) {
@@ -478,7 +480,7 @@ struct TimelineEngine {
     let timezoneEntries = buildTimezoneEntries(config: config)
 
 
-    let (weather, location) = (showWeather ? await fetchWeather() : nil) ?? (nil, nil)
+    let (weather, location) = (showWeather ? await fetchWeather(config: config) : nil) ?? (nil, nil)
 
     let fetchedReminders = await fetchReminders(config: config, startDate: startDate, endDate: endDate)
     var reminderEntries = buildReminderEntries(config: config, reminders: fetchedReminders)
@@ -557,8 +559,15 @@ struct TimelineEngine {
       }
     }
 
-    if let weather = weather, config.content == .weather {
-      calendarEntries.append(contentsOf: buildWeatherEntries(config: config, weather: weather, location: location))
+    if config.content == .weather {
+      if let weather = weather {
+        calendarEntries.append(contentsOf: buildWeatherEntries(config: config, weather: weather, location: location))
+      } else {
+        let message = config.weatherLocation.isEmpty
+          ? "Unable to load weather — check location access"
+          : "Unable to load weather for \(config.weatherLocation)"
+        calendarEntries.append(EventEntry(type: "error", title: message, url: URL(string: "settings:")))
+      }
     }
 
 
@@ -584,6 +593,7 @@ struct TimelineEngine {
 
     }
     print ("Returning timeline in \(round(-now.timeIntervalSinceNow * 1000))ms\nTimes: [\(timelineEntries.map({ shortTimeFormatter.string(from:$0.date)}).joined(separator:", "))]")
+    widgetLog.info("Timeline built: content=\(String(describing: config.content), privacy: .public) events=\(calendarEntries.count) reminders=\(reminderEntries.count) timezones=\(timezoneEntries.count) weather=\(weather != nil ? "yes" : "nil", privacy: .public) location=\(location ?? "nil", privacy: .public)")
 
     let timeline = Timeline(entries: timelineEntries, policy: .atEnd)
 
@@ -591,11 +601,11 @@ struct TimelineEngine {
 
   }
 
-  private func fetchWeather() async -> (Weather, String?)? {
+  private func fetchWeather(config: WidgetConfig) async -> (Weather, String?)? {
     do {
-      return try await weatherManager.fetchWeather()
+      return try await weatherManager.fetchWeather(zipCode: config.weatherLocation)
     } catch {
-      print("Weather Error: \(error.localizedDescription)")
+      widgetLog.error("Weather fetch failed (zip=\(config.weatherLocation, privacy: .public)): \(error.localizedDescription, privacy: .public)")
     }
     return nil
   }

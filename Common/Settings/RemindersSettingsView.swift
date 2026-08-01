@@ -13,7 +13,7 @@ struct RemindersSettingsView: View {
     Form {
       Section(header: Text("Display Options")) {
         Toggle("Compact Time", isOn: $compactTime)
-        Toggle("Tokenize Parentheses", isOn: $tokenize)
+        Toggle("Wrap Parentheses", isOn: $tokenize)
       }
       
       Section(header: Text("Lists")) {
