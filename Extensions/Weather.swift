@@ -3,7 +3,6 @@ import CoreLocation
 
 class WeatherLocationManager: NSObject {
   private let locationManager = LocationManager()
-  private var locationContinuation: CheckedContinuation<CLLocation, Error>?
   private var cachedWeather: Weather?
 
   @MainActor

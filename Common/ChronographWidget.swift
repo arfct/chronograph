@@ -382,7 +382,7 @@ struct TimezonesWidget: Widget {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()
-      .configurationDisplayName("Timezones")
+      .configurationDisplayName("Time Zones")
 //      .description("A text view of timezones")
       .supportedFamilies(widgetFamilies)
 #if os(iOS)
