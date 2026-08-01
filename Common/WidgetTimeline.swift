@@ -87,8 +87,6 @@ struct TimelineEngine {
     return timezoneEntries
   }
 
-  static var cachedTimelines: [String: (timeline: Timeline<CalendarTimelineEntry>, timestamp: Date)] = [:]
-
   /// The big `if configuration.content == .calendar` loop: headers, dedup, conflicts, free
   /// time, note/URL/meeting extraction. Also consumes `weather` for day-header forecasts —
   /// this cross-content dependency is why there is one engine and one provider.
@@ -588,8 +586,6 @@ struct TimelineEngine {
     print ("Returning timeline in \(round(-now.timeIntervalSinceNow * 1000))ms\nTimes: [\(timelineEntries.map({ shortTimeFormatter.string(from:$0.date)}).joined(separator:", "))]")
 
     let timeline = Timeline(entries: timelineEntries, policy: .atEnd)
-
-    TimelineEngine.cachedTimelines[identifier] = (timeline: timeline, timestamp: now)
 
     return timeline
 
