@@ -6,7 +6,7 @@ import WeatherKit
 
 struct CalendarTimelineEntry: TimelineEntry {
   let date: Date
-  let configuration: ConfigurationIntent
+  let config: WidgetConfig
   let state: Bool = false
   var reminders: [EventEntry] = []
   var events: [EventEntry] = []
@@ -31,16 +31,12 @@ struct TimelineProvider: AppIntentTimelineProvider {
   var weatherManager = WeatherLocationManager()
   var eventStore = EKEventStore()
   func placeholder(in context: Context) -> CalendarTimelineEntry {
-    
-    let config = ConfigurationIntent()
-    config.content = .calendar
-    config.calendars = []
-    
+
     let item = EKEvent(eventStore: eventStore)
     item.title = "Calendar Event"
     item.startDate = Date()
-    
-    return CalendarTimelineEntry(date: Date(), configuration: ConfigurationIntent(), events: [
+
+    return CalendarTimelineEntry(date: Date(), config: WidgetConfig.calendar, events: [
       EventEntry(id: "", title: "Today"),
       EventEntry(id: "", item: item),
       EventEntry(id: "", item: item),
@@ -54,24 +50,24 @@ struct TimelineProvider: AppIntentTimelineProvider {
   }
   
   func snapshot(for configuration: ConfigurationIntent, in context: Context) async -> CalendarTimelineEntry {
-    let timeline = await timeline(for:configuration, in: context)
+    let timeline = await timeline(config: configuration.widgetConfig, context: context)
     return timeline.entries.first!
   }
-  
+
   func timeline(for configuration: ConfigurationIntent, in context: Context) async -> Timeline<CalendarTimelineEntry> {
-    await timeline(for: configuration, context: context)
+    await timeline(config: configuration.widgetConfig, context: context)
   }
-  
+
   // MARK: Timeline
-  
-  private func getTimezoneEntries(configuration: ConfigurationIntent) -> [EventEntry] {
+
+  private func getTimezoneEntries(config: WidgetConfig) -> [EventEntry] {
     var timezoneEntries: [EventEntry] = []
-    
-    if configuration.content == .timezones {
+
+    if config.content == .timezones {
       let calendar = Calendar.current
       let now = Date()
-      
-      var timezones = configuration.timezones.compactMap({TimeZone(identifier: $0.id)})
+
+      var timezones = config.timezones.compactMap({TimeZone(identifier: $0.id)})
       timezones.sort { a, b in
         a.secondsFromGMT() < b.secondsFromGMT()
       }
@@ -102,9 +98,9 @@ struct TimelineProvider: AppIntentTimelineProvider {
   
   static var cachedTimelines: [String: (timeline: Timeline<CalendarTimelineEntry>, timestamp: Date)] = [:]
   
-  func timeline(for configuration: ConfigurationIntent, context: Context? = nil) async -> Timeline<CalendarTimelineEntry> {
-    
-    let identifier = "\(context?.family.description ?? "none").\(configuration.content).\(String(reflecting: configuration))"
+  func timeline(config: WidgetConfig, context: Context? = nil) async -> Timeline<CalendarTimelineEntry> {
+
+    let identifier = "\(context?.family.description ?? "none").\(config.content).\(String(reflecting: config))"
     
     let now = Date()
     
@@ -133,26 +129,26 @@ struct TimelineProvider: AppIntentTimelineProvider {
 //    #endif
     let endDate = calendar.date(byAdding: .day, value: 7, to: startDate)!
     
-    let showAllDay = configuration.features.contains(.allDayEvents)
-    let showMultiDay = configuration.features.contains(.multiDayEvents)
-    let showWeather = configuration.features.contains(.weather) || configuration.content == .weather
-    
-    let timezoneEntries = getTimezoneEntries(configuration:configuration)
-    
-    
+    let showAllDay = config.features.contains(.allDayEvents)
+    let showMultiDay = config.features.contains(.multiDayEvents)
+    let showWeather = config.features.contains(.weather) || config.content == .weather
+
+    let timezoneEntries = getTimezoneEntries(config: config)
+
+
     let (weather, location) = (showWeather ? await fetchWeather() : nil) ?? (nil, nil)
-    
-    var reminderEntries = await fetchReminders(configuration: configuration, startDate: startDate, endDate: endDate)
-    let scheduledReminders = await fetchScheduledReminders(configuration: configuration, startDate: startDate, endDate: endDate)
-    
+
+    var reminderEntries = await fetchReminders(config: config, startDate: startDate, endDate: endDate)
+    let scheduledReminders = await fetchScheduledReminders(config: config, startDate: startDate, endDate: endDate)
+
     reminderEntries.removeAll(where: { item in
         if let reminder = item.item as? EKReminder {
             return scheduledReminders.firstIndex(of: reminder) != nil
         }
         return false
     })
-    
-    let events = await fetchEvents(configuration: configuration, startDate: startDate, endDate: endDate)
+
+    let events = await fetchEvents(config: config, startDate: startDate, endDate: endDate)
     
     var calendarItems: [EKCalendarItem] = []
     calendarItems.append(contentsOf: scheduledReminders)
@@ -173,8 +169,8 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     var errors: [String] = []
     
-    let remindersError = (configuration.content == .reminders || configuration.content == .calendar) && EKEventStore.authorizationStatus(for: .reminder) != .fullAccess
-    let eventsError = (configuration.content == .calendar) && EKEventStore.authorizationStatus(for: .event) != .fullAccess
+    let remindersError = (config.content == .reminders || config.content == .calendar) && EKEventStore.authorizationStatus(for: .reminder) != .fullAccess
+    let eventsError = (config.content == .calendar) && EKEventStore.authorizationStatus(for: .event) != .fullAccess
     
     if (remindersError) {
       errors.append("Enable access to reminders in settings")
@@ -187,7 +183,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     // MARK: Errors
     if (errors.count > 0) {
       return Timeline(entries: [
-        CalendarTimelineEntry(date: now, configuration: configuration,
+        CalendarTimelineEntry(date: now, config: config,
                               events: errors.map({ error in
                                 EventEntry(type: error, title: error, url: URL(string: "settings:"))
                               }), context: context)
@@ -210,7 +206,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
     
     let renderDate = now
   
-    if (configuration.content == .calendar) {
+    if (config.content == .calendar) {
       for (i, item) in calendarItems.enumerated() {
         
         var lastDate: Date = .distantPast
@@ -250,7 +246,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
           
           headerIndex = calendarEntries.count
           calendarEntries.append(header)
-        } else if (configuration.features.contains(.freeTime)){
+        } else if (config.features.contains(.freeTime)){
           let formatter = DateComponentsFormatter()
           formatter.unitsStyle = .abbreviated
           formatter.allowedUnits = [.hour, .minute]
@@ -543,12 +539,12 @@ struct TimelineProvider: AppIntentTimelineProvider {
       return entries
     }
     
-    if let weather = weather, configuration.content == .weather {
+    if let weather = weather, config.content == .weather {
       
-      if configuration.weatherStyle == .current {
+      if config.weatherStyle == .current {
         calendarEntries.append(contentsOf:upcomingWeatherEntries(weather: weather, location:location))
         
-      } else if configuration.weatherStyle == .daily {
+      } else if config.weatherStyle == .daily {
         let dailyForecast = weather.dailyForecast
         
         for forecast in dailyForecast.forecast.prefix(10) {
@@ -560,7 +556,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
           )
           calendarEntries.append(eventEntry)
         }
-      } else if configuration.weatherStyle == .hourly {
+      } else if config.weatherStyle == .hourly {
         
           let currentWeather = weather.currentWeather
         let hourlyForecast = weather.hourlyForecast
@@ -591,7 +587,7 @@ struct TimelineProvider: AppIntentTimelineProvider {
                                     to: fullMinuteDate)!
       
       let timelineEntry = CalendarTimelineEntry(date: entryDate,
-                                                configuration: configuration,
+                                                config: config,
                                                 reminders: reminderEntries,
                                                 events: calendarEntries,
                                                 weather: weather,
@@ -619,10 +615,10 @@ struct TimelineProvider: AppIntentTimelineProvider {
     return nil
   }
   
-  private func fetchReminders(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EventEntry] {
-    guard configuration.content == .reminders else { return [] }
+  private func fetchReminders(config: WidgetConfig, startDate: Date, endDate: Date) async -> [EventEntry] {
+    guard config.content == .reminders else { return [] }
     
-    var reminderIDs = configuration.reminders.map({$0.id})
+    var reminderIDs = config.reminderLists.map({$0.id})
     if (reminderIDs.count == 0) {
       reminderIDs = selectedReminderIds
       print("REMINDERS \(reminderIDs)")
@@ -645,8 +641,8 @@ struct TimelineProvider: AppIntentTimelineProvider {
     return []
   }
   
-  private func fetchScheduledReminders(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EKReminder] {
-    guard configuration.content == .reminders || configuration.content == .calendar else { return [] }
+  private func fetchScheduledReminders(config: WidgetConfig, startDate: Date, endDate: Date) async -> [EKReminder] {
+    guard config.content == .reminders || config.content == .calendar else { return [] }
 
     print("Fetching Scheduled Reminders")
     do {
@@ -659,10 +655,10 @@ struct TimelineProvider: AppIntentTimelineProvider {
     }
   }
   
-  private func fetchEvents(configuration: ConfigurationIntent, startDate: Date, endDate: Date) async -> [EKEvent] {
-    guard configuration.content == .calendar else { return [] }
+  private func fetchEvents(config: WidgetConfig, startDate: Date, endDate: Date) async -> [EKEvent] {
+    guard config.content == .calendar else { return [] }
     
-    var calendarIDs = configuration.calendars.map({$0.id})
+    var calendarIDs = config.calendars.map({$0.id})
     if (calendarIDs.count == 0) {
       calendarIDs = selectedCalendarIds
     }

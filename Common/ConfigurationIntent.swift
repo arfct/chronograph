@@ -311,6 +311,23 @@ struct ConfigurationIntent: WidgetConfigurationIntent {
 //        }
 //      }
 //    }
-    
+
 //  }
+}
+
+extension ConfigurationIntent {
+  var widgetConfig: WidgetConfig {
+    WidgetConfig(content: content,
+                 features: features,
+                 calendars: calendars,
+                 reminderLists: reminders,
+                 timezones: timezones,
+                 weatherStyle: weatherStyle,
+                 viewOptions: viewOptions,
+                 fontStyle: fontStyle,
+                 fontSize: fontSize,
+                 backgroundColor: backgroundColor,
+                 accentColor: accentColor,
+                 pageOffset: pageOffset)
+  }
 }

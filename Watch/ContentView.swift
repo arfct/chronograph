@@ -36,7 +36,7 @@ struct ContentView: View {
       
       VStack(spacing:10) {
         if EKEventStore.authorizationStatus(for: .event) == .fullAccess {
-          WidgetPreviewView(config:ConfigurationIntent.calendarConfig)
+          WidgetPreviewView(config: .calendar)
             .frame(minHeight: 600)
         } else {
           Button(action: {
@@ -49,7 +49,7 @@ struct ContentView: View {
           .padding(.leading, 36)
         if EKEventStore.authorizationStatus(for: .reminder) == .fullAccess {
           
-          WidgetPreviewView(config: ConfigurationIntent.remindersConfig)
+          WidgetPreviewView(config: .reminders)
             .frame(minHeight: 100)
             .listRowBackground(Color.clear)
         } else {
