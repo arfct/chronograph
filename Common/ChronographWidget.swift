@@ -60,7 +60,7 @@ struct ChronographWidgetView : View {
   private var fontSize: CGFloat = 16.0
   
   let textStyle: UIFont.TextStyle
-  var entry: TimelineProvider.Entry
+  var entry: CalendarTimelineEntry
   var context: TimelineProviderContext?
   
   func designForFontStyle(_ style: FontStyle) -> Font.Design {
@@ -73,7 +73,7 @@ struct ChronographWidgetView : View {
   }
   
   // MARK: init
-  init(entry: TimelineProvider.Entry) {
+  init(entry: CalendarTimelineEntry) {
     self.entry = entry
     self.context = entry.context
     self.textStyle = FontSize.caseSize[entry.config.fontSize] ?? .body
@@ -339,7 +339,7 @@ struct ChronographWidget: Widget {
     AppIntentConfiguration(
       kind: kind,
       intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) { ChronographWidgetView(entry: $0)
+      provider: ChronographTimelineProvider<ConfigurationIntent>()) { ChronographWidgetView(entry: $0)
           
               .containerBackground(.clear, for: .widget)
       }
@@ -359,7 +359,7 @@ struct RemindersWidget: Widget {
     AppIntentConfiguration(
       kind: kind,
       intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) {
+      provider: ChronographTimelineProvider<ConfigurationIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()
@@ -378,7 +378,7 @@ struct TimezonesWidget: Widget {
     AppIntentConfiguration(
       kind: kind,
       intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) {
+      provider: ChronographTimelineProvider<ConfigurationIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()
@@ -397,7 +397,7 @@ struct WeatherWidget: Widget {
     AppIntentConfiguration(
       kind: kind,
       intent: ConfigurationIntent.self,
-      provider: TimelineProvider(kind: kind)) {
+      provider: ChronographTimelineProvider<ConfigurationIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()

@@ -8,7 +8,7 @@ struct WidgetPreviewView: View {
   var eventStore = EKEventStore()
   func reloadTimeline()  {
     Task {
-      timeline = await TimelineProvider(kind:kind).timeline(config: config)
+      timeline = await TimelineEngine().timeline(config: config)
     }
   }
   @State private var timeline: Timeline<CalendarTimelineEntry>?

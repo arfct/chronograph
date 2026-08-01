@@ -331,3 +331,14 @@ extension ConfigurationIntent {
                  pageOffset: pageOffset)
   }
 }
+
+extension ConfigurationIntent: ChronographWidgetIntent {
+  static var recommendedIntents: [(intent: ConfigurationIntent, description: String)] {
+    [(comboConfig, "Events - Combined"),
+     (simpleCalendarConfig, "Events - Simple"),
+     (remindersConfig, "Reminders"),
+     (weatherCurrentConfig, "Weather - Today"),
+     (weatherDailyConfig, "Weather - This Week"),
+     (timezonesConfig, "Time Zones")]
+  }
+}
