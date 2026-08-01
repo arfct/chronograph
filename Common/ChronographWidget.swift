@@ -99,7 +99,7 @@ struct ChronographWidgetView : View {
     
     
 #if os(macOS)
-    self.fullBleed = entry.configuration.features.contains(.fullBleed)
+    self.fullBleed = entry.configuration.viewOptions.contains(.fullBleed)
 #else
     self.fullBleed = widgetFamily == .accessoryRectangular || entry.configuration.viewOptions.contains(.fullBleed)
 #endif

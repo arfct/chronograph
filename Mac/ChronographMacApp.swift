@@ -6,7 +6,7 @@ struct ChronographMacApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ChronographTabView()
         }
     }
 }

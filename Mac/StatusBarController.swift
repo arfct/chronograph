@@ -19,7 +19,7 @@ class StatusBarController {
   @objc func showPopover() {
     if let button = statusItem.button {
       let popover = NSPopover()
-      popover.contentViewController = NSHostingController(rootView: ContentView())
+      popover.contentViewController = NSHostingController(rootView: ChronographTabView())
       popover.behavior = .transient
       popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
     }
