@@ -150,10 +150,10 @@ struct ClockWidgetView : View {
   var body: some View {
     let style = entry.configuration.clockStyle
     let now = entry.date
-    let hour = Calendar.current.dateComponents([.hour], from: now)
+    let hour = Calendar.current.component(.hour, from: now)
 
     let showHour = style == .hour || style == .time || style == .timeAdaptive
-    let showMinute = style == .minute || style == .time || style == .timeAdaptive && hour.hour! > 6
+    let showMinute = style == .minute || style == .time || (style == .timeAdaptive && hour > 6)
     let showBoth = showHour && showMinute
     
     let accentColor = Color.withHex(entry.configuration.accentColor) ?? .primary
@@ -227,8 +227,11 @@ struct ClockWidgetView : View {
 
 // MARK: Preview
 
-#Preview(as: .systemSmall) {
+#Preview("Adaptive", as: .systemSmall) {
   ClockWidget()
 } timeline: {
-  ClockEntry(date: .now, configuration: ClockConfigurationIntent())
+  ClockEntry(date: Calendar.current.date(bySettingHour: 3, minute: 24, second: 0, of: .now)!,
+             configuration: ClockConfigurationIntent())
+  ClockEntry(date: Calendar.current.date(bySettingHour: 14, minute: 24, second: 0, of: .now)!,
+             configuration: ClockConfigurationIntent())
 }
