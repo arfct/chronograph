@@ -303,7 +303,7 @@ struct CurrentWeatherRowView: View {
   let config: RowViewConfig
 
   var body: some View {
-    if let date = entry.startDate {
+    if entry.startDate != nil {
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
           Text("NOW").font(config.smallFont.monospacedDigit())

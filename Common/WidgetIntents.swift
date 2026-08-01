@@ -58,8 +58,8 @@ struct RemindersWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Lists", default: [])
   var reminderLists: [ReminderSelectionEntity]
 
-  @Parameter(title: "View Options", default: [])
-  var viewOptions: [WidgetViewOptions]
+  @Parameter(title: "Remove Padding", default: false)
+  var fullBleed: Bool
 
   @Parameter(title: "Font Style", default: .normal)
   var fontStyle: FontStyle
@@ -79,7 +79,7 @@ struct RemindersWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   var widgetConfig: WidgetConfig {
     var config = WidgetConfig(content: .reminders)
     config.reminderLists = reminderLists
-    config.viewOptions = viewOptions
+    config.viewOptions = fullBleed ? [.fullBleed] : []
     config.fontStyle = fontStyle
     config.fontSize = fontSize
     config.backgroundColor = backgroundColor
@@ -100,8 +100,8 @@ struct TimezonesWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Time Zones", default: [])
   var timezones: [TimeZoneSelectionEntity]
 
-  @Parameter(title: "View Options", default: [])
-  var viewOptions: [WidgetViewOptions]
+  @Parameter(title: "Remove Padding", default: false)
+  var fullBleed: Bool
 
   @Parameter(title: "Font Style", default: .normal)
   var fontStyle: FontStyle
@@ -118,7 +118,7 @@ struct TimezonesWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   var widgetConfig: WidgetConfig {
     var config = WidgetConfig(content: .timezones)
     config.timezones = timezones.isEmpty ? WidgetConfig.timezones.timezones : timezones
-    config.viewOptions = viewOptions
+    config.viewOptions = fullBleed ? [.fullBleed] : []
     config.fontStyle = fontStyle
     config.fontSize = fontSize
     config.backgroundColor = backgroundColor
@@ -138,8 +138,8 @@ struct WeatherWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent {
   @Parameter(title: "Weather Style", default: .current)
   var weatherStyle: WeatherStyle
 
-  @Parameter(title: "View Options", default: [])
-  var viewOptions: [WidgetViewOptions]
+  @Parameter(title: "Remove Padding", default: false)
+  var fullBleed: Bool
 
   @Parameter(title: "Font Style", default: .normal)
   var fontStyle: FontStyle
@@ -157,7 +157,7 @@ struct WeatherWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent {
     var config = WidgetConfig(content: .weather)
     config.weatherStyle = weatherStyle
     config.features = [.weather]
-    config.viewOptions = viewOptions
+    config.viewOptions = fullBleed ? [.fullBleed] : []
     config.fontStyle = fontStyle
     config.fontSize = fontSize
     config.backgroundColor = backgroundColor
