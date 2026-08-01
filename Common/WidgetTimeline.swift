@@ -296,6 +296,8 @@ struct TimelineEngine {
 
   /// Current `fetchReminders` result shaping (header row + sorted rows).
   private func buildReminderEntries(config: WidgetConfig, reminders: [EKReminder]) -> [EventEntry] {
+    guard config.content == .reminders else { return [] }
+
     var reminderIDs = config.reminderLists.map({$0.id})
     if (reminderIDs.count == 0) {
       reminderIDs = selectedReminderIds
