@@ -65,7 +65,7 @@ enum DisplayedContent: String, AppEnum {
   static var caseDisplayRepresentations: [DisplayedContent : DisplayRepresentation] = [
     .calendar: "Calendar",
     .reminders: "Reminders",
-    .timezones: "World Clock",
+    .timezones: "Time Zones",
     .weather: "Weather"
   ]
 }

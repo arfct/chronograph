@@ -94,7 +94,7 @@ struct RemindersWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
 }
 
 struct TimezonesWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent {
-  static var title: LocalizedStringResource = "World Clock"
+  static var title: LocalizedStringResource = "Time Zones"
   static var description = IntentDescription("Times across time zones")
 
   @Parameter(title: "Time Zones", default: [])
