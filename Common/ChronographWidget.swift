@@ -338,9 +338,9 @@ struct ChronographWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: ChronographTimelineProvider<ConfigurationIntent>()) { ChronographWidgetView(entry: $0)
-          
+      intent: CalendarWidgetIntent.self,
+      provider: ChronographTimelineProvider<CalendarWidgetIntent>()) { ChronographWidgetView(entry: $0)
+
               .containerBackground(.clear, for: .widget)
       }
       .contentMarginsDisabled()
@@ -358,8 +358,8 @@ struct RemindersWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: ChronographTimelineProvider<ConfigurationIntent>()) {
+      intent: RemindersWidgetIntent.self,
+      provider: ChronographTimelineProvider<RemindersWidgetIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()
@@ -377,8 +377,8 @@ struct TimezonesWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: ChronographTimelineProvider<ConfigurationIntent>()) {
+      intent: TimezonesWidgetIntent.self,
+      provider: ChronographTimelineProvider<TimezonesWidgetIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()
@@ -396,8 +396,8 @@ struct WeatherWidget: Widget {
   var body: some WidgetConfiguration {
     AppIntentConfiguration(
       kind: kind,
-      intent: ConfigurationIntent.self,
-      provider: ChronographTimelineProvider<ConfigurationIntent>()) {
+      intent: WeatherWidgetIntent.self,
+      provider: ChronographTimelineProvider<WeatherWidgetIntent>()) {
         ChronographWidgetView(entry: $0)
       }
       .contentMarginsDisabled()

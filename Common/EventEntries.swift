@@ -172,13 +172,3 @@ func clean(location input: String) -> String {
   // Trimming leading and trailing spaces
   return modifiedString.trimmingCharacters(in: .whitespacesAndNewlines)
 }
-
-func fetchReminders(configuration: ConfigurationIntent? = nil) async -> [EventEntry]? {
-  return []
-}
-
-func fetchEvents(calendarIDs: [String]?, configuration: ConfigurationIntent? = nil) async -> [EventEntry]? {
-
-  
-  return []
-}
