@@ -45,9 +45,8 @@ struct ChronographWidgetView : View {
   @AppStorage("view") private var defaultValueTest2 = "view"
   
   @State private var eventStore = EKEventStore()
-  @State private var visibleItemCount: Int
-  @State private var extraSpace: CGFloat = 0.0
-  
+  private var visibleItemCount: Int
+
   @State private var toggled = false
   
   
@@ -121,10 +120,9 @@ struct ChronographWidgetView : View {
   
     var visibleCount = 30
     if let displaySize = entry.context?.displaySize {
-//      print("font: \(baseFont.lineHeight) \(self.fontSize) \(self.lineHeight) \(displaySize.height) \(widgetFamily?.debugDescription ?? "")")
       visibleCount = Int(floor(displaySize.height / self.lineHeight))
     }
-    _visibleItemCount = State(initialValue: visibleCount)
+    self.visibleItemCount = visibleCount
     
     
     //    print("\n Init view \(widgetFamily).\(entry.config.content) \(shortTimeFormatter.string(from:entry.date)) ")
@@ -228,11 +226,10 @@ struct ChronographWidgetView : View {
     let clippedItems: [EventEntry] = Array(items[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
     let index = clippedItems.lastIndex { $0.removeIfOrphaned != true}
     let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
-    let extraSpacing = 0.0 // extraSpace < (row.lineHeight) ? CGFloat(extraSpace) / CGFloat(visibleItemCount) : 0
-    
-    
+
+
     GeometryReader { container in
-      VStack(spacing: extraSpacing) {
+      VStack(spacing: 0) {
         ForEach(visibleItems, id: \.self) { entry in
           if let event = entry.item as? EKEvent {
             EventRowView(event: event, entry: entry, config: row)
@@ -261,12 +258,8 @@ struct ChronographWidgetView : View {
             HeaderRowView(entry: entry, config: row, large: false)
           }
         }
-        
-        .background(GeometryReader {
-          Color.clear.preference(key: RowHeightPreferenceKey.self, value: [$0.frame(in: .named("stack")).maxY])
-        })
       }
-      
+
       .frame(maxHeight: .infinity, alignment: .top)
       .frame(maxWidth: .infinity, alignment: .top)
       .padding(.top, insets.top)
@@ -275,11 +268,7 @@ struct ChronographWidgetView : View {
       .padding(.trailing, insets.trailing)
       .coordinateSpace(name: "stack")
       .tint(row.accentColor)
-      
-      .onPreferenceChange(RowHeightPreferenceKey.self) { heights in
-        updateVisibleRows(with: heights, containerHeight: container.size.height)
-      }
-      
+
       .clipped()
       .environment(\.colorScheme, isDark ?  .dark : .light)
       .background(widgetRenderingMode == .accented ? .clear : backgroundColor)
@@ -289,24 +278,6 @@ struct ChronographWidgetView : View {
     //    let _ = print("Rendered \(widgetFamily).\(entry.config.content) for \(shortTimeFormatter.string(from:entry.date)) \(visibleItemCount) in \(round(-now.timeIntervalSinceNow * 1000))ms")
   }
   
-  private func updateVisibleRows(with rowMaxY: [CGFloat], containerHeight: CGFloat) {
-    let visibleCount = rowMaxY.indices.last { index in
-      let maxY = rowMaxY[index]
-      return maxY <= containerHeight + 2
-    }
-    
-    if let visibleCount = visibleCount, visibleItemCount != visibleCount + 1 {
-      visibleItemCount = visibleCount + 1
-      extraSpace = containerHeight - rowMaxY[visibleCount]
-    }
-  }
-}
-
-struct RowHeightPreferenceKey: PreferenceKey {
-  static var defaultValue: [CGFloat] = []
-  static func reduce(value: inout [CGFloat], nextValue: () -> [CGFloat]) {
-    value.append(contentsOf: nextValue())
-  }
 }
 
 
