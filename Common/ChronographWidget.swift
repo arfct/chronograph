@@ -123,6 +123,12 @@ struct ChronographWidgetView : View {
       visibleCount = Int(floor(displaySize.height / self.lineHeight))
     }
     self.visibleItemCount = visibleCount
+
+    // Diagnostic for iOS 27 XL-portrait adoption: reveals whether WidgetKit
+    // hands this pre-27-SDK binary the true family and canvas size.
+    let family = String(describing: widgetFamily)
+    let size = String(describing: entry.context?.displaySize)
+    widgetLog.info("Widget init: family=\(family, privacy: .public) displaySize=\(size, privacy: .public) rows=\(visibleCount)")
     
     
     //    print("\n Init view \(widgetFamily).\(entry.config.content) \(shortTimeFormatter.string(from:entry.date)) ")
