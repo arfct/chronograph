@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Regenerates Extensions/cmudict-ipa.txt from the CMU Pronouncing Dictionary.
+"""Regenerates apple/Extensions/cmudict-ipa.txt from the CMU Pronouncing Dictionary.
 
 Converts ARPAbet to IPA styled like https://github.com/arfct/enigma defaults:
 stress as combining accents (acute primary, grave secondary) and long vowels
-doubled. Output is sorted "word\tipa" lines for binary search (Cmudict.swift).
+doubled. Output is sorted "word\tipa" lines for binary search (apple/Extensions/Cmudict.swift).
 
 Usage:
   curl -sLO https://raw.githubusercontent.com/cmusphinx/cmudict/master/cmudict.dict
-  python3 scripts/generate-cmudict-ipa.py cmudict.dict > Extensions/cmudict-ipa.txt
+  python3 scripts/generate-cmudict-ipa.py cmudict.dict > apple/Extensions/cmudict-ipa.txt
 """
 import re
 import sys

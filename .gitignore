@@ -1,0 +1,40 @@
+# macOS
+.DS_Store
+
+# Dropbox — this repo lives in a synced folder
+**conflicted copy**
+
+# Xcode
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.perspectivev3
+!default.perspectivev3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Gradle / Android
+.gradle/
+.kotlin/
+local.properties
+captures/
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+
+# IDEs
+.idea/
+*.iml
