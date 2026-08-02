@@ -77,7 +77,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA3142C1B6A9600F22C21"
             BuildableName = "Widget-watch.appex"
-            BlueprintName = "Widget-watch"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -120,7 +119,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA3142C1B6A9600F22C21"
             BuildableName = "Widget-watch.appex"
-            BlueprintName = "Widget-watch"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

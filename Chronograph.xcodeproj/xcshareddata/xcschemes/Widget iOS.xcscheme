@@ -64,7 +64,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA32D2C1B6ABB00F22C21"
             BuildableName = "Widget-ios.appex"
-            BlueprintName = "Widget-ios"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>

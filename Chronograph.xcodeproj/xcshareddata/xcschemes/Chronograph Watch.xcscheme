@@ -60,7 +60,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
             BuildableName = "Chronograph-watch.app"
-            BlueprintName = "Chronograph-watch"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -77,7 +76,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2C6BA2F92C1B6A5000F22C21"
             BuildableName = "Chronograph-watch.app"
-            BlueprintName = "Chronograph-watch"
             ReferencedContainer = "container:Chronograph.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
