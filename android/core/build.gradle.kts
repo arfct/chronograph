@@ -15,4 +15,8 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    // Shared cross-platform inputs live at the repo root / in apple/;
+    // resolved here so tests never hardcode machine paths.
+    systemProperty("chronograph.fixtures", rootDir.parentFile.resolve("fixtures").absolutePath)
+    systemProperty("chronograph.cmudict", rootDir.parentFile.resolve("apple/Extensions/cmudict-ipa.txt").absolutePath)
 }

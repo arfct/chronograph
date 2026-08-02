@@ -97,9 +97,9 @@ These constants define the look and must match iOS exactly; they live in `:core`
 
 ## Obfuscation
 
-All four modes port to `:core`. Braille and Enigma are pure text transforms and are covered by fixtures. Enigma reads the same `cmudict-ipa.txt`, binary-searched over a memory-mapped buffer (`FileChannel.map` + `ByteBuffer`), mirroring `Cmudict.swift`; the rule-based fallback ports rule-for-rule.
+Braille and Enigma port to `:core` as pure text transforms covered by fixtures. Enigma reads the same `cmudict-ipa.txt`, binary-searched over a memory-mapped buffer (`FileChannel.map` + `ByteBuffer`), mirroring `Cmudict.swift`; the rule-based fallback ports rule-for-rule.
 
-Ishihara is a font swap rather than a text transform, and whether Glance can apply a bundled custom font is unverified — see Risks.
+**Ishihara is out of scope on Android** (decided 2026-08-03): it's a font swap rather than a text transform, the spike proved Glance can't apply bundled fonts, and the bitmap-row workaround isn't worth carrying for one novelty mode. Tracked as a ➖ in docs/parity.md; revisit only if Glance grows custom-font support.
 
 ## Architecture
 
