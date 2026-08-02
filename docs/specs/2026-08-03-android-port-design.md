@@ -5,9 +5,11 @@
 
 ## Scope
 
-**In (v1):** Calendar widget (day headers, all-day/multi-day events, time bars, free time, inline day forecast), Time Zones widget, Weather widget (current / hourly / daily), per-widget configuration, the four Obfuscation modes, Play Store release.
+**In (v1):** Calendar widget (day headers, all-day/multi-day events, time bars, free time, inline day forecast), Time Zones widget, Weather widget (current / hourly / daily), lock screen variants of all three, generated widget-picker previews, per-widget configuration, the four Obfuscation modes, Play Store release.
 
 **Out (v1):** Reminders (Android has no system reminders store — see decisions), the StandBy Clock widget (no StandBy analogue), Wear OS tiles, macOS-style desktop widgets, live/interactive widget buttons.
+
+Lock screen widgets are in scope only because of the modern-only baseline below — they landed in AOSP for phones and tablets after Android 16 QPR1. They are the direct analogue of iOS's `accessoryRectangular` family, which the app already supports.
 
 ## Repository layout
 
@@ -32,11 +34,32 @@ scripts/                   # generate-cmudict-ipa.py
 
 The Xcode project needs **no `project.pbxproj` edits**: every source folder is a `PBXFileSystemSynchronizedRootGroup` with a plain relative path (`path = Common`) resolved against the project's own directory, so moving the project and its folders together preserves every path. The one external follow-up is repointing the Xcode Cloud workflow at `apple/Chronograph.xcodeproj` in App Store Connect.
 
+## Platform baseline and toolchain
+
+Deliberately modern-only: no compatibility shims, no `AppCompat`, no hand-written `RemoteViews` fallbacks, no legacy widget-preview drawables. Edge-to-edge and predictive back are platform defaults at this API level rather than opt-ins.
+
+| | Version | Note |
+|---|---|---|
+| `compileSdk` / `targetSdk` | **37** (Android 17) | Stable since 2026-06-16. Requires AGP 9.1+. |
+| `minSdk` | **36** (Android 16) | The aggressive floor that still has an install base; API 37 alone would be a few months of devices. Lock screen widgets arrived in a QPR after the 36.0 baseline, so that one category is runtime-gated rather than assumed. |
+| AGP | **9.2** | April 2026; first line supporting API 37 (9.0 caps at 36.1). |
+| Gradle | **9.5.1** | Current stable. |
+| Kotlin | **2.4.0** | What Compose BOM 2026.06.00 is built against. |
+| Compose BOM | **2026.06.00** | Compose 1.11.x, `material3` 1.4.0. |
+| Glance | **1.2.0-rc01** | See below. |
+| Material 3 Expressive | `material3` **1.5.0-alpha**, opt-in | Companion app only; behind `@ExperimentalMaterial3ExpressiveApi`. |
+
+**On Glance versions:** stable is still **1.1.1** (October 2024) and is too old to use — it has no generated-preview API. **1.2.0-rc01** adds `providePreview()` / `setWidgetPreviews()`, `MultiProcessGlanceAppWidget`, and image alpha, which covers everything this app needs at release-candidate quality. **1.3.0-alpha02** (July 2026) is fresher still, but its additions are Wear-widget-specific (`GlanceWearWidget`, health data, wear brushes) and buy this app nothing, so taking alpha churn in the framework that renders the entire product would be cost without benefit. Pin 1.2.0-rc01, and revisit when 1.3.0 stabilizes or if a home-screen feature we want appears there.
+
 ## Key decisions
 
 | Decision | Choice | Rationale |
 |---|---|---|
 | Widget framework | Jetpack Glance | The only supported way to build App Widgets in Compose. Chronograph's rows are `Row`/`Column`/`Text` — Glance's constrained composable set is a good fit, unlike the game-shaped ports where it wouldn't be. |
+| Widget picker previews | `providePreview()` + `setWidgetPreviews()` | Renders the real widget with real data in the picker — the closest analogue to iOS's `recommendedIntents` gallery entries. Push-based and rate-limited to ~2 calls/hour, so previews are refreshed on first launch and after a config change, not on every timeline tick. `previewSizeMode` must be set to `SizeMode.Responsive` or the picker renders only what fits the minimum size. |
+| Widget theming | `GlanceTheme` + `glance-material3` color providers | Gives widgets Material You dynamic color from the system palette, which is the Android-native equivalent of the accent/background hex fields rather than a port of them. Per-widget hex overrides still win when set. |
+| Companion app UI | Compose Material 3 Expressive (opt-in alpha) | The app is only previews and settings, so experimental-API churn is cheap there — unlike the widgets, where it would put the whole product on alpha. |
+| Lock screen widgets | Same Glance widgets, `keyguard` category, runtime-gated | Direct analogue of `accessoryRectangular`. The row renderer already handles a constrained height via the metrics kernel, so this is a manifest category plus a size bucket, not a second implementation. |
 | Module split | `:core` (Kotlin JVM) + `:app` (Android) | Mirrors villainy. Row building, config, obfuscation, and note parsing are platform-free and JVM-testable without an emulator; only data sources and rendering need Android. |
 | Row layout model | Static row count from widget size | Glance cannot measure text, so it can't do a measure-and-refit pass. iOS dropped its own refit loop on 2026-08-01 (it caused blank widgets), so both platforms now derive rows from `height / lineHeight` — the models already agree. |
 | Calendar source | `CalendarContract.Instances` | Direct analogue of `EKEventStore.events(matching:)`; expands recurrences server-side in the provider, which is what the iOS predicate does. |
@@ -119,10 +142,12 @@ Permission and fetch failures render as an error row, exactly as iOS does — a 
 - **Custom fonts in Glance.** If a bundled `.otf` can't be applied to Glance `Text`, Ishihara needs another route (pre-rendered bitmap rows, or `RemoteViews` for that mode) or gets dropped on Android with a parity footnote.
 - **Time bars.** iOS draws a gradient-filled rectangle; Glance has no canvas, so this becomes a `Box` with a background and fractional width, or a generated bitmap.
 - **Widget size buckets.** Glance `SizeMode.Responsive` needs a fixed set of sizes; the dp buckets that best mirror iOS's `systemMedium`/`systemLarge` need to be measured on a real launcher, not assumed.
+- **Lock screen availability.** Which concrete API level exposes the `keyguard` widget category on phones needs checking against a real Android 16 QPR / 17 emulator image; the AOSP note says "the release after Android 16 QPR1" without naming a level. If it turns out to need 37, the category gets gated there and `minSdk` stays 36.
+- **Glance 1.2.0-rc01 durability.** It has sat at RC since December 2025. If it never goes stable before release, decide whether to ship on an RC dependency or drop generated previews and fall back to a static `previewImage`.
 
 ## Build order
 
-1. **Phase 1 — restructure + scaffold + `:core`.** Repo move to `apple/`, root `.gitignore`, Gradle scaffold with `:core` and `:app`, and the pure-Kotlin port: config, entries, metrics, obfuscation with CMUdict, note parsing. Ends with `:core` tests green against the shared fixtures, and the three risks above answered by a spike.
-2. **Phase 2 — Calendar + Time Zones widgets.** `CalendarContract` repository, Glance row composables, per-widget configuration activity, refresh scheduling. Ends with both widgets rendering real data on an emulator.
+1. **Phase 1 — restructure + scaffold + `:core`.** Repo move to `apple/` and the root `.gitignore` (both done 2026-08-03), Gradle scaffold on the toolchain above with `:core` and `:app`, and the pure-Kotlin port: config, entries, metrics, obfuscation with CMUdict, note parsing. Ends with `:core` tests green against the shared fixtures, and the risks above answered by a throwaway spike widget on an Android 17 emulator.
+2. **Phase 2 — Calendar + Time Zones widgets.** `CalendarContract` repository, Glance row composables, `GlanceTheme` wiring, per-widget configuration activity, generated previews, refresh scheduling. Ends with both widgets rendering real data on home and lock screens.
 3. **Phase 3 — Weather.** Open-Meteo client, file cache, location and zip resolution, WMO icon mapping, the three forecast styles, and the calendar widget's inline day forecast.
 4. **Phase 4 — Play release.** Signing, `docs/play-release.md`, store assets, internal testing track.
