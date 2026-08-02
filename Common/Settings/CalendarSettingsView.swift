@@ -7,7 +7,16 @@ struct CalendarSettingsView: View {
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName))
   private var compactTime = true
   @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName))
-  private var brailleMode = false
+  private var legacyBrailleMode = false
+  @AppStorage(Keys.obfuscation, store: UserDefaults(suiteName: Keys.suiteName))
+  private var obfuscationRaw = ""
+
+  private var obfuscation: Binding<ObfuscationStyle> {
+    Binding(
+      get: { ObfuscationStyle.resolve(rawValue: obfuscationRaw, legacyBrailleMode: legacyBrailleMode) },
+      set: { obfuscationRaw = $0.rawValue }
+    )
+  }
   @AppStorage(Keys.enabledCalendars, store: UserDefaults(suiteName: Keys.suiteName))
   private var selectedCalendarIds: [String] = []
   @State private var calendars: [EKCalendar] = []
@@ -22,8 +31,10 @@ struct CalendarSettingsView: View {
           Toggle(isOn: $compactTime) {
             Text("Compact Time")
           }
-          Toggle(isOn: $brailleMode) {
-            Text("Braille Mode")
+          Picker("Obfuscation", selection: obfuscation) {
+            ForEach(ObfuscationStyle.allCases) { style in
+              Text(style.displayName).tag(style)
+            }
           }
         }
 

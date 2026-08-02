@@ -37,7 +37,8 @@ struct ChronographWidgetView : View {
   @Environment(\.widgetFamily) var widgetFamily
   @AppStorage(Keys.tokenizeParens, store: UserDefaults(suiteName: Keys.suiteName)) private var tokenize = false
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
-  @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName)) private var brailleMode = false
+  @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName)) private var legacyBrailleMode = false
+  @AppStorage(Keys.obfuscation, store: UserDefaults(suiteName: Keys.suiteName)) private var obfuscationRaw = ""
   @AppStorage(Keys.fullBleed, store: UserDefaults(suiteName: Keys.suiteName)) private var wantsFullBleed = true
   
 //  @AppStorage("KEY", store: UserDefaults(suiteName: Keys.suiteName)) private var defaultValueTest1 = "test1"
@@ -188,13 +189,17 @@ struct ChronographWidgetView : View {
       config.heightIsLimited = heightIsLimited
       
       let design = designForFontStyle(entry.config.fontStyle)
-      
-      config.font = brailleMode ? Font.custom("Ishihara", size: config.fontSize) :
+
+      let obfuscation = ObfuscationStyle.resolve(rawValue: obfuscationRaw,
+                                                 legacyBrailleMode: legacyBrailleMode)
+      let ishihara = obfuscation == .ishihara
+
+      config.font = ishihara ? Font.custom("Ishihara", size: config.fontSize) :
       Font.system(size: config.fontSize, design: design).width(.standard)
-      config.smallFont =  brailleMode ? Font.custom("Ishihara", size: config.fontSize) :
+      config.smallFont = ishihara ? Font.custom("Ishihara", size: config.fontSize) :
       Font.system(size: config.fontSize * 0.66, design: design).weight(.semibold)
       config.smallLineHeight = config.lineHeight * 0.66
-      config.smallFontSize = config.fontSize * (brailleMode ? 1.0 : 0.66)
+      config.smallFontSize = config.fontSize * (ishihara ? 1.0 : 0.66)
       
       switch entry.config.fontStyle {
       case .compressed, .condensed:
@@ -208,8 +213,8 @@ struct ChronographWidgetView : View {
       config.defaultCalendar = eventStore.defaultCalendarForNewEvents
       // TODO: Infer default from number of events
       config.defaultRemindersList = eventStore.defaultCalendarForNewReminders()
-      config.compactTime = compactTime && !brailleMode
-      config.brailleMode = false
+      config.compactTime = compactTime && !ishihara
+      config.obfuscation = obfuscation
       config.tokenize = tokenize
       config.showTimeBars = entry.config.features.contains(.timeBars) && !widthIsLimited
       return config
@@ -292,25 +297,21 @@ let widgetFamilies: [WidgetFamily] = [
   .accessoryRectangular
 ]
 #elseif os(iOS)
-let widgetFamilies: [WidgetFamily] = {
-  var families: [WidgetFamily] = [
-    .accessoryRectangular,
-    .systemSmall,
-    .systemMedium,
-    .systemLarge,
-    .systemExtraLarge
-  ]
-  // iOS 27's page-size widget. The case is availability-gated until the
-  // iOS 27 SDK, but exists in the runtime framework; construct it via the
-  // public rawValue init, matched by description so a raw-value shift can
-  // never select the wrong family.
-  if let extraLargePortrait = (0..<16)
-    .compactMap(WidgetFamily.init(rawValue:))
-    .first(where: { $0.description == "systemExtraLargePortrait" }) {
-    families.append(extraLargePortrait)
-  }
-  return families
-}()
+// iOS 27's page-size widget. The case is availability-gated until the
+// iOS 27 SDK, but exists in the runtime framework; construct it via the
+// public rawValue init, matched by description so a raw-value shift can
+// never select the wrong family.
+let extraLargePortraitFamily: WidgetFamily? = (0..<16)
+  .compactMap(WidgetFamily.init(rawValue:))
+  .first { $0.description == "systemExtraLargePortrait" }
+
+let widgetFamilies: [WidgetFamily] = [
+  .accessoryRectangular,
+  .systemSmall,
+  .systemMedium,
+  .systemLarge,
+  .systemExtraLarge
+] + (extraLargePortraitFamily.map { [$0] } ?? [])
 #elseif os(macOS)
 let widgetFamilies: [WidgetFamily] = [
   .systemSmall,
@@ -375,7 +376,7 @@ struct TimezonesWidget: Widget {
 //      .description("A text view of timezones")
       .supportedFamilies(widgetFamilies)
 #if os(iOS)
-      .disfavoredLocations([.homeScreen], for: [.systemSmall, .systemLarge, .systemExtraLarge])
+      .disfavoredLocations([.homeScreen], for: [.systemSmall, .systemLarge, .systemExtraLarge] + (extraLargePortraitFamily.map { [$0] } ?? []))
 #endif
   }
 }

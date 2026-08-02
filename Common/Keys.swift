@@ -8,7 +8,8 @@ struct Keys {
 
   static let tokenizeParens = "tokenizeParens"
   static let compactTime = "compactTime"
-  static let brailleMode = "brailleMode"
+  static let brailleMode = "brailleMode"  // legacy toggle; migrated to obfuscation
+  static let obfuscation = "obfuscation"
   static let hideIntroduction = "hideIntroduction"
 
   static let fullBleed = "fullBleed"

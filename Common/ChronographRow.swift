@@ -130,7 +130,7 @@ struct TimeZoneRowView: View {
       .foregroundColor(isLikelySleeping ? .secondary : .primary)
 //        .foregroundStyle(daylightGradient)
       
-      Text((entry.title ?? "Timezone").apply(config.brailleMode ? braille : nil))
+      Text((entry.title ?? "Timezone").apply(config.obfuscation.textTransform))
         .font(config.font)
         .foregroundColor(isLikelySleeping ? .secondary : .primary)
         .italic(isLikelySleeping)
@@ -167,7 +167,7 @@ struct RowViewConfig {
   var defaultCalendar: EKCalendar? = nil
   var defaultRemindersList: EKCalendar? = nil
   var compactTime: Bool = false
-  var brailleMode: Bool = false
+  var obfuscation: ObfuscationStyle = .none
   var tokenize: Bool = false
   var widthIsLimited: Bool = false
   var heightIsLimited: Bool = false
@@ -222,7 +222,7 @@ struct HourlyWeatherRowView: View {
           .frame(minWidth:config.lineHeight * 1.125)
         Text(forecast.temperature.converted(to: .fahrenheit), formatter: tempFormatter)
           .font(config.font)
-        Text(title ?? forecast.condition.description)
+        Text((title ?? forecast.condition.description).apply(config.obfuscation.textTransform))
           .font(config.font)
           .foregroundColor(.secondary)
 
@@ -253,7 +253,7 @@ struct DailyWeatherRowView: View {
       let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
-          Text(dayOfWeekFormat.string(for:date) ?? "").textCase(.uppercase)
+          Text((dayOfWeekFormat.string(for:date) ?? "").apply(config.obfuscation.textTransform)).textCase(.uppercase)
             .font(config.smallFont.monospaced())
             .foregroundStyle(.secondary)
           
@@ -322,7 +322,7 @@ struct CurrentWeatherRowView: View {
           .frame(minWidth:config.lineHeight * 1.125)
         Text(forecast.temperature.converted(to: .fahrenheit), formatter: tempFormatter)
           .font(config.font)
-        Text(forecast.condition.description)
+        Text(forecast.condition.description.apply(config.obfuscation.textTransform))
           .font(config.font)
           .foregroundColor(.secondary)
         Spacer()
@@ -368,7 +368,7 @@ struct TimeStringView: View {
             
           }
         } else {
-          Text("\(hour)\(config.brailleMode ? "" : ":")\(minute)".apply(config.brailleMode ? braille : nil))
+          Text("\(hour)\(config.obfuscation == .braille ? "" : ":")\(minute)".apply(config.obfuscation.textTransform))
             .font(config.font.monospacedDigit())
             .kerning(-0.5)
         }
@@ -428,8 +428,8 @@ struct EventRowView: View {
 //                  "\ncid:", event.calendarItemExternalIdentifier ?? "",
 //                  "\ndid:", event.eventIdentifier)
     
-    var titleString = (event.title.count > 0 ? event.title : nil) ?? "Untitled"
-    let title = config.brailleMode ? convertToBraille(titleString) : titleString
+    let titleString = (event.title.count > 0 ? event.title : nil) ?? "Untitled"
+    let title = titleString.apply(config.obfuscation.textTransform)
     
     
     HStack(alignment: .top, spacing:config.columnSpacing) {
@@ -524,7 +524,7 @@ struct EventRowView: View {
                     }
                     .buttonStyle(.plain)
                   }
-                  Text("\(locations.joined(separator: ", "))".apply(config.brailleMode ? braille : nil))
+                  Text("\(locations.joined(separator: ", "))".apply(config.obfuscation.textTransform))
                     .foregroundStyle(.secondary)
                     .italic()
                 }
@@ -627,7 +627,7 @@ struct ReminderRowView: View {
             if (config.tokenize) {
               Text(reminder.title ?? "No Title")
             } else {
-              Text(reminder.title.apply(config.brailleMode ? braille : nil))
+              Text(reminder.title.apply(config.obfuscation.textTransform))
             }
           }
           .font(config.font)
@@ -644,12 +644,12 @@ struct ReminderRowView: View {
           let dueDate = components.date
           if components.hour != nil {
             
-            Text((relativeDateFormatter.string(for: dueDate) ?? "due").apply(config.brailleMode ? braille : nil))
+            Text((relativeDateFormatter.string(for: dueDate) ?? "due").apply(config.obfuscation.textTransform))
               .foregroundColor(.secondary)
               .font(config.font)
             
           } else if (config.widget.content == .reminders ){ // allDay
-            Text((relativeDateFormatterDay.string(for: dueDate) ?? "due").apply(config.brailleMode ? braille : nil))
+            Text((relativeDateFormatterDay.string(for: dueDate) ?? "due").apply(config.obfuscation.textTransform))
               .foregroundColor(.secondary)
               .font(config.font)
             
@@ -700,7 +700,7 @@ struct FreeRowView: View {
         .frame(minWidth:config.fontSize)
       }
       
-      Text((entry.title ?? "Free").apply(config.brailleMode ? braille : nil))
+      Text((entry.title ?? "Free").apply(config.obfuscation.textTransform))
         .font(config.smallFont)
         .italic()
         .foregroundColor(.secondary)
@@ -744,10 +744,6 @@ extension String {
   }
 }
 
-func braille(_ string: String) -> String {
-  return convertToBraille(string)
-}
-
 struct HeaderRowView: View {
   let entry: EventEntry
   let config: RowViewConfig
@@ -768,7 +764,7 @@ struct HeaderRowView: View {
           ForEach(visibleItems) { item in
             if let title = item.item?.title {
               let (emoji, remaining) = extractEmoji(from: title)
-              Text(sanitizeAllDayEvents(remaining).apply(config.brailleMode ? braille : nil))
+              Text(sanitizeAllDayEvents(remaining).apply(config.obfuscation.textTransform))
                 .font(config.smallFont)
                 .foregroundColor(Color.secondary)
                 .lineLimit(1)
@@ -805,7 +801,7 @@ struct HeaderRowView: View {
     {
       
       let dayName =
-      Text(shortDayName.apply(config.brailleMode ? braille : nil))
+      Text(shortDayName.apply(config.obfuscation.textTransform))
         .font(config.smallFont)
         .textCase(.uppercase)
         .lineLimit(1)

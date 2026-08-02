@@ -5,7 +5,16 @@ import EventKit
 
 struct ContentView: View {
   @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName))
-  private var brailleMode = false
+  private var legacyBrailleMode = false
+  @AppStorage(Keys.obfuscation, store: UserDefaults(suiteName: Keys.suiteName))
+  private var obfuscationRaw = ""
+
+  private var obfuscation: Binding<ObfuscationStyle> {
+    Binding(
+      get: { ObfuscationStyle.resolve(rawValue: obfuscationRaw, legacyBrailleMode: legacyBrailleMode) },
+      set: { obfuscationRaw = $0.rawValue }
+    )
+  }
 
   var body: some View {
     
@@ -30,8 +39,10 @@ struct ContentView: View {
       .padding(.bottom, 16)
       .background(.white.opacity(0.1))
       
-      Toggle(isOn: $brailleMode) {
-        Text("Braille Mode")
+      Picker("Obfuscation", selection: obfuscation) {
+        ForEach(ObfuscationStyle.allCases) { style in
+          Text(style.displayName).tag(style)
+        }
       }
       
       VStack(spacing:10) {
