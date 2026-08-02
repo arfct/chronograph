@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Placeholder launcher icon: black rounded square echoing the iOS wordmark
+     tile. Replaced with real branding in phase 4. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:fillColor="#1C1C1E"
+        android:pathData="M8,4 h32 a4,4 0 0 1 4,4 v32 a4,4 0 0 1 -4,4 h-32 a4,4 0 0 1 -4,-4 v-32 a4,4 0 0 1 4,-4 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14,14 h20 v4 h-20 z M14,22 h20 v4 h-20 z M14,30 h12 v4 h-12 z" />
+</vector>

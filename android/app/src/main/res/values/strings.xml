@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="spike_widget_description">Phase-1 spike: font, time bar, size buckets, keyguard</string>
+</resources>

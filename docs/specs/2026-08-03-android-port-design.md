@@ -137,13 +137,15 @@ Permission and fetch failures render as an error row, exactly as iOS does — a 
 - **CI drift job** regenerates both from the Swift source of truth and fails if the committed files differ, matching villainy's `fixture-drift` job.
 - Widget rendering is verified by screenshot on an emulator per phase; there is no automated widget snapshot test.
 
-## Risks to resolve in phase 1
+## Risks — resolved by the phase-1 spike (2026-08-03, Pixel 9 AVD, API 37)
 
-- **Custom fonts in Glance.** If a bundled `.otf` can't be applied to Glance `Text`, Ishihara needs another route (pre-rendered bitmap rows, or `RemoteViews` for that mode) or gets dropped on Android with a parity footnote.
-- **Time bars.** iOS draws a gradient-filled rectangle; Glance has no canvas, so this becomes a `Box` with a background and fractional width, or a generated bitmap.
-- **Widget size buckets.** Glance `SizeMode.Responsive` needs a fixed set of sizes; the dp buckets that best mirror iOS's `systemMedium`/`systemLarge` need to be measured on a real launcher, not assumed.
-- **Lock screen availability.** Which concrete API level exposes the `keyguard` widget category on phones needs checking against a real Android 16 QPR / 17 emulator image; the AOSP note says "the release after Android 16 QPR1" without naming a level. If it turns out to need 37, the category gets gated there and `minSdk` stays 36.
-- **Glance 1.2.0-rc01 durability.** It has sat at RC since December 2025. If it never goes stable before release, decide whether to ship on an RC dependency or drop generated previews and fall back to a static `previewImage`.
+- **Custom fonts in Glance: not supported.** `FontFamily("ishihara")` with the font in `res/font` renders identically to the default sans (generic families like Monospace do work). Ishihara on Android therefore needs pre-rendered bitmap rows via Glance `Image`, or ships as a parity footnote. Decide in phase 2; Braille unicode dots and IPA accents render fine in the system font, so the other three modes are unaffected.
+- **Time bars: solved.** A `Box` with an explicit dp width computed from `LocalSize` under `SizeMode.Exact` gives clean fractional bars with `cornerRadius`, no canvas needed.
+- **Size buckets: measured.** On a Pixel 9 grid, 4×2 = 373×212 dp and 4×5 = 373×548 dp (≈106 dp per row of cells, full width 373 dp). 4×2 is the `systemMedium` analogue (iOS: 364×170 pt); responsive buckets anchor at roughly 212/324/548 dp heights. `SizeMode.Exact` recomposes live on launcher resize.
+- **Lock screen: declare and wait.** `widgetCategory="home_screen|keyguard"` is accepted and registers (`widgetCategory=3` in dumpsys) on API 37, but the phone emulator exposes no lock-screen widget surface (no glanceable-hub settings or flags). Keep the declaration — it's free — and treat lock screen as enabled-where-the-OS-offers-it rather than a testable v1 deliverable.
+- **Glance 1.2.0-rc01 durability** (still open). It has sat at RC since December 2025. If it never goes stable before release, decide whether to ship on an RC dependency or drop generated previews and fall back to a static `previewImage`.
+
+Toolchain notes from the spike: AGP 9 has built-in Kotlin — applying `org.jetbrains.kotlin.android` is an error now; `:core` needs `junit-platform-launcher` at test runtime under Gradle 9.
 
 ## Build order
 

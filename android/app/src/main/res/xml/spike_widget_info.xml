@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- widgetCategory includes keyguard to answer the lock-screen risk from the
+     design spec: does the 37 emulator's lock screen offer this widget? -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="140dp"
+    android:minHeight="40dp"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen|keyguard"
+    android:updatePeriodMillis="0"
+    android:description="@string/spike_widget_description" />
