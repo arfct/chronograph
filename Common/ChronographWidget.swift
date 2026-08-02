@@ -286,13 +286,25 @@ let widgetFamilies: [WidgetFamily] = [
   .accessoryRectangular
 ]
 #elseif os(iOS)
-let widgetFamilies: [WidgetFamily] = [
-  .accessoryRectangular,
-  .systemSmall,
-  .systemMedium,
-  .systemLarge,
-  .systemExtraLarge
-]
+let widgetFamilies: [WidgetFamily] = {
+  var families: [WidgetFamily] = [
+    .accessoryRectangular,
+    .systemSmall,
+    .systemMedium,
+    .systemLarge,
+    .systemExtraLarge
+  ]
+  // iOS 27's page-size widget. The case is availability-gated until the
+  // iOS 27 SDK, but exists in the runtime framework; construct it via the
+  // public rawValue init, matched by description so a raw-value shift can
+  // never select the wrong family.
+  if let extraLargePortrait = (0..<16)
+    .compactMap(WidgetFamily.init(rawValue:))
+    .first(where: { $0.description == "systemExtraLargePortrait" }) {
+    families.append(extraLargePortrait)
+  }
+  return families
+}()
 #elseif os(macOS)
 let widgetFamilies: [WidgetFamily] = [
   .systemSmall,
