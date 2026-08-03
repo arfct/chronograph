@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="timezones_widget_description">Current time across your chosen time zones</string>
+    <string name="calendar_widget_description">Upcoming events as a compact text agenda</string>
 </resources>
