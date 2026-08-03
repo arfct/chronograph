@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Live per-zone clock for widget rows. TextClock has no Glance equivalent,
+     so rows keep ticking between widget updates via RemoteViews interop;
+     setTimeZone/setFormat12Hour are @RemotableViewMethod. -->
+<TextClock xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_clock"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="end|center_vertical"
+    android:format12Hour="h:mm a"
+    android:format24Hour="H:mm"
+    android:maxLines="1" />

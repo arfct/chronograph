@@ -6,7 +6,7 @@
 |---|---|---|---|---|
 | Calendar widget | ✅ | ✅ | ✅ | 🔜 [phase 2](specs/2026-08-03-android-port-design.md) |
 | Reminders widget | ✅ | ✅ | ✅ | ➖ [^reminders] |
-| Time Zones widget | ✅ | ✅ | ✅ | 🔜 [phase 2](specs/2026-08-03-android-port-design.md) |
+| Time Zones widget | ✅ | ✅ | ✅ | ✅ (Glance + live TextClock) |
 | Weather widget | ✅ | ➖ [^macweather] | ✅ | 🔜 [phase 3](specs/2026-08-03-android-port-design.md) |
 | Weather via zip code | ✅ | ➖ | ✅ | 🔜 [phase 3](specs/2026-08-03-android-port-design.md) |
 | StandBy Clock widget | ✅ | ➖ | ➖ | ➖ (no StandBy analogue) |
@@ -16,8 +16,8 @@
 | Obfuscation — Enigma (CMUdict IPA) | ✅ | ✅ | ✅ | ✅ (`:core`, fixture-verified) |
 | Obfuscation — Ishihara font | ✅ | ✅ | ✅ | ➖ [^ishihara] |
 | Per-widget configuration | ✅ (AppIntents sheet) | ✅ | ✅ | 🔜 (config activity, phase 2) |
-| Widget gallery previews | ✅ (`recommendedIntents`) | ✅ | ✅ | 🔜 (`providePreview`, phase 2) |
-| Dynamic system color | ➖ | ➖ | ➖ | 🔜 (Material You, phase 2) |
+| Widget gallery previews | ✅ (`recommendedIntents`) | ✅ | ✅ | ✅ (generated previews) |
+| Dynamic system color | ➖ | ➖ | ➖ | ✅ (Material You via GlanceTheme) |
 
 [^reminders]: Android has no system reminders store; the nearest equivalent (Google Tasks API) needs OAuth + Play verification — disproportionate for one widget type. See the design spec's key decisions.
 [^macweather]: The Mac widget target is missing the WeatherKit entitlement (Linear A-155).

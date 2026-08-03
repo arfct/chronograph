@@ -1,0 +1,40 @@
+package com.artifact.chronograph.core
+
+/** Verbatim port of apple/Common/ObliqueStrategies.swift — order matters:
+ *  free-time rows pick `epochSeconds % size`, so any reordering changes
+ *  which strategy a given gap shows on each platform. */
+val obliqueStrategies = listOf(
+    "=^_^=",
+    "=^..^=",
+    "【ツ】",
+    "(◔ ‿ ◔)",
+    "An unexpected treat",
+    "Disconnect for a bit",
+    "Enjoy this time",
+    "Free time to call your own",
+    "Grab a snack",
+    "Hello, me time",
+    "Inhale, exhale, inhale, exhale",
+    "It’s cupcake time",
+    "Listen to your favorite song",
+    "Maker time",
+    "Plan your next vacation",
+    "Practice a new skill",
+    "Quiet time",
+    "Recharge yourself",
+    "Rejoice",
+    "Relax",
+    "Rest your brain",
+    "Share a snack with a friend",
+    "Slow down",
+    "Stretch",
+    "Take a look out the window",
+    "Take your time",
+    "Text a friend",
+    "Turn off for a bit",
+    "Turn up the music",
+    "Unplug for a moment",
+    "What a nice surprise",
+    "Work on your bucket list",
+    "Writer’s block",
+)

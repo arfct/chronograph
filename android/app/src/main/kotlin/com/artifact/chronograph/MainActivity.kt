@@ -20,11 +20,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.artifact.chronograph.widget.SpikeWidgetReceiver
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.lifecycle.lifecycleScope
+import com.artifact.chronograph.widget.TimeZonesWidgetReceiver
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Generated previews (rate-limited by the OS, ~2 calls/hour) so the
+        // widget picker shows real rows instead of the app icon.
+        lifecycleScope.launch {
+            GlanceAppWidgetManager(this@MainActivity)
+                .setWidgetPreviews(TimeZonesWidgetReceiver::class)
+        }
         setContent {
             val scheme = if (isSystemInDarkTheme()) {
                 dynamicDarkColorScheme(this)
@@ -51,11 +60,11 @@ private fun Home() {
             modifier = Modifier.padding(top = 24.dp),
             onClick = {
                 AppWidgetManager.getInstance(context).requestPinAppWidget(
-                    ComponentName(context, SpikeWidgetReceiver::class.java), null, null,
+                    ComponentName(context, TimeZonesWidgetReceiver::class.java), null, null,
                 )
             },
         ) {
-            Text("Pin spike widget")
+            Text("Pin Time Zones widget")
         }
     }
 }
