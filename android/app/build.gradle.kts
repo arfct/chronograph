@@ -1,8 +1,16 @@
+import java.util.Properties
+
 // AGP 9 has built-in Kotlin; the kotlin-android plugin must not be applied.
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
+
+// Play upload key — android/keystore/ is gitignored; back it up outside the
+// repo. Builds stay unsigned when the keystore is absent (CI, fresh clones).
+val keystoreProperties = rootProject.file("keystore/keystore.properties")
+    .takeIf { it.exists() }
+    ?.let { file -> Properties().apply { file.inputStream().use(::load) } }
 
 android {
     namespace = "com.artifact.chronograph"
@@ -16,10 +24,24 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        if (keystoreProperties != null) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (keystoreProperties != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 }
