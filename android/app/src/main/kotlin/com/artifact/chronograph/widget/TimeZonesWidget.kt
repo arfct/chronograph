@@ -84,6 +84,7 @@ private fun TimeZonesContent(
     val height = previewHeight ?: LocalSize.current.height.value
     val rows = RowBuilder.timezoneRows(config)
     val metrics = RowMetrics.forWidget(config.fontSize, height - 24f, compactTime = false)
+    val palette = rowPalette(transparent)
 
     // Always set a background: omitting the modifier leaves the launcher's
     // recycled host view holding the previous color (RemoteViews properties
@@ -96,19 +97,19 @@ private fun TimeZonesContent(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         for (row in rows.take(maxOf(metrics.visibleRows, 1))) {
-            TimeZoneRow(row, metrics, config, dictionary)
+            TimeZoneRow(row, metrics, config, dictionary, palette)
         }
     }
 }
 
 @Composable
-private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig, dictionary: Cmudict?) {
+private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig, dictionary: Cmudict?, palette: RowPalette) {
     val context = LocalContext.current
     val zone = ZoneId.of(row.zoneId ?: "UTC")
     val hour = Instant.now().atZone(zone).hour
     val isLikelySleeping = hour < 7
 
-    val textColor = if (isLikelySleeping) GlanceTheme.colors.onSurfaceVariant else GlanceTheme.colors.onSurface
+    val textColor = if (isLikelySleeping) palette.secondary else palette.primary
 
     Row(
         modifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp),

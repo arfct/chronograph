@@ -132,6 +132,7 @@ private fun CalendarContent(
     val now = Instant.now()
     val showTimeBars = WidgetFeature.TIME_BARS in config.features
     val accent = accentColorProvider(config.accentColor)
+    val palette = rowPalette(transparent)
 
     // Explicit transparent color, never an omitted modifier — see TimeZonesWidget.
     val modifier = GlanceModifier
@@ -143,10 +144,10 @@ private fun CalendarContent(
     Column(modifier = modifier) {
         for (row in rows.take(maxOf(metrics.visibleRows, 1))) {
             when (row.type) {
-                "header" -> HeaderRow(row, metrics, showTimeBars, config, dictionary)
-                "error", "empty" -> MessageRow(row, metrics)
-                "free" -> FreeTimeRow(row, metrics, showTimeBars)
-                else -> EventRow(row, metrics, now, showTimeBars, accent, config, dictionary)
+                "header" -> HeaderRow(row, metrics, showTimeBars, config, dictionary, palette)
+                "error", "empty" -> MessageRow(row, metrics, palette)
+                "free" -> FreeTimeRow(row, metrics, showTimeBars, palette)
+                else -> EventRow(row, metrics, now, showTimeBars, accent, config, dictionary, palette)
             }
         }
     }
@@ -213,6 +214,7 @@ private fun HeaderRow(
     showTimeBars: Boolean,
     config: WidgetConfig,
     dictionary: Cmudict?,
+    palette: RowPalette,
 ) {
     var rowModifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp)
     dayIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
@@ -226,7 +228,7 @@ private fun HeaderRow(
         Text(
             text = config.obfuscation.transform(row.title ?: "", dictionary),
             style = TextStyle(
-                color = GlanceTheme.colors.onSurface,
+                color = palette.primary,
                 fontSize = metrics.fontSize.sp,
                 fontWeight = FontWeight.Bold,
             ),
@@ -238,7 +240,7 @@ private fun HeaderRow(
             Text(
                 text = config.obfuscation.transform(allDayTitles.joinToString(", "), dictionary),
                 style = TextStyle(
-                    color = GlanceTheme.colors.onSurfaceVariant,
+                    color = palette.secondary,
                     fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp,
                 ),
                 maxLines = 1,
@@ -257,10 +259,11 @@ private fun EventRow(
     accent: GlanceColorProvider,
     config: WidgetConfig,
     dictionary: Cmudict?,
+    palette: RowPalette,
 ) {
     val hasEnded = row.hasEnded(now)
     val isHappening = row.isHappening(now)
-    val color = if (hasEnded) GlanceTheme.colors.onSurfaceVariant else GlanceTheme.colors.onSurface
+    val color = if (hasEnded) palette.secondary else palette.primary
 
     var rowModifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp)
     eventIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
@@ -297,7 +300,7 @@ private fun EventRow(
             Text(
                 text = suffix,
                 style = TextStyle(
-                    color = GlanceTheme.colors.onSurfaceVariant,
+                    color = palette.secondary,
                     fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp,
                 ),
             )
@@ -306,7 +309,7 @@ private fun EventRow(
 }
 
 @Composable
-private fun FreeTimeRow(row: RowEntry, metrics: RowMetrics, showTimeBars: Boolean) {
+private fun FreeTimeRow(row: RowEntry, metrics: RowMetrics, showTimeBars: Boolean, palette: RowPalette) {
     Row(
         modifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -316,7 +319,7 @@ private fun FreeTimeRow(row: RowEntry, metrics: RowMetrics, showTimeBars: Boolea
         Text(
             text = row.title ?: "",
             style = TextStyle(
-                color = GlanceTheme.colors.onSurfaceVariant,
+                color = palette.secondary,
                 fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp,
                 fontStyle = FontStyle.Italic,
             ),
@@ -327,10 +330,10 @@ private fun FreeTimeRow(row: RowEntry, metrics: RowMetrics, showTimeBars: Boolea
 }
 
 @Composable
-private fun MessageRow(row: RowEntry, metrics: RowMetrics) {
+private fun MessageRow(row: RowEntry, metrics: RowMetrics, palette: RowPalette) {
     Text(
         text = row.title ?: "",
-        style = TextStyle(color = GlanceTheme.colors.onSurfaceVariant, fontSize = metrics.fontSize.sp),
+        style = TextStyle(color = palette.secondary, fontSize = metrics.fontSize.sp),
         modifier = GlanceModifier.padding(vertical = 4.dp),
     )
 }

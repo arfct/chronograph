@@ -17,6 +17,7 @@
 | Obfuscation — Ishihara font | ✅ | ✅ | ✅ | ➖ [^ishihara] |
 | Per-widget configuration | ✅ (AppIntents sheet) | ✅ | ✅ | ✅ (config activity, reconfigurable) |
 | Transparent background | ✅ (clear default) | ✅ | ➖ | ✅ (per-widget toggle) |
+| Wallpaper-adaptive text | ➖ (system vibrancy) | ➖ | ➖ | ✅ (WallpaperColors hint) |
 | Time bars | ✅ | ✅ | ✅ | ✅ |
 | Accent color | ✅ (hex field) | ✅ | ✅ | ✅ (presets) |
 | Widget gallery previews | ✅ (`recommendedIntents`) | ✅ | ✅ | ✅ (generated previews) |
