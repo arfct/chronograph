@@ -126,9 +126,12 @@ private fun CalendarContent(
     previewHeight: Float? = null,
 ) {
     val height = previewHeight ?: LocalSize.current.height.value
+    // Transparent widgets go full bleed — without a surface, the inset reads
+    // as misalignment against the launcher grid (iOS fullBleed equivalent).
+    val inset = if (transparent) 0 else 12
     // iOS keylines are minWidth and can grow; Glance widths are fixed, so use
     // the wide keyline to fit five-character times like "10:43".
-    val metrics = RowMetrics.forWidget(config.fontSize, height - 24f, compactTime = false)
+    val metrics = RowMetrics.forWidget(config.fontSize, height - inset * 2f, compactTime = false)
     val now = Instant.now()
     val showTimeBars = WidgetFeature.TIME_BARS in config.features
     val accent = accentColorProvider(config.accentColor)
@@ -137,7 +140,7 @@ private fun CalendarContent(
     // Explicit transparent color, never an omitted modifier — see TimeZonesWidget.
     val modifier = GlanceModifier
         .fillMaxSize()
-        .padding(12.dp)
+        .padding(inset.dp)
         .clickable(actionStartActivity<MainActivity>())
         .background(if (transparent) transparentColor else GlanceTheme.colors.widgetBackground)
 

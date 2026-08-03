@@ -83,13 +83,15 @@ private fun TimeZonesContent(
 ) {
     val height = previewHeight ?: LocalSize.current.height.value
     val rows = RowBuilder.timezoneRows(config)
-    val metrics = RowMetrics.forWidget(config.fontSize, height - 24f, compactTime = false)
+    // Transparent widgets go full bleed, like iOS fullBleed.
+    val inset = if (transparent) 0 else 12
+    val metrics = RowMetrics.forWidget(config.fontSize, height - inset * 2f, compactTime = false)
     val palette = rowPalette(transparent)
 
     // Always set a background: omitting the modifier leaves the launcher's
     // recycled host view holding the previous color (RemoteViews properties
     // are never reset, only overwritten).
-    val modifier = GlanceModifier.fillMaxSize().padding(12.dp)
+    val modifier = GlanceModifier.fillMaxSize().padding(inset.dp)
         .background(if (transparent) transparentColor else GlanceTheme.colors.widgetBackground)
 
     Column(
