@@ -1,7 +1,8 @@
 import Foundation
 
-/// Renders text as IPA phonemes in the style of https://github.com/arfct/enigma
-/// with its default settings: en-US, stress as accents, long vowels doubled,
+/// Renders text as IPA phonemes per https://github.com/arfct/enigma
+/// NOTATION.md defaults: en-US, stress as accents (word-initial primary
+/// stress unwritten), long vowels doubled, theta as script ϑ (capital ϴ),
 /// punctuation and capitalization preserved.
 ///
 /// The site phonemizes with eSpeak NG (GPL, so not bundleable here). Instead,
@@ -27,12 +28,16 @@ private func enigmaWord(_ word: String) -> String {
   let wasCapitalized = core.first?.isUppercase == true
   let lookupKey = core.lowercased().replacingOccurrences(of: "\u{2019}", with: "'")
   // Real pronunciation when the dictionary knows the word; spelling rules
-  // as fallback for names and other out-of-vocabulary words.
-  var ipa = Cmudict.lookup(lookupKey) ?? applyStressAccent(graphemesToIPA(lookupKey))
+  // as fallback for names and other out-of-vocabulary words. The fallback
+  // writes no stress: it can only guess the first syllable, and word-initial
+  // primary stress is unwritten by notation.
+  var ipa = Cmudict.lookup(lookupKey) ?? graphemesToIPA(lookupKey)
 
-  // Default: capitals preserved.
+  // Default: capitals preserved. Unicode raises ϑ to Θ; the notation
+  // specifies ϴ (U+03F4).
   if wasCapitalized, let first = ipa.first {
-    ipa = String(first).uppercased() + ipa.dropFirst()
+    let upper = first == "ϑ" ? "ϴ" : String(first).uppercased()
+    ipa = upper + ipa.dropFirst()
   }
   return leading + ipa + trailing
 }
@@ -43,7 +48,7 @@ private let enigmaRules: [(String, String)] = [
   ("tion", "ʃən"), ("sion", "ʒən"), ("ture", "tʃəɹ"), ("ough", "ɔɔ"),
   ("eigh", "eɪ"), ("igh", "aɪ"), ("tch", "tʃ"), ("dge", "dʒ"),
   ("ing", "ɪŋ"), ("ear", "ɪɹ"), ("air", "ɛɹ"), ("oor", "ɔɹ"),
-  ("ch", "tʃ"), ("sh", "ʃ"), ("th", "θ"), ("ph", "f"), ("wh", "w"),
+  ("ch", "tʃ"), ("sh", "ʃ"), ("th", "ϑ"), ("ph", "f"), ("wh", "w"),
   ("ck", "k"), ("ng", "ŋ"), ("qu", "kw"), ("wr", "ɹ"), ("kn", "n"),
   ("ee", "ii"), ("ea", "ii"), ("oo", "uu"), ("ou", "aʊ"), ("ow", "aʊ"),
   ("oi", "ɔɪ"), ("oy", "ɔɪ"), ("ai", "eɪ"), ("ay", "eɪ"), ("au", "ɔɔ"),
@@ -92,25 +97,5 @@ private func graphemesToIPA(_ word: String) -> String {
     }
     i += 1
   }
-  return result
-}
-
-private let ipaVowels = Set("æɛɪɑʌəaeiouʊɔ")
-
-/// First-syllable stress as a combining acute accent (the site's default
-/// "Accents" stress style).
-private func applyStressAccent(_ ipa: String) -> String {
-  var vowelGroups = 0
-  var previousWasVowel = false
-  for character in ipa {
-    let isVowel = ipaVowels.contains(character)
-    if isVowel && !previousWasVowel { vowelGroups += 1 }
-    previousWasVowel = isVowel
-  }
-  guard vowelGroups > 1 else { return ipa }
-
-  guard let index = ipa.firstIndex(where: { ipaVowels.contains($0) }) else { return ipa }
-  var result = ipa
-  result.insert("\u{0301}", at: result.index(after: index))
   return result
 }
