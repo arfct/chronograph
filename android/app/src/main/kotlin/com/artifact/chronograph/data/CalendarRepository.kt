@@ -44,6 +44,7 @@ object CalendarRepository {
             CalendarContract.Instances.EVENT_LOCATION,
         )
 
+        val defaultCalendarId = defaultCalendarId(context)
         val items = mutableListOf<CalendarItem>()
         context.contentResolver.query(
             uri, projection, null, null, "${CalendarContract.Instances.BEGIN} ASC",
@@ -70,10 +71,29 @@ object CalendarRepository {
                         calendarId = cursor.getLong(5).toString(),
                         calendarTitle = cursor.getString(6) ?: "",
                         location = cursor.getString(7),
+                        isDefaultCalendar = defaultCalendarId == null ||
+                            cursor.getLong(5).toString() == defaultCalendarId,
                     )
                 )
             }
         }
         return items.sortedBy { it.start }
+    }
+
+    /** iOS defaultCalendarForNewEvents analogue: the primary calendar, else the first. */
+    private fun defaultCalendarId(context: Context): String? {
+        val projection = arrayOf(CalendarContract.Calendars._ID, CalendarContract.Calendars.IS_PRIMARY)
+        var first: String? = null
+        context.contentResolver.query(
+            CalendarContract.Calendars.CONTENT_URI, projection, null, null,
+            "${CalendarContract.Calendars._ID} ASC",
+        )?.use { cursor ->
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(0).toString()
+                if (first == null) first = id
+                if (cursor.getInt(1) == 1) return id
+            }
+        }
+        return first
     }
 }

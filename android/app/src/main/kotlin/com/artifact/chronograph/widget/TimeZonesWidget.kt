@@ -1,6 +1,10 @@
 package com.artifact.chronograph.widget
 
 import android.content.Context
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.RelativeSizeSpan
+import android.text.style.SuperscriptSpan
 import android.util.TypedValue
 import android.widget.RemoteViews
 import androidx.compose.runtime.Composable
@@ -85,7 +89,8 @@ private fun TimeZonesContent(
     val rows = RowBuilder.timezoneRows(config)
     // Transparent widgets go full bleed, like iOS fullBleed.
     val inset = if (transparent) 0 else 12
-    val metrics = RowMetrics.forWidget(config.fontSize, height - inset * 2f, compactTime = false)
+    // Compact time (hour + small AM/PM) — the iOS TimeStringView default.
+    val metrics = RowMetrics.forWidget(config.fontSize, height - inset * 2f, compactTime = true)
     val palette = rowPalette(transparent)
 
     // Always set a background: omitting the modifier leaves the launcher's
@@ -119,7 +124,9 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig
     ) {
         AndroidRemoteViews(
             remoteViews = zoneClock(context, zone.id, metrics.fontSize, textColor.getColor(context).toArgb()),
-            modifier = GlanceModifier.width(metrics.keyline.dp),
+            // Wider than the keyline: iOS keylines are minWidth and stretch
+            // for two-digit hours like "11 PM"; fixed widths must pre-fit.
+            modifier = GlanceModifier.width((metrics.fontSize * 2.9f).dp),
         )
         Text(
             text = config.obfuscation.transform(row.title ?: "Timezone", dictionary),
@@ -138,9 +145,23 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig
     }
 }
 
+/**
+ * iOS TimeStringView compact + showAMPM: big hour, small raised meridiem, no
+ * minutes. Spans on the format pattern survive TextClock's formatting, so the
+ * live clock keeps the mixed sizing. Both format slots get the same pattern so
+ * the layout doesn't shift with the device's 24-hour preference.
+ */
+private fun compactHourFormat(): CharSequence =
+    SpannableString("h a").apply {
+        setSpan(RelativeSizeSpan(0.66f), 1, 3, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+        setSpan(SuperscriptSpan(), 1, 3, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+    }
+
 private fun zoneClock(context: Context, zoneId: String, fontSizeSp: Float, colorArgb: Int): RemoteViews =
     RemoteViews(context.packageName, R.layout.row_clock).apply {
         setString(R.id.row_clock, "setTimeZone", zoneId)
+        setCharSequence(R.id.row_clock, "setFormat12Hour", compactHourFormat())
+        setCharSequence(R.id.row_clock, "setFormat24Hour", compactHourFormat())
         setTextViewTextSize(R.id.row_clock, TypedValue.COMPLEX_UNIT_SP, fontSizeSp)
         setTextColor(R.id.row_clock, colorArgb)
     }

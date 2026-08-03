@@ -16,6 +16,8 @@ data class CalendarItem(
     val calendarId: String = "",
     val calendarTitle: String = "",
     val location: String? = null,
+    /** Mirrors EKEventStore.defaultCalendarForNewEvents membership on iOS. */
+    val isDefaultCalendar: Boolean = true,
 )
 
 /**

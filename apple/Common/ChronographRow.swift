@@ -180,7 +180,7 @@ var tempFormatter: MeasurementFormatter {
   let formatter = MeasurementFormatter()
   formatter.unitStyle = .medium
   formatter.numberFormatter.maximumFractionDigits = 0
-  formatter.unitOptions = .temperatureWithoutUnit
+  formatter.unitOptions = [.providedUnit, .temperatureWithoutUnit]
   return formatter
 }
 
@@ -188,7 +188,7 @@ var tempFormatterTrailing: MeasurementFormatter {
   let formatter = MeasurementFormatter()
   formatter.unitStyle = .short
   formatter.numberFormatter.maximumFractionDigits = 0
-  formatter.unitOptions = .temperatureWithoutUnit
+  formatter.unitOptions = [.providedUnit, .temperatureWithoutUnit]
   return formatter
 }
 
@@ -220,7 +220,7 @@ struct HourlyWeatherRowView: View {
         Image(systemName: forecast.symbolName)
           .font(config.font)
           .frame(minWidth:config.lineHeight * 1.125)
-        Text(forecast.temperature.converted(to: .fahrenheit), formatter: tempFormatter)
+        Text(forecast.temperature.localizedUnit, formatter: tempFormatter)
           .font(config.font)
         Text((title ?? forecast.condition.description).apply(config.obfuscation.textTransform))
           .font(config.font)
@@ -269,7 +269,7 @@ struct DailyWeatherRowView: View {
           .font(config.font)
           .frame(minWidth:config.lineHeight * 1.125)
         Spacer()
-        Text(forecast.lowTemperature.converted(to: .fahrenheit), formatter: tempFormatter)
+        Text(forecast.lowTemperature.localizedUnit, formatter: tempFormatter)
           .font(config.font)
           .foregroundColor(.secondary)
 
@@ -278,7 +278,7 @@ struct DailyWeatherRowView: View {
           
           .frame(maxWidth:.infinity, maxHeight:2)
 
-        Text(forecast.highTemperature.converted(to: .fahrenheit), formatter: tempFormatter)
+        Text(forecast.highTemperature.localizedUnit, formatter: tempFormatter)
           .font(config.font)
           .foregroundColor(.secondary)
 
@@ -320,7 +320,7 @@ struct CurrentWeatherRowView: View {
         Image(systemName: forecast.symbolName)
           .font(config.font)
           .frame(minWidth:config.lineHeight * 1.125)
-        Text(forecast.temperature.converted(to: .fahrenheit), formatter: tempFormatter)
+        Text(forecast.temperature.localizedUnit, formatter: tempFormatter)
           .font(config.font)
         Text(forecast.condition.description.apply(config.obfuscation.textTransform))
           .font(config.font)
@@ -780,9 +780,9 @@ struct HeaderRowView: View {
         (
         Text(Image(systemName: forecast.symbolName))
         + Text(" ")
-        + Text(tempFormatter.string(from: forecast.lowTemperature.converted(to: .fahrenheit)).replacingOccurrences(of: "°", with: ""))
+        + Text(tempFormatter.string(from: forecast.lowTemperature.localizedUnit).replacingOccurrences(of: "°", with: ""))
         + Text("–")
-        + Text(forecast.highTemperature.converted(to: .fahrenheit), formatter: tempFormatterTrailing)
+        + Text(forecast.highTemperature.localizedUnit, formatter: tempFormatterTrailing)
         + (forecast.precipitationChance > 0 ?
            Text(" ") + Text(Image(systemName: "drop")) +
            Text(NSNumber(value:forecast.precipitationChance), formatter:percentFormatter)

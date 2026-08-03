@@ -3,6 +3,7 @@ package com.artifact.chronograph.widget
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.provider.CalendarContract
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -11,6 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
@@ -22,7 +24,6 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.background
-import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
@@ -56,8 +57,12 @@ import java.util.Locale
 
 /**
  * Calendar widget — same TimelineEngine shape as iOS: fetch items, build rows
- * in :core, mark conflicts, render. Per-widget options come from Glance state
- * (WidgetPrefs) exactly like the per-widget AppIntents parameters on iOS.
+ * in :core, mark conflicts, render. The rendering mirrors ChronographRow.swift
+ * closely: compact numerals (big hour, small raised minutes), secondary time
+ * color, day headers as DAY-NAME + accent day number, time bars in a
+ * fontSize-wide slot, the free-time squiggle, conflict and non-default-calendar
+ * indicators, and the iOS visibility pipeline (ended rows dropped, trailing
+ * orphaned headers trimmed).
  */
 class CalendarWidget : GlanceAppWidget() {
 
@@ -125,17 +130,31 @@ private fun CalendarContent(
     dictionary: Cmudict?,
     previewHeight: Float? = null,
 ) {
-    val height = previewHeight ?: LocalSize.current.height.value
-    // Transparent widgets go full bleed — without a surface, the inset reads
-    // as misalignment against the launcher grid (iOS fullBleed equivalent).
+    val size = LocalSize.current
+    val height = previewHeight ?: size.height.value
+    val widthIsLimited = previewHeight == null && size.width.value < 200f
+    val heightIsLimited = previewHeight == null && size.height.value < 130f
+
+    // Transparent widgets go full bleed (iOS fullBleed equivalent).
     val inset = if (transparent) 0 else 12
-    // iOS keylines are minWidth and can grow; Glance widths are fixed, so use
-    // the wide keyline to fit five-character times like "10:43".
-    val metrics = RowMetrics.forWidget(config.fontSize, height - inset * 2f, compactTime = false)
+    val metrics = RowMetrics.forWidget(config.fontSize, height - inset * 2f, compactTime = true)
     val now = Instant.now()
-    val showTimeBars = WidgetFeature.TIME_BARS in config.features
-    val accent = accentColorProvider(config.accentColor)
+    val showTimeBars = WidgetFeature.TIME_BARS in config.features && !widthIsLimited
     val palette = rowPalette(transparent)
+    val accent = accentColor(config.accentColor)
+    val style = RowStyle(
+        metrics = metrics,
+        palette = palette,
+        accent = GlanceColorProvider(accent),
+        barAccent = GlanceColorProvider(accent.copy(alpha = 0.5f)),
+        showTimeBars = showTimeBars,
+        widthIsLimited = widthIsLimited,
+        heightIsLimited = heightIsLimited,
+        config = config,
+        dictionary = dictionary,
+    )
+
+    val visible = visibleRows(rows, now, metrics, heightBudget = height - inset * 2f, style)
 
     // Explicit transparent color, never an omitted modifier — see TimeZonesWidget.
     val modifier = GlanceModifier
@@ -145,14 +164,351 @@ private fun CalendarContent(
         .background(if (transparent) transparentColor else GlanceTheme.colors.widgetBackground)
 
     Column(modifier = modifier) {
-        for (row in rows.take(maxOf(metrics.visibleRows, 1))) {
+        for (row in visible) {
             when (row.type) {
-                "header" -> HeaderRow(row, metrics, showTimeBars, config, dictionary, palette)
-                "error", "empty" -> MessageRow(row, metrics, palette)
-                "free" -> FreeTimeRow(row, metrics, showTimeBars, palette)
-                else -> EventRow(row, metrics, now, showTimeBars, accent, config, dictionary, palette)
+                "header" -> HeaderRow(row, style)
+                "error", "empty" -> MessageRow(row, style)
+                "free" -> FreeTimeRow(row, style)
+                else -> EventRow(row, style, now)
             }
         }
+    }
+}
+
+/** Everything EventRowView reads off RowViewConfig, resolved once per render. */
+private data class RowStyle(
+    val metrics: RowMetrics,
+    val palette: RowPalette,
+    val accent: GlanceColorProvider,
+    val barAccent: GlanceColorProvider,
+    val showTimeBars: Boolean,
+    val widthIsLimited: Boolean,
+    val heightIsLimited: Boolean,
+    val config: WidgetConfig,
+    val dictionary: Cmudict?,
+) {
+    val smallSize: Float get() = metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE
+    fun transform(text: String): String = config.obfuscation.transform(text, dictionary)
+}
+
+/** iOS accentColor: hex when configured, theme secondary otherwise. */
+@Composable
+private fun accentColor(hex: String): Color {
+    val parsed = runCatching { android.graphics.Color.parseColor(hex) }.getOrNull()
+    return parsed?.let { Color(it) }
+        ?: GlanceTheme.colors.secondary.getColor(LocalContext.current)
+}
+
+/**
+ * The iOS pipeline: `items.filter { $0.isVisible() }`, clip to the height
+ * budget (headers are taller than events), then trim trailing orphaned
+ * headers so a day header never dangles at the bottom.
+ */
+private fun visibleRows(
+    rows: List<RowEntry>,
+    now: Instant,
+    metrics: RowMetrics,
+    heightBudget: Float,
+    style: RowStyle,
+): List<RowEntry> {
+    val result = mutableListOf<RowEntry>()
+    var used = 0f
+    for (row in rows) {
+        if (row.hasEnded(now)) continue
+        val weight = when (row.type) {
+            "header" -> if (style.showTimeBars && !style.widthIsLimited && !style.heightIsLimited) 1.9f else 1.6f
+            "error", "empty" -> 1.5f
+            else -> if (rowShowsDetails(row, now, style)) 1.66f else 1f
+        }
+        if (used + weight * metrics.lineHeight > heightBudget && result.isNotEmpty()) break
+        used += weight * metrics.lineHeight
+        result.add(row)
+    }
+    while (result.isNotEmpty() && result.last().removeIfOrphaned) {
+        result.removeAt(result.size - 1)
+    }
+    return result
+}
+
+private fun rowShowsDetails(row: RowEntry, now: Instant, style: RowStyle): Boolean {
+    if (style.heightIsLimited || row.item == null) return false
+    val soon = row.startAt?.let { it.epochSecond - now.epochSecond < 2 * 3600 } ?: false
+    return (row.isHappening(now) || soon) &&
+        (!row.locations.isNullOrEmpty() || row.meetingUrl != null)
+}
+
+// MARK: compact numerals — TimeStringView with compactTime (the iOS default):
+// monospaced-feel big hour, small semibold minutes top-aligned to read raised.
+
+private val hourFormat = DateTimeFormatter.ofPattern("h", Locale.US)
+private val minuteFormat = DateTimeFormatter.ofPattern("mm", Locale.US)
+
+@Composable
+private fun CompactTime(instant: Instant, style: RowStyle, color: GlanceColorProvider) {
+    val zoned = instant.atZone(ZoneId.systemDefault())
+    Row(verticalAlignment = Alignment.Top) {
+        Text(
+            text = hourFormat.format(zoned),
+            style = TextStyle(color = color, fontSize = style.metrics.fontSize.sp),
+            maxLines = 1,
+        )
+        Text(
+            text = minuteFormat.format(zoned),
+            style = TextStyle(color = color, fontSize = style.smallSize.sp, fontWeight = FontWeight.Medium),
+            maxLines = 1,
+        )
+    }
+}
+
+/** iOS TimeBarView inside its fontSize-wide slot. */
+@Composable
+private fun TimeBarSlot(style: RowStyle, color: GlanceColorProvider?) {
+    Column(
+        modifier = GlanceModifier
+            .width(style.metrics.fontSize.dp)
+            .fillMaxHeight()
+            .padding(vertical = (style.metrics.fontSize / 12f).dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        if (color != null) {
+            Box(
+                modifier = GlanceModifier
+                    .width((0.085f * style.metrics.fontSize * 1.5f).dp)
+                    .fillMaxHeight()
+                    .cornerRadius(2.dp)
+                    .background(color),
+            ) {}
+        }
+    }
+}
+
+/** FreeRowView's "Time Squiggle" slot: a wavy vertical glyph at 2/3 opacity. */
+@Composable
+private fun SquiggleSlot(style: RowStyle) {
+    Column(
+        modifier = GlanceModifier.width(style.metrics.fontSize.dp).fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = "⌇",
+            style = TextStyle(color = style.palette.secondary, fontSize = style.smallSize.sp),
+        )
+    }
+}
+
+// MARK: rows
+
+private val dayNameFormat = DateTimeFormatter.ofPattern("EEE", Locale.getDefault())
+private val dayNumberFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
+
+/**
+ * HeaderRowView: DAY-NAME small caps in the keyline, day number in accent,
+ * all-day titles in small secondary. The large variant (big widgets with time
+ * bars) shows a light 1.8× day number aligned with the bars column.
+ */
+@Composable
+private fun HeaderRow(row: RowEntry, style: RowStyle) {
+    val m = style.metrics
+    val startAt = row.startAt ?: return
+    val zoned = startAt.atZone(ZoneId.systemDefault())
+    val dayName = style.transform(dayNameFormat.format(zoned)).uppercase()
+    val dayNumber = dayNumberFormat.format(zoned)
+    val allDayTitles = row.allDayItems.orEmpty().take(if (style.widthIsLimited) 2 else 3)
+        .mapNotNull { it.item?.title }
+    val large = style.showTimeBars && !style.widthIsLimited && !style.heightIsLimited
+
+    var modifier = GlanceModifier.fillMaxWidth()
+    row.startAt?.let { dayIntent(row)?.let { intent -> modifier = modifier.clickable(actionStartActivityIntent(intent)) } }
+
+    if (large) {
+        Row(
+            // Explicit height: an unbounded row lets the bar slot's
+            // fillMaxHeight consume the whole widget.
+            modifier = modifier.height((m.lineHeight * 1.7f).dp).padding(top = (m.lineHeight / 4).dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(modifier = GlanceModifier.width(m.keyline.dp), contentAlignment = Alignment.CenterEnd) {
+                Text(
+                    text = dayNumber,
+                    style = TextStyle(color = style.accent, fontSize = (m.fontSize * 1.8f).sp),
+                    maxLines = 1,
+                )
+            }
+            TimeBarSlot(style, style.barAccent)
+            Column(modifier = GlanceModifier.defaultWeight().padding(vertical = (m.lineHeight / 4).dp)) {
+                Text(
+                    text = dayName,
+                    style = TextStyle(
+                        color = style.palette.primary,
+                        fontSize = style.smallSize.sp,
+                        fontWeight = FontWeight.Medium,
+                    ),
+                    maxLines = 1,
+                )
+                if (allDayTitles.isNotEmpty()) {
+                    Text(
+                        text = style.transform(allDayTitles.joinToString("  ")),
+                        style = TextStyle(color = style.palette.secondary, fontSize = style.smallSize.sp),
+                        maxLines = 1,
+                    )
+                }
+            }
+        }
+    } else {
+        Row(
+            modifier = modifier.padding(
+                top = (if (style.heightIsLimited) 0f else m.lineHeight / 2).dp,
+                bottom = (if (style.heightIsLimited) 0f else m.lineHeight / 8).dp,
+            ),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(modifier = GlanceModifier.width(m.keyline.dp), contentAlignment = Alignment.CenterEnd) {
+                Text(
+                    text = dayName,
+                    style = TextStyle(
+                        color = style.palette.primary,
+                        fontSize = style.smallSize.sp,
+                        fontWeight = FontWeight.Medium,
+                    ),
+                    maxLines = 1,
+                )
+            }
+            if (!style.widthIsLimited) {
+                Box(modifier = GlanceModifier.width(m.fontSize.dp), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = dayNumber,
+                        style = TextStyle(color = style.accent, fontSize = style.smallSize.sp),
+                        maxLines = 1,
+                    )
+                }
+            }
+            if (allDayTitles.isNotEmpty()) {
+                Text(
+                    text = style.transform(allDayTitles.joinToString("  ")),
+                    style = TextStyle(color = style.palette.secondary, fontSize = style.smallSize.sp),
+                    maxLines = 1,
+                    modifier = GlanceModifier.padding(start = 6.dp).defaultWeight(),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
+    val m = style.metrics
+    val isHappening = row.isHappening(now)
+    val soon = row.startAt?.let { it.epochSecond - now.epochSecond < 2 * 3600 } ?: false
+    val showDetails = rowShowsDetails(row, now, style)
+    val twoLines = !style.heightIsLimited && (isHappening || soon)
+
+    var rowModifier = GlanceModifier.fillMaxWidth()
+        .height((if (showDetails) m.lineHeight * 1.66f else m.lineHeight).dp)
+    eventIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
+
+    Row(modifier = rowModifier, verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = GlanceModifier.width(m.keyline.dp).fillMaxHeight(),
+            contentAlignment = Alignment.CenterEnd,
+        ) {
+            // Same-start conflicts leave the keyline empty, like EventRowView.
+            if (!(row.hasConflict && row.hasStartConflict)) {
+                row.startAt?.let { CompactTime(it, style, style.palette.secondary) }
+            }
+        }
+        if (style.showTimeBars) TimeBarSlot(style, style.barAccent)
+
+        Column(modifier = GlanceModifier.defaultWeight().padding(start = 4.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = style.transform(row.item?.title ?: row.title ?: "Untitled"),
+                    style = TextStyle(
+                        color = style.palette.primary,
+                        fontSize = m.fontSize.sp,
+                        fontWeight = if (isHappening) FontWeight.Medium else FontWeight.Normal,
+                    ),
+                    maxLines = if (twoLines) 2 else 1,
+                )
+                if (row.hasConflict && !style.widthIsLimited) {
+                    Text(
+                        text = " ⚠︎",
+                        style = TextStyle(color = style.palette.secondary, fontSize = style.smallSize.sp),
+                    )
+                }
+                if (row.item?.isDefaultCalendar == false) {
+                    Text(
+                        text = " " + circledInitial(row.item?.calendarTitle),
+                        style = TextStyle(color = style.accent, fontSize = m.fontSize.sp),
+                    )
+                }
+            }
+            if (showDetails) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    row.meetingUrl?.let { url ->
+                        Text(
+                            text = "Join call  ",
+                            style = TextStyle(color = style.palette.primary, fontSize = style.smallSize.sp),
+                            modifier = GlanceModifier.clickable(
+                                actionStartActivityIntent(Intent(Intent.ACTION_VIEW, Uri.parse(url))),
+                            ),
+                        )
+                    }
+                    row.locations?.takeIf { it.isNotEmpty() }?.let { locations ->
+                        Text(
+                            text = style.transform(locations.joinToString(", ")),
+                            style = TextStyle(
+                                color = style.palette.secondary,
+                                fontSize = style.smallSize.sp,
+                                fontStyle = FontStyle.Italic,
+                            ),
+                            maxLines = 1,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** iOS `<initial>.circle` indicator for events off the default calendar. */
+private fun circledInitial(calendarTitle: String?): String {
+    val letter = calendarTitle?.firstOrNull()?.lowercaseChar() ?: return "◦"
+    return if (letter in 'a'..'z') ('ⓐ' + (letter - 'a')).toString() else "◦"
+}
+
+@Composable
+private fun FreeTimeRow(row: RowEntry, style: RowStyle) {
+    val m = style.metrics
+    Row(
+        modifier = GlanceModifier.fillMaxWidth().height(m.lineHeight.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(modifier = GlanceModifier.width(m.keyline.dp)) {}
+        if (style.showTimeBars) SquiggleSlot(style)
+        Text(
+            text = style.transform(row.title ?: "Free"),
+            style = TextStyle(
+                color = style.palette.secondary,
+                fontSize = style.smallSize.sp,
+                fontStyle = FontStyle.Italic,
+            ),
+            maxLines = 1,
+            modifier = GlanceModifier.padding(start = 4.dp),
+        )
+    }
+}
+
+@Composable
+private fun MessageRow(row: RowEntry, style: RowStyle) {
+    Box(
+        modifier = GlanceModifier.fillMaxWidth().height((style.metrics.lineHeight * 1.5f).dp),
+        contentAlignment = Alignment.BottomStart,
+    ) {
+        Text(
+            text = row.title ?: "",
+            style = TextStyle(color = style.palette.secondary, fontSize = style.metrics.fontSize.sp),
+        )
     }
 }
 
@@ -176,174 +532,6 @@ private fun dayIntent(row: RowEntry): Intent? {
             .build(),
     )
 }
-
-/** iOS TimeBarView: thin rounded accent bar at half opacity beside the keyline. */
-@Composable
-private fun TimeBarSlot(metrics: RowMetrics, color: GlanceColorProvider?) {
-    Column(
-        modifier = GlanceModifier
-            .width((metrics.fontSize * 0.5f).dp)
-            .fillMaxHeight()
-            .padding(vertical = (metrics.fontSize / 12f).dp, horizontal = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        if (color != null) {
-            Box(
-                modifier = GlanceModifier
-                    .width((0.085f * metrics.fontSize * 1.5f).dp)
-                    .fillMaxHeight()
-                    .cornerRadius(2.dp)
-                    .background(color),
-            ) {}
-        }
-    }
-}
-
-@Composable
-private fun accentColorProvider(hex: String): GlanceColorProvider {
-    val parsed = runCatching { android.graphics.Color.parseColor(hex) }.getOrNull()
-    return if (parsed != null) {
-        val half = Color(parsed).copy(alpha = 0.5f)
-        ColorProvider(half, half)
-    } else {
-        GlanceTheme.colors.secondary
-    }
-}
-
-@Composable
-private fun HeaderRow(
-    row: RowEntry,
-    metrics: RowMetrics,
-    showTimeBars: Boolean,
-    config: WidgetConfig,
-    dictionary: Cmudict?,
-    palette: RowPalette,
-) {
-    var rowModifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp)
-    dayIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
-
-    Row(
-        modifier = rowModifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(modifier = GlanceModifier.width(metrics.keyline.dp)) {}
-        if (showTimeBars) TimeBarSlot(metrics, color = null)
-        Text(
-            text = config.obfuscation.transform(row.title ?: "", dictionary),
-            style = TextStyle(
-                color = palette.primary,
-                fontSize = metrics.fontSize.sp,
-                fontWeight = FontWeight.Bold,
-            ),
-            maxLines = 1,
-            modifier = GlanceModifier.padding(start = 8.dp),
-        )
-        val allDayTitles = row.allDayItems.orEmpty().mapNotNull { it.item?.title }
-        if (allDayTitles.isNotEmpty()) {
-            Text(
-                text = config.obfuscation.transform(allDayTitles.joinToString(", "), dictionary),
-                style = TextStyle(
-                    color = palette.secondary,
-                    fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp,
-                ),
-                maxLines = 1,
-                modifier = GlanceModifier.padding(start = 8.dp).defaultWeight(),
-            )
-        }
-    }
-}
-
-@Composable
-private fun EventRow(
-    row: RowEntry,
-    metrics: RowMetrics,
-    now: Instant,
-    showTimeBars: Boolean,
-    accent: GlanceColorProvider,
-    config: WidgetConfig,
-    dictionary: Cmudict?,
-    palette: RowPalette,
-) {
-    val hasEnded = row.hasEnded(now)
-    val isHappening = row.isHappening(now)
-    val color = if (hasEnded) palette.secondary else palette.primary
-
-    var rowModifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp)
-    eventIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
-
-    Row(
-        modifier = rowModifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(
-            modifier = GlanceModifier.width(metrics.keyline.dp),
-            contentAlignment = Alignment.CenterEnd,
-        ) {
-            // Same-start conflicts leave the keyline empty, like EventRowView.
-            if (!(row.hasConflict && row.hasStartConflict)) {
-                Text(
-                    text = row.startAt?.let(::shortTime) ?: "",
-                    style = TextStyle(color = color, fontSize = metrics.fontSize.sp),
-                    maxLines = 1,
-                )
-            }
-        }
-        if (showTimeBars) TimeBarSlot(metrics, color = accent)
-        Text(
-            text = config.obfuscation.transform(row.item?.title ?: row.title ?: "Event", dictionary),
-            style = TextStyle(
-                color = color,
-                fontSize = metrics.fontSize.sp,
-                fontWeight = if (isHappening) FontWeight.Bold else FontWeight.Normal,
-            ),
-            maxLines = 1,
-            modifier = GlanceModifier.padding(start = 8.dp).defaultWeight(),
-        )
-        row.suffix?.let { suffix ->
-            Text(
-                text = suffix,
-                style = TextStyle(
-                    color = palette.secondary,
-                    fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp,
-                ),
-            )
-        }
-    }
-}
-
-@Composable
-private fun FreeTimeRow(row: RowEntry, metrics: RowMetrics, showTimeBars: Boolean, palette: RowPalette) {
-    Row(
-        modifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(modifier = GlanceModifier.width(metrics.keyline.dp)) {}
-        if (showTimeBars) TimeBarSlot(metrics, color = null)
-        Text(
-            text = row.title ?: "",
-            style = TextStyle(
-                color = palette.secondary,
-                fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp,
-                fontStyle = FontStyle.Italic,
-            ),
-            maxLines = 1,
-            modifier = GlanceModifier.padding(start = 8.dp),
-        )
-    }
-}
-
-@Composable
-private fun MessageRow(row: RowEntry, metrics: RowMetrics, palette: RowPalette) {
-    Text(
-        text = row.title ?: "",
-        style = TextStyle(color = palette.secondary, fontSize = metrics.fontSize.sp),
-        modifier = GlanceModifier.padding(vertical = 4.dp),
-    )
-}
-
-private fun shortTime(instant: Instant): String =
-    DateTimeFormatter.ofPattern("h:mm", Locale.getDefault())
-        .format(instant.atZone(ZoneId.systemDefault()))
 
 class CalendarWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = CalendarWidget()

@@ -84,3 +84,10 @@ var dayOfMonthFormat: DateFormatter  {
   formatter.dateFormat = "d"
   return formatter
 }
+
+extension Measurement where UnitType == UnitTemperature {
+  /// The user's preferred temperature unit — °F or °C per system locale.
+  var localizedUnit: Measurement<UnitTemperature> {
+    converted(to: UnitTemperature(forLocale: .current))
+  }
+}
