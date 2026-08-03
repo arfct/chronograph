@@ -41,7 +41,7 @@ Deliberately modern-only: no compatibility shims, no `AppCompat`, no hand-writte
 | | Version | Note |
 |---|---|---|
 | `compileSdk` / `targetSdk` | **37** (Android 17) | Stable since 2026-06-16. Requires AGP 9.1+. |
-| `minSdk` | **36** (Android 16) | The aggressive floor that still has an install base; API 37 alone would be a few months of devices. Lock screen widgets arrived in a QPR after the 36.0 baseline, so that one category is runtime-gated rather than assumed. |
+| `minSdk` | **35** (Android 15) | The floor for generated widget previews (`setWidgetPreviews`), our newest platform dependency — lowered from 36 once verified that nothing else needs 16 (2026-08-03, API 35 emulator pass). Lock screen widgets remain runtime-gated. |
 | AGP | **9.2** | April 2026; first line supporting API 37 (9.0 caps at 36.1). |
 | Gradle | **9.5.1** | Current stable. |
 | Kotlin | **2.4.0** | What Compose BOM 2026.06.00 is built against. |

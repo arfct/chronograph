@@ -18,7 +18,9 @@ android {
 
     defaultConfig {
         applicationId = "com.artifact.chronograph"
-        minSdk = 36
+        // 35 = Android 15, the floor for generated widget previews
+        // (setWidgetPreviews) — our newest platform dependency.
+        minSdk = 35
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"

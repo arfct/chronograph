@@ -37,5 +37,5 @@
 - [ ] Content rating questionnaire (utility, no user content → Everyone).
 - [ ] Target audience: 18+ or 13+ (no kids design program).
 - [ ] App category: Productivity or Tools.
-- [ ] Note: `minSdk 36` intentionally limits availability to Android 16+
+- [ ] Note: `minSdk 35` limits availability to Android 15+
       (docs/specs/2026-08-03-android-port-design.md — modern-only baseline).
