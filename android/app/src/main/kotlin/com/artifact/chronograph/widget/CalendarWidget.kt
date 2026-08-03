@@ -1,6 +1,9 @@
 package com.artifact.chronograph.widget
 
+import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
+import android.provider.CalendarContract
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -11,6 +14,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
+import androidx.glance.appwidget.action.actionStartActivity as actionStartActivityIntent
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
@@ -148,6 +152,27 @@ private fun CalendarContent(
     }
 }
 
+/** Counterpart of EventRowView's Link: open the event in the calendar app. */
+private fun eventIntent(row: RowEntry): Intent? {
+    val eventId = row.item?.id?.toLongOrNull() ?: return null
+    return Intent(Intent.ACTION_VIEW)
+        .setData(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId))
+        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, row.startAt?.toEpochMilli() ?: 0L)
+        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, row.endAt?.toEpochMilli() ?: 0L)
+}
+
+/** Day headers open the calendar at that day. */
+private fun dayIntent(row: RowEntry): Intent? {
+    val millis = row.startAt?.toEpochMilli() ?: return null
+    return Intent(
+        Intent.ACTION_VIEW,
+        CalendarContract.CONTENT_URI.buildUpon()
+            .appendPath("time")
+            .appendPath(millis.toString())
+            .build(),
+    )
+}
+
 /** iOS TimeBarView: thin rounded accent bar at half opacity beside the keyline. */
 @Composable
 private fun TimeBarSlot(metrics: RowMetrics, color: GlanceColorProvider?) {
@@ -189,8 +214,11 @@ private fun HeaderRow(
     config: WidgetConfig,
     dictionary: Cmudict?,
 ) {
+    var rowModifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp)
+    dayIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
+
     Row(
-        modifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp),
+        modifier = rowModifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = GlanceModifier.width(metrics.keyline.dp)) {}
@@ -234,8 +262,11 @@ private fun EventRow(
     val isHappening = row.isHappening(now)
     val color = if (hasEnded) GlanceTheme.colors.onSurfaceVariant else GlanceTheme.colors.onSurface
 
+    var rowModifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp)
+    eventIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
+
     Row(
-        modifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp),
+        modifier = rowModifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
