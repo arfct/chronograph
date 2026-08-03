@@ -11,4 +11,6 @@
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard"
     android:updatePeriodMillis="1800000"
+    android:configure="com.artifact.chronograph.widget.WidgetConfigActivity"
+    android:widgetFeatures="reconfigurable|configuration_optional"
     android:description="@string/timezones_widget_description" />

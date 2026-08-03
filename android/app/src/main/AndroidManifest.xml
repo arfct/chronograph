@@ -17,6 +17,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".widget.WidgetConfigActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".widget.CalendarWidgetReceiver"
             android:exported="false"

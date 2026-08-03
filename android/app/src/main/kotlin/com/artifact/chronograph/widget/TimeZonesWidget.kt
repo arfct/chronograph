@@ -17,6 +17,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -26,15 +27,17 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
+import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontStyle
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.artifact.chronograph.R
-import com.artifact.chronograph.core.FontSize
+import com.artifact.chronograph.core.Cmudict
 import com.artifact.chronograph.core.RowBuilder
 import com.artifact.chronograph.core.RowEntry
 import com.artifact.chronograph.core.RowMetrics
 import com.artifact.chronograph.core.WidgetConfig
+import com.artifact.chronograph.data.Dictionaries
 import java.time.Instant
 import java.time.ZoneId
 
@@ -50,9 +53,13 @@ class TimeZonesWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val prefs = getAppWidgetState(context, PreferencesGlanceStateDefinition, id)
+        val config = WidgetPrefs.timezonesConfig(prefs)
+        val transparent = WidgetPrefs.isTransparent(prefs)
+        val dictionary = Dictionaries.cmudict(context)
         provideContent {
             GlanceTheme {
-                TimeZonesContent()
+                TimeZonesContent(config, transparent, dictionary)
             }
         }
     }
@@ -61,33 +68,41 @@ class TimeZonesWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 // No host size during preview generation; use the 3×2 bucket.
-                TimeZonesContent(previewHeight = 212f)
+                TimeZonesContent(WidgetConfig.timezones, transparent = false, dictionary = null, previewHeight = 212f)
             }
         }
     }
 }
 
 @Composable
-private fun TimeZonesContent(previewHeight: Float? = null) {
+private fun TimeZonesContent(
+    config: WidgetConfig,
+    transparent: Boolean,
+    dictionary: Cmudict?,
+    previewHeight: Float? = null,
+) {
     val height = previewHeight ?: LocalSize.current.height.value
-    val rows = RowBuilder.timezoneRows(WidgetConfig.timezones)
-    val metrics = RowMetrics.forWidget(FontSize.MEDIUM, height - 24f, compactTime = false)
+    val rows = RowBuilder.timezoneRows(config)
+    val metrics = RowMetrics.forWidget(config.fontSize, height - 24f, compactTime = false)
+
+    // Always set a background: omitting the modifier leaves the launcher's
+    // recycled host view holding the previous color (RemoteViews properties
+    // are never reset, only overwritten).
+    val modifier = GlanceModifier.fillMaxSize().padding(12.dp)
+        .background(if (transparent) transparentColor else GlanceTheme.colors.widgetBackground)
 
     Column(
-        modifier = GlanceModifier
-            .fillMaxSize()
-            .background(GlanceTheme.colors.widgetBackground)
-            .padding(12.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         for (row in rows.take(maxOf(metrics.visibleRows, 1))) {
-            TimeZoneRow(row, metrics)
+            TimeZoneRow(row, metrics, config, dictionary)
         }
     }
 }
 
 @Composable
-private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics) {
+private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig, dictionary: Cmudict?) {
     val context = LocalContext.current
     val zone = ZoneId.of(row.zoneId ?: "UTC")
     val hour = Instant.now().atZone(zone).hour
@@ -104,7 +119,7 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics) {
             modifier = GlanceModifier.width(metrics.keyline.dp),
         )
         Text(
-            text = row.title ?: "Timezone",
+            text = config.obfuscation.transform(row.title ?: "Timezone", dictionary),
             style = TextStyle(
                 color = textColor,
                 fontSize = metrics.fontSize.sp,
@@ -139,6 +154,10 @@ private fun dayPartIcon(hour: Int): String = when (hour) {
     22 -> "😴"
     else -> "🌙"
 }
+
+internal val transparentColor = androidx.glance.unit.ColorProvider(
+    androidx.compose.ui.graphics.Color.Transparent,
+)
 
 class TimeZonesWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = TimeZonesWidget()

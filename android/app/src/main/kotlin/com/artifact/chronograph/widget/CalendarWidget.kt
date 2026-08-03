@@ -2,6 +2,7 @@ package com.artifact.chronograph.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
@@ -13,29 +14,37 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.background
+import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
+import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontStyle
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider as GlanceColorProvider
 import com.artifact.chronograph.MainActivity
 import com.artifact.chronograph.core.CalendarItem
-import com.artifact.chronograph.core.FontSize
+import com.artifact.chronograph.core.Cmudict
 import com.artifact.chronograph.core.RowBuilder
 import com.artifact.chronograph.core.RowEntry
 import com.artifact.chronograph.core.RowMetrics
 import com.artifact.chronograph.core.WidgetConfig
+import com.artifact.chronograph.core.WidgetFeature
 import com.artifact.chronograph.data.CalendarRepository
+import com.artifact.chronograph.data.Dictionaries
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -43,18 +52,22 @@ import java.util.Locale
 
 /**
  * Calendar widget — same TimelineEngine shape as iOS: fetch items, build rows
- * in :core, mark conflicts, render. Missing permission renders the same kind
- * of error row the Swift engine emits (tap opens the app to grant).
+ * in :core, mark conflicts, render. Per-widget options come from Glance state
+ * (WidgetPrefs) exactly like the per-widget AppIntents parameters on iOS.
  */
 class CalendarWidget : GlanceAppWidget() {
 
     override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val rows = buildRows(context)
+        val prefs = getAppWidgetState(context, PreferencesGlanceStateDefinition, id)
+        val config = WidgetPrefs.calendarConfig(prefs)
+        val transparent = WidgetPrefs.isTransparent(prefs)
+        val dictionary = Dictionaries.cmudict(context)
+        val rows = buildRows(context, config)
         provideContent {
             GlanceTheme {
-                CalendarContent(rows)
+                CalendarContent(rows, config, transparent, dictionary)
             }
         }
     }
@@ -62,17 +75,20 @@ class CalendarWidget : GlanceAppWidget() {
     override suspend fun providePreview(context: Context, widgetCategory: Int) {
         provideContent {
             GlanceTheme {
-                CalendarContent(sampleRows(), previewHeight = 212f)
+                CalendarContent(
+                    sampleRows(), WidgetConfig.calendar,
+                    transparent = false, dictionary = null, previewHeight = 212f,
+                )
             }
         }
     }
 
-    private fun buildRows(context: Context): List<RowEntry> {
+    private fun buildRows(context: Context, config: WidgetConfig): List<RowEntry> {
         if (!CalendarRepository.hasPermission(context)) {
             return listOf(RowEntry(type = "error", title = "Enable access to calendar in settings"))
         }
         val now = Instant.now()
-        val rows = RowBuilder.calendarRows(WidgetConfig.calendar, CalendarRepository.queryItems(context, now), now)
+        val rows = RowBuilder.calendarRows(config, CalendarRepository.queryItems(context, now), now)
         RowBuilder.markConflicts(rows)
         return rows.ifEmpty { listOf(RowEntry(type = "empty", title = "No upcoming events")) }
     }
@@ -98,40 +114,89 @@ class CalendarWidget : GlanceAppWidget() {
 }
 
 @Composable
-private fun CalendarContent(rows: List<RowEntry>, previewHeight: Float? = null) {
+private fun CalendarContent(
+    rows: List<RowEntry>,
+    config: WidgetConfig,
+    transparent: Boolean,
+    dictionary: Cmudict?,
+    previewHeight: Float? = null,
+) {
     val height = previewHeight ?: LocalSize.current.height.value
     // iOS keylines are minWidth and can grow; Glance widths are fixed, so use
     // the wide keyline to fit five-character times like "10:43".
-    val metrics = RowMetrics.forWidget(FontSize.MEDIUM, height - 24f, compactTime = false)
+    val metrics = RowMetrics.forWidget(config.fontSize, height - 24f, compactTime = false)
     val now = Instant.now()
+    val showTimeBars = WidgetFeature.TIME_BARS in config.features
+    val accent = accentColorProvider(config.accentColor)
 
-    Column(
-        modifier = GlanceModifier
-            .fillMaxSize()
-            .background(GlanceTheme.colors.widgetBackground)
-            .padding(12.dp)
-            .clickable(actionStartActivity<MainActivity>()),
-    ) {
+    // Explicit transparent color, never an omitted modifier — see TimeZonesWidget.
+    val modifier = GlanceModifier
+        .fillMaxSize()
+        .padding(12.dp)
+        .clickable(actionStartActivity<MainActivity>())
+        .background(if (transparent) transparentColor else GlanceTheme.colors.widgetBackground)
+
+    Column(modifier = modifier) {
         for (row in rows.take(maxOf(metrics.visibleRows, 1))) {
             when (row.type) {
-                "header" -> HeaderRow(row, metrics)
+                "header" -> HeaderRow(row, metrics, showTimeBars, config, dictionary)
                 "error", "empty" -> MessageRow(row, metrics)
-                "free" -> FreeTimeRow(row, metrics)
-                else -> EventRow(row, metrics, now)
+                "free" -> FreeTimeRow(row, metrics, showTimeBars)
+                else -> EventRow(row, metrics, now, showTimeBars, accent, config, dictionary)
             }
         }
     }
 }
 
+/** iOS TimeBarView: thin rounded accent bar at half opacity beside the keyline. */
 @Composable
-private fun HeaderRow(row: RowEntry, metrics: RowMetrics) {
+private fun TimeBarSlot(metrics: RowMetrics, color: GlanceColorProvider?) {
+    Column(
+        modifier = GlanceModifier
+            .width((metrics.fontSize * 0.5f).dp)
+            .fillMaxHeight()
+            .padding(vertical = (metrics.fontSize / 12f).dp, horizontal = 4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        if (color != null) {
+            Box(
+                modifier = GlanceModifier
+                    .width((0.085f * metrics.fontSize * 1.5f).dp)
+                    .fillMaxHeight()
+                    .cornerRadius(2.dp)
+                    .background(color),
+            ) {}
+        }
+    }
+}
+
+@Composable
+private fun accentColorProvider(hex: String): GlanceColorProvider {
+    val parsed = runCatching { android.graphics.Color.parseColor(hex) }.getOrNull()
+    return if (parsed != null) {
+        val half = Color(parsed).copy(alpha = 0.5f)
+        ColorProvider(half, half)
+    } else {
+        GlanceTheme.colors.secondary
+    }
+}
+
+@Composable
+private fun HeaderRow(
+    row: RowEntry,
+    metrics: RowMetrics,
+    showTimeBars: Boolean,
+    config: WidgetConfig,
+    dictionary: Cmudict?,
+) {
     Row(
         modifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = GlanceModifier.width(metrics.keyline.dp)) {}
+        if (showTimeBars) TimeBarSlot(metrics, color = null)
         Text(
-            text = row.title ?: "",
+            text = config.obfuscation.transform(row.title ?: "", dictionary),
             style = TextStyle(
                 color = GlanceTheme.colors.onSurface,
                 fontSize = metrics.fontSize.sp,
@@ -143,7 +208,7 @@ private fun HeaderRow(row: RowEntry, metrics: RowMetrics) {
         val allDayTitles = row.allDayItems.orEmpty().mapNotNull { it.item?.title }
         if (allDayTitles.isNotEmpty()) {
             Text(
-                text = allDayTitles.joinToString(", "),
+                text = config.obfuscation.transform(allDayTitles.joinToString(", "), dictionary),
                 style = TextStyle(
                     color = GlanceTheme.colors.onSurfaceVariant,
                     fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp,
@@ -156,7 +221,15 @@ private fun HeaderRow(row: RowEntry, metrics: RowMetrics) {
 }
 
 @Composable
-private fun EventRow(row: RowEntry, metrics: RowMetrics, now: Instant) {
+private fun EventRow(
+    row: RowEntry,
+    metrics: RowMetrics,
+    now: Instant,
+    showTimeBars: Boolean,
+    accent: GlanceColorProvider,
+    config: WidgetConfig,
+    dictionary: Cmudict?,
+) {
     val hasEnded = row.hasEnded(now)
     val isHappening = row.isHappening(now)
     val color = if (hasEnded) GlanceTheme.colors.onSurfaceVariant else GlanceTheme.colors.onSurface
@@ -169,14 +242,18 @@ private fun EventRow(row: RowEntry, metrics: RowMetrics, now: Instant) {
             modifier = GlanceModifier.width(metrics.keyline.dp),
             contentAlignment = Alignment.CenterEnd,
         ) {
-            Text(
-                text = row.startAt?.let(::shortTime) ?: "",
-                style = TextStyle(color = color, fontSize = metrics.fontSize.sp),
-                maxLines = 1,
-            )
+            // Same-start conflicts leave the keyline empty, like EventRowView.
+            if (!(row.hasConflict && row.hasStartConflict)) {
+                Text(
+                    text = row.startAt?.let(::shortTime) ?: "",
+                    style = TextStyle(color = color, fontSize = metrics.fontSize.sp),
+                    maxLines = 1,
+                )
+            }
         }
+        if (showTimeBars) TimeBarSlot(metrics, color = accent)
         Text(
-            text = row.item?.title ?: row.title ?: "Event",
+            text = config.obfuscation.transform(row.item?.title ?: row.title ?: "Event", dictionary),
             style = TextStyle(
                 color = color,
                 fontSize = metrics.fontSize.sp,
@@ -198,12 +275,13 @@ private fun EventRow(row: RowEntry, metrics: RowMetrics, now: Instant) {
 }
 
 @Composable
-private fun FreeTimeRow(row: RowEntry, metrics: RowMetrics) {
+private fun FreeTimeRow(row: RowEntry, metrics: RowMetrics, showTimeBars: Boolean) {
     Row(
         modifier = GlanceModifier.fillMaxWidth().height(metrics.lineHeight.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = GlanceModifier.width(metrics.keyline.dp)) {}
+        if (showTimeBars) TimeBarSlot(metrics, color = null)
         Text(
             text = row.title ?: "",
             style = TextStyle(
