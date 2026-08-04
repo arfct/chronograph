@@ -16,12 +16,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -41,6 +43,7 @@ import androidx.glance.appwidget.state.getAppWidgetState
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.lifecycle.lifecycleScope
+import kotlin.math.roundToInt
 import com.artifact.chronograph.core.FontSize
 import com.artifact.chronograph.core.ObfuscationStyle
 import kotlinx.coroutines.launch
@@ -141,11 +144,20 @@ private fun ConfigScreen(
         Text("Widget options", style = MaterialTheme.typography.headlineSmall)
 
         SectionLabel("Font Size")
-        ChipRow(
-            options = FontSize.entries.map { it to it.label },
-            selected = fontSize,
-            onSelect = { fontSize = it },
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Slider(
+                value = fontSize.ordinal.toFloat(),
+                onValueChange = { fontSize = FontSize.entries[it.roundToInt()] },
+                valueRange = 0f..(FontSize.entries.size - 1).toFloat(),
+                steps = FontSize.entries.size - 2,
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                fontSize.label,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(start = 16.dp).width(64.dp),
+            )
+        }
 
         SectionLabel("Obfuscation")
         ChipRow(
