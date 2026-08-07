@@ -11,7 +11,7 @@
 # Secrets are read from 1Password at runtime and never written to disk, echoed,
 # or committed. Required items (Employee vault, account geist@artifact.com):
 #
-#   "Cloudflare API token (chronograph)"  credential = the API token
+#   "Cloudflare API token chronograph"    credential = the API token
 #   "Porkbun API"                        username   = API key      (pk1_...)
 #                                        credential = secret key   (sk1_...)
 #
@@ -37,7 +37,7 @@ echo "project: $PROJECT  ->  $TARGET"
 echo
 
 # ---------------------------------------------------------------- Cloudflare
-CF_TOKEN="$(op read "op://Employee/Cloudflare API token (chronograph)/credential")"
+CF_TOKEN="$(op read "op://Employee/Cloudflare API token chronograph/credential")"
 [ -n "$CF_TOKEN" ] || { echo "error: empty Cloudflare token from 1Password" >&2; exit 1; }
 
 echo "==> Cloudflare: verifying token"
@@ -95,7 +95,7 @@ if d.get("status") != "SUCCESS":
     print("   retrieve failed:", d.get("message","?")); sys.exit(1)
 rows = [r for r in d.get("records", []) if r["name"] in (sys.argv[1], "")]
 for r in rows or []:
-    print(f"   {r[\"type\"]:6} {r[\"name\"]:24} {r[\"content\"]}  (id {r[\"id\"]})")
+    print("   %-6s %-24s %s  (id %s)" % (r["type"], r["name"], r["content"], r["id"]))
 if not rows: print("   (none)")
 ' "$DOMAIN"
 

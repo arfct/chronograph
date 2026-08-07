@@ -30,9 +30,12 @@ Required 1Password items (`geist@artifact.com`, Employee vault):
 
 | Item | Field | Value |
 |---|---|---|
-| `Cloudflare API token (chronograph)` | `credential` | API token, scoped **Account → Cloudflare Pages → Edit** |
+| `Cloudflare API token chronograph` | `credential` | API token, scoped **Account → Cloudflare Pages → Edit** |
 | `Porkbun API` | `username` | API key (`pk1_…`) |
 | `Porkbun API` | `credential` | Secret API key (`sk1_…`) |
 
 Porkbun gotcha: API access is **off per domain** by default. Enable it on the
 domain's own page or every call returns an authentication error even with valid keys.
+
+> 1Password item titles used in `op://` references must not contain parentheses —
+> `op read` rejects them as invalid secret references.
