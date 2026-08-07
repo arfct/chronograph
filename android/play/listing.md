@@ -73,7 +73,7 @@ Requires Android 15 or later.
 | App category | Productivity |
 | Tags | Calendar, Widgets, Productivity |
 | Contact email | nicholas@artifact.com |
-| Privacy policy | *(host `docs/privacy-chronograph.html` and paste the URL)* |
+| Privacy policy | `https://chronograph.page/privacy` |
 
 ## Data safety form
 
