@@ -2,6 +2,5 @@
 # (Replaces the old registrar-level 302; new TestFlight invite as of 2026-08-07.)
 /                 https://testflight.apple.com/join/qP1EtCvZ   302
 
-# Friendly aliases for the policy.
-/privacy.html     /privacy   301
+# Friendly alias for the policy (Pages serves privacy.html at /privacy natively).
 /privacy-policy   /privacy   301

@@ -7,8 +7,8 @@ Cloudflare Pages project root for the Chronograph domain.
 | `/` | 302 → iOS TestFlight beta (`_redirects`) |
 | `/privacy` | Privacy policy — the URL given to Google Play and the App Store |
 
-`privacy/index.html` is a copy of `docs/privacy-chronograph.html`; keep them in
-sync (`cp docs/privacy-chronograph.html site/privacy/index.html`).
+`privacy.html` is a copy of `docs/privacy-chronograph.html`; keep them in
+sync (`cp docs/privacy-chronograph.html site/privacy.html`).
 
 Deploy:
 
