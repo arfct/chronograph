@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Chronograph — Play feature graphic</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1024px; height: 500px; overflow: hidden; }
+  body {
+    background: #F2F2F0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    display: flex; align-items: center;
+    /* Play crops the outer edges on some surfaces; keep content inside a safe band */
+    padding: 0 72px;
+    gap: 64px;
+  }
+
+  /* ---- left: wordmark ---- */
+  .mark { flex: 0 0 auto; }
+  /* Wordmark is the shipped vector lockup (Wordmark.pdf) rasterised at 2400px.
+     Its ground is white, so multiply drops it onto the warm gray cleanly. */
+  .wordmark { width: 392px; display: block; mix-blend-mode: multiply; }
+  .tagline {
+    margin-top: 30px; font-size: 26px; color: #5F5F5C;
+    letter-spacing: 0.3px; line-height: 1.32;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  /* ---- right: the product ---- */
+  .card {
+    flex: 1 1 auto; min-width: 0; background: #EAEBF7; border-radius: 30px;
+    padding: 30px 34px; display: flex; flex-direction: column; gap: 15px;
+    box-shadow: 0 10px 34px rgba(38,38,38,.10);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  .row { display: flex; align-items: baseline; gap: 14px; min-width: 0; }
+  .t { font-size: 29px; color: #1C1C1E; width: 96px; text-align: right;
+       font-variant-numeric: tabular-nums; flex: 0 0 auto; }
+  .t sup { font-size: 17px; margin-left: 2px; }
+  .rule { width: 2px; align-self: stretch; background: #A9ACC4; flex: 0 0 auto; }
+  .title { font-size: 29px; color: #1C1C1E; min-width: 0; white-space: nowrap;
+           overflow: hidden; text-overflow: ellipsis; }
+  .hdr .t { font-size: 38px; color: #6E7189; }
+  .hdr .title { font-size: 20px; color: #6E7189; letter-spacing: 2.2px; }
+</style>
+
+<div class="mark">
+  <img class="wordmark" src="wordmark.png" alt="Chronograph 31">
+  <div class="tagline">Your calendar, reminders and<br>time zones — as plain text.</div>
+</div>
+
+<div class="card">
+  <div class="row hdr"><div class="t">7</div><div class="rule"></div><div class="title">FRI</div></div>
+  <div class="row"><div class="t">10<sup>00</sup></div><div class="rule"></div><div class="title">Standup</div></div>
+  <div class="row"><div class="t">11<sup>30</sup></div><div class="rule"></div><div class="title">Design review</div></div>
+  <div class="row"><div class="t">12<sup>45</sup></div><div class="rule"></div><div class="title">Lunch w/ Priya</div></div>
+  <div class="row"><div class="t">4<sup>30</sup></div><div class="rule"></div><div class="title">Ship Play release</div></div>
+</div>

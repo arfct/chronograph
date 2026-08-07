@@ -10,3 +10,6 @@ app/src/main/assets/
 # Upload signing key + secrets. Never commit — back these up outside the
 # repo. CI builds unsigned without this dir.
 keystore/
+
+# Play listing assets are committed; generated intermediates are not.
+play/.*.png
