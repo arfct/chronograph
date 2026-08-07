@@ -1,6 +1,9 @@
-# chronograph.page
+# chronograph.fyi
 
-Cloudflare Pages project root for the Chronograph domain.
+Cloudflare Pages project root for the Chronograph web presence.
+
+Primary domain: **chronograph.fyi** (DNS at Porkbun, served by Cloudflare Pages).
+`chronograph.page` remains a separate TestFlight vanity redirect at its own registrar.
 
 | Path | Serves |
 |---|---|
