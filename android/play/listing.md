@@ -72,7 +72,7 @@ Requires Android 15 or later.
 |---|---|
 | App category | Productivity |
 | Tags | Calendar, Widgets, Productivity |
-| Contact email | nicholas@artifact.com |
+| Contact email | *(Play requires a public contact email — use a role alias, not a personal address)* |
 | Privacy policy | `https://chronograph.page/privacy` |
 
 ## Data safety form
