@@ -7,31 +7,53 @@ package com.artifact.chronograph.core
  * Swift implementation by fixtures/obfuscation-vectors.tsv.
  */
 fun convertToEnigma(input: String, dictionary: Cmudict?): String =
-    input.split(" ").joinToString(" ") {
-        if (isPhoneticallyOpaque(it)) it else enigmaWord(it, dictionary)
-    }
+    input.split(" ").joinToString(" ") { enigmaToken(it, dictionary) }
 
 /**
  * URLs and acronyms have no useful pronunciation, so phonemizing them destroys
- * the only thing that made them readable. Both pass through untouched. Braille
- * is unaffected: it is a character cipher, and every character still maps.
+ * the only thing that made them readable. Acronyms pass through untouched;
+ * URLs are reduced to their host. Braille is unaffected: it is a character
+ * cipher, and every character still maps.
  */
-fun isPhoneticallyOpaque(token: String): Boolean = isUrlLike(token) || isAcronym(token)
+private fun enigmaToken(token: String, dictionary: Cmudict?): String = when {
+    urlPattern.containsMatchIn(token) -> simplifyUrls(token)
+    isAcronym(token) -> token
+    else -> enigmaWord(token, dictionary)
+}
+
+/**
+ * Reduces every URL in the token to its bare host: scheme, `www.` and the path
+ * are all dropped, so `https://meet.google.com/abc-defg` reads
+ * `meet.google.com`. Surrounding punctuation is left alone, and dropping the
+ * path also drops the meeting id — this mode is meant to be shoulder-safe.
+ */
+private fun simplifyUrls(token: String): String =
+    urlPattern.replace(token) { simplifyUrl(it.value) }
+
+private fun simplifyUrl(url: String): String {
+    var host = url
+    val scheme = host.indexOf("://")
+    if (scheme >= 0) host = host.substring(scheme + 3)
+    val cut = host.indexOfFirst { it == '/' || it == '?' || it == '#' }
+    if (cut >= 0) host = host.substring(0, cut)
+    if (host.lowercase().startsWith("www.")) host = host.substring(4)
+    return host
+}
 
 /**
  * Matches explicit schemes, `www.` hosts, and bare hosts like
  * `meet.google.com/abc-defg` — meeting links usually arrive bare in the
  * location field. Requires an alphabetic TLD of 2+ characters, so "e.g." and
- * "i.e." are not treated as hosts.
+ * "i.e." are not treated as hosts. A match never ends on trailing
+ * punctuation, so a URL inside parentheses keeps its closing bracket.
  */
 private val urlPattern = Regex(
-    """(?:[a-z][a-z0-9+.\-]*://\S+)""" +
-        """|(?:www\.\S+)""" +
-        """|(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?)*\.[a-z]{2,24}(?:[/?#]\S*)?)""",
+    """(?:[a-z][a-z0-9+.\-]*://\S*[^\s.,;:!?)\]}>"'])""" +
+        """|(?:www\.\S*[^\s.,;:!?)\]}>"'])""" +
+        """|(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?)*""" +
+        """\.[a-z]{2,24}(?:[/?#]\S*[^\s.,;:!?)\]}>"'])?)""",
     RegexOption.IGNORE_CASE,
 )
-
-private fun isUrlLike(token: String): Boolean = urlPattern.containsMatchIn(token)
 
 /**
  * An all-caps run of 2–5 letters, optionally pluralised: PTO, EOD, NYC, OKRs.

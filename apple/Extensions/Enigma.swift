@@ -11,30 +11,64 @@ import Foundation
 /// out-of-vocabulary words. Digits pass through so times stay readable.
 func convertToEnigma(_ input: String) -> String {
   input.split(separator: " ", omittingEmptySubsequences: false)
-    .map { isPhoneticallyOpaque(String($0)) ? String($0) : enigmaWord(String($0)) }
+    .map { enigmaToken(String($0)) }
     .joined(separator: " ")
 }
 
 /// URLs and acronyms have no useful pronunciation, so phonemizing them
-/// destroys the only thing that made them readable. Both pass through
-/// untouched. Braille is unaffected: it is a character cipher, and every
-/// character still maps.
-func isPhoneticallyOpaque(_ token: String) -> Bool {
-  isURLLike(token) || isAcronym(token)
+/// destroys the only thing that made them readable. Acronyms pass through
+/// untouched; URLs are reduced to their host. Braille is unaffected: it is a
+/// character cipher, and every character still maps.
+private func enigmaToken(_ token: String) -> String {
+  if containsURL(token) { return simplifyURLs(in: token) }
+  if isAcronym(token) { return token }
+  return enigmaWord(token)
+}
+
+/// Reduces every URL in the token to its bare host: scheme, `www.` and the
+/// path are all dropped, so `https://meet.google.com/abc-defg` reads
+/// `meet.google.com`. Surrounding punctuation is left alone, and dropping the
+/// path also drops the meeting id — this mode is meant to be shoulder-safe.
+private func simplifyURLs(in token: String) -> String {
+  let text = token as NSString
+  var result = ""
+  var cursor = 0
+  for match in urlPattern.matches(in: token, options: [], range: NSRange(location: 0, length: text.length)) {
+    result += text.substring(with: NSRange(location: cursor, length: match.range.location - cursor))
+    result += simplifyURL(text.substring(with: match.range))
+    cursor = match.range.location + match.range.length
+  }
+  result += text.substring(from: cursor)
+  return result
+}
+
+private func simplifyURL(_ url: String) -> String {
+  var host = url
+  if let schemeEnd = host.range(of: "://") {
+    host = String(host[schemeEnd.upperBound...])
+  }
+  if let cut = host.firstIndex(where: { $0 == "/" || $0 == "?" || $0 == "#" }) {
+    host = String(host[..<cut])
+  }
+  if host.lowercased().hasPrefix("www.") {
+    host = String(host.dropFirst(4))
+  }
+  return host
 }
 
 /// Matches explicit schemes, `www.` hosts, and bare hosts like
 /// `meet.google.com/abc-defg` — meeting links usually arrive bare in the
 /// location field. Requires an alphabetic TLD of 2+ characters, so "e.g."
-/// and "i.e." are not treated as hosts.
+/// and "i.e." are not treated as hosts. A match never ends on trailing
+/// punctuation, so a URL inside parentheses keeps its closing bracket.
 private let urlPattern = try! NSRegularExpression(
-  pattern: #"(?:[a-z][a-z0-9+.\-]*://\S+)"#
-    + #"|(?:www\.\S+)"#
-    + #"|(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?)*\.[a-z]{2,24}(?:[/?#]\S*)?)"#,
+  pattern: #"(?:[a-z][a-z0-9+.\-]*://\S*[^\s.,;:!?)\]}>"'])"#
+    + #"|(?:www\.\S*[^\s.,;:!?)\]}>"'])"#
+    + #"|(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?)*\.[a-z]{2,24}(?:[/?#]\S*[^\s.,;:!?)\]}>"'])?)"#,
   options: [.caseInsensitive]
 )
 
-private func isURLLike(_ token: String) -> Bool {
+private func containsURL(_ token: String) -> Bool {
   let range = NSRange(token.startIndex..., in: token)
   return urlPattern.firstMatch(in: token, options: [], range: range) != nil
 }

@@ -65,6 +65,9 @@ let inputs = [
   "Ping bit.ly/x3k9 first",
   "Q3 vs. Q4 comparison",
   "e.g. bring snacks",
+  "Retro (https://meet.google.com/xyz-abcd)",   // punctuation around a URL
+  "Notes: WWW.Example.COM/Path",                // uppercase scheme-less host
+  "Read https://example.com/a/b?c=d#e now",     // query and fragment
 ]
 
 var out = "input\tbraille\tenigma\n"
