@@ -38,3 +38,6 @@ captures/
 # IDEs
 .idea/
 *.iml
+
+# wrangler local cache
+.wrangler/

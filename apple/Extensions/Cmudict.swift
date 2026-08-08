@@ -12,8 +12,15 @@ enum Cmudict {
   private static let tab = UInt8(ascii: "\t")
 
   private static let data: Data? = {
-    guard let url = Bundle.main.url(forResource: "cmudict-ipa", withExtension: "txt") else { return nil }
-    return try? Data(contentsOf: url, options: .alwaysMapped)
+    // Command-line tooling (scripts/generate-obfuscation-vectors.swift) has no
+    // bundle, so allow an explicit path. Unset in the app; the bundle wins.
+    if let url = Bundle.main.url(forResource: "cmudict-ipa", withExtension: "txt") {
+      return try? Data(contentsOf: url, options: .alwaysMapped)
+    }
+    if let path = ProcessInfo.processInfo.environment["CHRONOGRAPH_CMUDICT"] {
+      return try? Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped)
+    }
+    return nil
   }()
 
   static func lookup(_ word: String) -> String? {

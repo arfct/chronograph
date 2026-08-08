@@ -14,6 +14,7 @@
 | Extra-large page widget | 🔜 (iOS 27, declared) | ➖ | ➖ | ➖ |
 | Obfuscation — Braille | ✅ | ✅ | ✅ | ✅ (`:core`, fixture-verified) |
 | Obfuscation — Enigma (CMUdict IPA) | ✅ | ✅ | ✅ | ✅ (`:core`, fixture-verified) |
+| Enigma — acronyms & URLs pass through | ✅ | ✅ | ✅ | ✅ (`:core`, fixture-verified) |
 | Obfuscation — Ishihara font | ✅ | ✅ | ✅ | ➖ [^ishihara] |
 | Per-widget configuration | ✅ (AppIntents sheet) | ✅ | ✅ | ✅ (config activity, reconfigurable) |
 | Transparent background | ✅ (clear default) | ✅ | ➖ | ✅ (per-widget toggle) |

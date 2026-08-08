@@ -7,7 +7,53 @@ package com.artifact.chronograph.core
  * Swift implementation by fixtures/obfuscation-vectors.tsv.
  */
 fun convertToEnigma(input: String, dictionary: Cmudict?): String =
-    input.split(" ").joinToString(" ") { enigmaWord(it, dictionary) }
+    input.split(" ").joinToString(" ") {
+        if (isPhoneticallyOpaque(it)) it else enigmaWord(it, dictionary)
+    }
+
+/**
+ * URLs and acronyms have no useful pronunciation, so phonemizing them destroys
+ * the only thing that made them readable. Both pass through untouched. Braille
+ * is unaffected: it is a character cipher, and every character still maps.
+ */
+fun isPhoneticallyOpaque(token: String): Boolean = isUrlLike(token) || isAcronym(token)
+
+/**
+ * Matches explicit schemes, `www.` hosts, and bare hosts like
+ * `meet.google.com/abc-defg` — meeting links usually arrive bare in the
+ * location field. Requires an alphabetic TLD of 2+ characters, so "e.g." and
+ * "i.e." are not treated as hosts.
+ */
+private val urlPattern = Regex(
+    """(?:[a-z][a-z0-9+.\-]*://\S+)""" +
+        """|(?:www\.\S+)""" +
+        """|(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?)*\.[a-z]{2,24}(?:[/?#]\S*)?)""",
+    RegexOption.IGNORE_CASE,
+)
+
+private fun isUrlLike(token: String): Boolean = urlPattern.containsMatchIn(token)
+
+/**
+ * An all-caps run of 2–5 letters, optionally pluralised: PTO, EOD, NYC, OKRs.
+ * The upper bound keeps a shouty title ("TEAM OFFSITE") from passing through
+ * wholesale, which would defeat the mode.
+ */
+private fun isAcronym(token: String): Boolean {
+    val core = enigmaCore(token)
+    if (core.length !in 2..5 && !(core.length == 6 && core.endsWith("s"))) return false
+    val letters = if (core.endsWith("s")) core.dropLast(1) else core
+    if (letters.length < 2) return false
+    return letters.all { it.isUpperCase() && it.isLetter() }
+}
+
+/** The alphanumeric middle of a token, with surrounding punctuation peeled. */
+private fun enigmaCore(word: String): String {
+    val leading = word.takeWhile { !it.isLetter() && !it.isDigit() }
+    val trailing = word.takeLastWhile { !it.isLetter() && !it.isDigit() }
+        .let { if (it.length == word.length) "" else it }
+    if (word.length < leading.length + trailing.length) return ""
+    return word.substring(leading.length, word.length - trailing.length)
+}
 
 private fun enigmaWord(word: String, dictionary: Cmudict?): String {
     if (word.none { it.isLetter() }) return word
