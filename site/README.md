@@ -17,7 +17,7 @@ Deploy:
 
 ```bash
 wrangler login                       # one-time, opens a browser
-wrangler pages deploy site --project-name=chronograph-page
+wrangler pages deploy site --project-name=chronograph
 ```
 
 ## Pointing a domain at this project

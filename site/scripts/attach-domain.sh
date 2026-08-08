@@ -2,7 +2,7 @@
 # Point a domain at the Chronograph Cloudflare Pages project.
 #
 #   ./site/scripts/attach-domain.sh [domain] [pages-project]
-#   defaults: chronograph.fyi  chronograph-page
+#   defaults: chronograph.fyi  chronograph
 #
 # Does two things:
 #   1. Cloudflare — registers the domain as a custom domain on the Pages project
@@ -20,7 +20,7 @@
 set -euo pipefail
 
 DOMAIN="${1:-chronograph.fyi}"
-PROJECT="${2:-chronograph-page}"
+PROJECT="${2:-chronograph}"
 ACCOUNT_ID="c0912e10eadeaa117b0067ab29b55da6"   # Artifact
 TARGET="$PROJECT.pages.dev"
 export OP_ACCOUNT="${OP_ACCOUNT:-arfct.1password.com}"
