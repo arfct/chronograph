@@ -24,7 +24,7 @@
 | Widget gallery previews | ✅ (`recommendedIntents`) | ✅ | ✅ | ✅ (generated previews) |
 | Dynamic system color | ➖ | ➖ | ➖ | ✅ (Material You via GlanceTheme) |
 
-[^androidcal]: Agenda rows (headers, all-day, dedup, suffixes, conflicts, time bars) from `:core`; note/meeting extraction still 🔜 phase 2.
+[^androidcal]: Agenda rows (headers, all-day, dedup, suffixes, conflicts, time bars) from `:core`; note/meeting extraction still 🔜 phase 2 — when it lands, port `apple/Extensions/NoteCleanup.swift` (boilerplate stripping) with it, verified by `scripts/check-note-cleanup.swift`.
 [^reminders]: Android has no system reminders store; the nearest equivalent (Google Tasks API) needs OAuth + Play verification — disproportionate for one widget type. See the design spec's key decisions.
 [^macweather]: The Mac widget target is missing the WeatherKit entitlement (Linear A-155).
 [^keyguard]: Declared (`widgetCategory="home_screen|keyguard"`, registers on API 37) but the phone emulator exposes no lock-screen widget surface yet — enabled wherever the OS offers the glanceable hub.

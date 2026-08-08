@@ -177,38 +177,6 @@ func extractAttachments(from html: String) -> ([EventAttachment], String) {
   }
 }
 
-// https://chatgpt.com/share/d38ac2e5-f999-4b9d-9c38-dee4ed98cffb
-
-let COMMON_MEETING_SUFFIXES = [
-  "Join Zoom Meeting",
-  "Join with Google Meet",
-  "----( Video Call )----",
-  ZOOM_SEPARATOR
-]
-
-func removeMeetingMetadata(from text: String, containing suffixes: [String] = COMMON_MEETING_SUFFIXES) -> String {
-  var earliestIndex: String.Index? = nil
-
-  for suffix in suffixes {
-    if let range = text.range(of: suffix), earliestIndex == nil || range.lowerBound < earliestIndex! {
-      earliestIndex = range.lowerBound
-    }
-  }
-
-  guard let index = earliestIndex else { return text }
-
-  let substringBeforeIndex = text[..<index]
-  if let lineBreakRange = substringBeforeIndex.range(of: "\n", options: .backwards) {
-    return String(substringBeforeIndex[..<lineBreakRange.lowerBound])
-  } else if let paragraphRange = substringBeforeIndex.range(of: "<p>", options: .backwards) {
-    return String(substringBeforeIndex[..<paragraphRange.lowerBound])
-  } else {
-    return String(substringBeforeIndex)
-  }
-}
-
-
-
 func extractTitleFromURL(from urlString: String) -> String? {
   let pattern = "https://paper.dropbox.com/doc/([^\\-]+)--"
   

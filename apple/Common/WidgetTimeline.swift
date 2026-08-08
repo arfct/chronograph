@@ -227,36 +227,38 @@ struct TimelineEngine {
               //              }))
             }
 
-            if event.hasNotes, let notes = event.notes,
-               let firstNote = notes.split(separator: CALENDAR_SEPARATOR).first
-            {
+            if event.hasNotes, let notes = event.notes {
 
               if eventEntry.meeting == nil {
                 eventEntry.meeting = extractMeetingUrls(from: notes).first
               }
 
-
-
-              let note = removeMeetingMetadata(from: String(firstNote))
-
+              // Cuts the machine-generated tail (Gmail's "created from an
+              // email", Zoom/Meet/Teams dial-in blocks) and any stray chrome
+              // lines, leaving "" when nothing human was written.
+              let note = cleanEventNote(notes)
 
               var (docs, noteWithoutDocs) = extractAttachments(from: note)
 
-              docs = docs.filter({ !$0.urlString.contains("zoom.us")})
+              // Conferencing and mail links are plumbing, not documents: the
+              // meeting link is surfaced on its own row and the rest is noise.
+              docs = docs.filter { doc in
+                !noteNoiseLinkHosts.contains(where: { doc.urlString.localizedCaseInsensitiveContains($0) })
+              }
 
-              if (eventEntry.meeting == nil) {
-                if let meeting = docs.filter({ $0.urlString.contains("meet.google.com")}).first {
+              if eventEntry.meeting == nil {
+                if let meeting = extractMeetingUrls(from: note).first {
                   eventEntry.meeting = meeting
                 }
               }
 
-              noteWithoutDocs = noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines)
+              noteWithoutDocs = cleanEventNote(noteWithoutDocs)
               eventEntry.attachments = docs
 
-              if (firstNote.contains("</")) {
-                eventEntry.notes = attributedString(from:noteWithoutDocs)
+              if note.contains("</") {
+                eventEntry.notes = attributedString(from: noteWithoutDocs)
               } else {
-                eventEntry.notes = AttributedString(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))
+                eventEntry.notes = AttributedString(noteWithoutDocs)
               }
 
               //print("\n===\(event.title ?? "UNTITLED") ===")

@@ -166,9 +166,7 @@ func replaceBirthdayString(_ input: String) -> String {
   return modifiedString
 }
 
-let CALENDAR_SEPARATOR = "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
 
-let ZOOM_SEPARATOR = "──────────"
 
 
 
