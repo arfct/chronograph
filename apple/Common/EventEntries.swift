@@ -141,6 +141,12 @@ class EventEntry: Identifiable, Hashable {
     return locations?.count ?? 0 > 0
   }
   
+  /// A note survives boilerplate stripping, so it is worth a detail row on
+  /// its own — an event can have something worth reading and no location.
+  var hasNotes: Bool {
+    (notes?.characters.count ?? 0) > 1
+  }
+
   var hasAttachments: Bool {
     return attachments?.count ?? 0 > 0
   }

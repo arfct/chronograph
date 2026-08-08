@@ -16,6 +16,8 @@ data class CalendarItem(
     val calendarId: String = "",
     val calendarTitle: String = "",
     val location: String? = null,
+    /** Raw event description, boilerplate and all — cleaned by the row builder. */
+    val description: String? = null,
     /** Mirrors EKEventStore.defaultCalendarForNewEvents membership on iOS. */
     val isDefaultCalendar: Boolean = true,
 )
@@ -38,6 +40,12 @@ class RowEntry(
     var removeIfOrphaned: Boolean = false,
     var locations: List<String>? = null,
     var meetingUrl: String? = null,
+    /** Meeting link title ("Zoom", "Meet") for the video row. */
+    var meetingTitle: String? = null,
+    /** Document links pulled out of the description. */
+    var attachments: List<EventAttachment>? = null,
+    /** The human part of the description, or null when nothing survived. */
+    var notes: String? = null,
     var zoneId: String? = null,
     var dayIndex: Int? = null,
     var hasConflict: Boolean = false,

@@ -234,7 +234,8 @@ private fun rowShowsDetails(row: RowEntry, now: Instant, style: RowStyle): Boole
     if (style.heightIsLimited || row.item == null) return false
     val soon = row.startAt?.let { it.epochSecond - now.epochSecond < 2 * 3600 } ?: false
     return (row.isHappening(now) || soon) &&
-        (!row.locations.isNullOrEmpty() || row.meetingUrl != null)
+        (!row.locations.isNullOrEmpty() || row.meetingUrl != null ||
+            !row.attachments.isNullOrEmpty() || !row.notes.isNullOrBlank())
 }
 
 // MARK: compact numerals — TimeStringView with compactTime (the iOS default):
@@ -447,7 +448,7 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     row.meetingUrl?.let { url ->
                         Text(
-                            text = "Join call  ",
+                            text = "📹 " + style.transform(row.meetingTitle ?: "Video conference") + "  ",
                             style = TextStyle(color = style.palette.primary, fontSize = style.smallSize.sp),
                             modifier = GlanceModifier.clickable(
                                 actionStartActivityIntent(Intent(Intent.ACTION_VIEW, Uri.parse(url))),
@@ -466,9 +467,39 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                         )
                     }
                 }
+                // Document links lifted out of the description, one row each.
+                row.attachments?.take(MAX_ATTACHMENT_ROWS)?.forEach { doc ->
+                    Text(
+                        text = attachmentGlyph(doc.displayIcon) + " " +
+                            (doc.prefix?.takeIf { it.isNotBlank() }?.let { "$it " } ?: "") +
+                            style.transform(doc.displayName),
+                        style = TextStyle(color = style.palette.primary, fontSize = style.smallSize.sp),
+                        maxLines = 1,
+                        modifier = GlanceModifier.clickable(
+                            actionStartActivityIntent(Intent(Intent.ACTION_VIEW, Uri.parse(doc.urlString))),
+                        ),
+                    )
+                }
+                // Whatever a human actually wrote, boilerplate already stripped.
+                row.notes?.let { notes ->
+                    Text(
+                        text = style.transform(notes),
+                        style = TextStyle(color = style.palette.secondary, fontSize = style.smallSize.sp),
+                        maxLines = 2,
+                    )
+                }
             }
         }
     }
+}
+
+/** Apple renders SF Symbols here; the glyphs are the closest text analogue. */
+private const val MAX_ATTACHMENT_ROWS = 2
+
+private fun attachmentGlyph(icon: String): String = when (icon) {
+    "document" -> "📄"
+    "bubble" -> "💬"
+    else -> "🔗"
 }
 
 /** iOS `<initial>.circle` indicator for events off the default calendar. */

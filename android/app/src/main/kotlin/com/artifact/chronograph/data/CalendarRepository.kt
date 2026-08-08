@@ -42,6 +42,7 @@ object CalendarRepository {
             CalendarContract.Instances.CALENDAR_ID,
             CalendarContract.Instances.CALENDAR_DISPLAY_NAME,
             CalendarContract.Instances.EVENT_LOCATION,
+            CalendarContract.Instances.DESCRIPTION,
         )
 
         val defaultCalendarId = defaultCalendarId(context)
@@ -71,6 +72,7 @@ object CalendarRepository {
                         calendarId = cursor.getLong(5).toString(),
                         calendarTitle = cursor.getString(6) ?: "",
                         location = cursor.getString(7),
+                        description = cursor.getString(8),
                         isDefaultCalendar = defaultCalendarId == null ||
                             cursor.getLong(5).toString() == defaultCalendarId,
                     )

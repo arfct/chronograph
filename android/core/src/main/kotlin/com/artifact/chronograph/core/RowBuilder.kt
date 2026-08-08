@@ -132,6 +132,9 @@ object RowBuilder {
                     entry.meetingUrl = urls.firstOrNull()
                     entry.locations = locations.filterNot { it in urls }.map(::cleanLocation)
                 }
+                if (fetchDetails && !item.description.isNullOrEmpty()) {
+                    attachDescription(entry, item.description)
+                }
 
                 entries.add(entry)
             }
@@ -140,6 +143,33 @@ object RowBuilder {
         }
 
         return entries
+    }
+
+    /**
+     * The description half of TimelineEngine's detail block: strip the
+     * machine-generated boilerplate, lift out document links, keep the meeting
+     * link separate, and leave `notes` null when nothing human survived.
+     */
+    private fun attachDescription(entry: RowEntry, description: String) {
+        val note = cleanEventNote(description)
+
+        val (links, remainder) = extractAttachments(note)
+        // Conferencing and mail links are plumbing, not documents: the meeting
+        // link gets its own row and the rest is noise.
+        entry.attachments = links
+            .filterNot { link -> noteNoiseLinkHosts.any { link.urlString.contains(it, ignoreCase = true) } }
+            .takeIf { it.isNotEmpty() }
+
+        if (entry.meetingUrl == null) {
+            extractMeetingUrls(description).firstOrNull()?.let {
+                entry.meetingUrl = it.urlString
+                entry.meetingTitle = it.displayName
+            }
+        } else if (entry.meetingTitle == null) {
+            entry.meetingTitle = titleFromUrl(entry.meetingUrl!!)
+        }
+
+        entry.notes = cleanEventNote(stripHtmlTags(remainder)).takeIf { it.isNotEmpty() }
     }
 
     /** The adjacent-pair conflict pass from TimelineEngine.timeline(). */

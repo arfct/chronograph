@@ -507,7 +507,7 @@ struct EventRowView: View {
         .clipped()
         
         if (!config.heightIsLimited && (isHappening || isSoon)
-            && (entry.hasAttachments || entry.hasLocation) ) {
+            && (entry.hasAttachments || entry.hasLocation || entry.hasNotes) ) {
           
           
           VStack(alignment: .leading, spacing:0) {
@@ -538,8 +538,10 @@ struct EventRowView: View {
                         Image(systemName: document.displayIcon)
                           .foregroundStyle(.secondary)
                         
-                        if let prefix = document.prefix, prefix.count > 0 { Text(prefix).foregroundStyle(.secondary) }
-                        Text(document.displayName).foregroundStyle(.primary)
+                        if let prefix = document.prefix, prefix.count > 0 {
+                          Text(prefix.apply(config.obfuscation.textTransform)).foregroundStyle(.secondary)
+                        }
+                        Text(document.displayName.apply(config.obfuscation.textTransform)).foregroundStyle(.primary)
                       }
                     })
                     .buttonStyle(.plain)
@@ -552,7 +554,16 @@ struct EventRowView: View {
               }
               
               if let notes = entry.notes, notes.characters.count > 1 {
-                Text(notes)
+                // Obfuscation modes exist to be shoulder-safe, so the note is
+                // transformed too; that costs the attributed styling, which is
+                // why the plain AttributedString is kept when it is off.
+                Group {
+                  if let transform = config.obfuscation.textTransform {
+                    Text(transform(String(notes.characters)))
+                  } else {
+                    Text(notes)
+                  }
+                }
                   .multilineTextAlignment(.leading)
                   .lineLimit(2)
                   .foregroundStyle(.secondary)
