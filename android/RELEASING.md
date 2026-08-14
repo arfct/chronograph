@@ -43,6 +43,47 @@ keystore copy in the repo.
 5. Upload `app/build/outputs/bundle/release/app-release.aab` to the Play
    Console (start with the **Internal testing** track).
 
+## Store screenshots
+
+Captured from a **release** build, never a debug one, so what ships is what the
+listing shows. The `play-store-assets` skill owns the geometry table and the spec
+check; this is just the order of operations.
+
+```bash
+adb install app/build/outputs/apk/release/app-release.apk   # uninstall first if
+                                                            # a debug build is on
+adb shell pm grant com.artifact.chronograph android.permission.READ_CALENDAR
+scripts/seed-calendar.sh                                    # a realistic day
+```
+
+Then, for each of `phone`, `tablet7`, `tablet10`:
+
+```bash
+python3 ~/.claude/skills/play-store-assets/scripts/capture.py set --form tablet10
+# re-pin both widgets: changing wm size/density makes the launcher re-lay-out and
+# it drops widgets that no longer fit. Then find the page they landed on — HOME
+# returns to the default page, which is usually not that one.
+python3 ~/.claude/skills/play-store-assets/scripts/capture.py shot \
+  --out play --name tablet10-1-widgets
+python3 ~/.claude/skills/play-store-assets/scripts/capture.py reset
+```
+
+Finally:
+
+```bash
+python3 ~/.claude/skills/play-store-assets/scripts/validate.py play
+```
+
+Things that have bitten us, all of which show up in the capture:
+
+- `screencap` emits RGBA and Play rejects an alpha channel. `capture.py shot`
+  flattens it; a hand-rolled `adb exec-out screencap` does not.
+- Other apps' foreground services put a chip in the status bar. `com.artifact.shareware`
+  leaves a red "Sharing your screen" timer there; force-stop it first.
+- A "Item removed" snackbar lingers for several seconds after deleting a widget.
+- **Look at every capture before trusting it.** Two of these were of the wrong
+  home-screen page and one was of a stale build.
+
 ## Play Console checklist (first submission)
 
 - [ ] Developer account ($25 one-time), app created as
