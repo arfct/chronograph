@@ -13,32 +13,32 @@ Written with the `play-store-assets` skill; the voice rules live in that skill's
 Chronograph³¹
 ```
 
-## Short description — 71 / 80
+## Short description — 74 / 80
 
 ```
-Your calendar as type, not a grid. Plus the time wherever your team is.
+Your day written out on the home screen, plus the time where your team is.
 ```
 
-## Full description — 1640 / 4000
+## Full description — 1692 / 4000
 
 ```
-It is 8:47. Coffee in one hand, phone in the other, and half a second to find out whether the next thing is in ten minutes or two hours.
+The most useful calendar you ever had was four things on a sticky note, stuck to the edge of a monitor, in somebody's handwriting.
 
-Half a second is not long enough to read a grid. It is long enough to read a line of text.
+Chronograph is that note, on your home screen, keeping itself current.
 
-Chronograph puts your day on the home screen as type. Events in the order they happen, under the day they belong to: the 9:00 with a Meet link on it, the 10:30 you are supposed to bring something to, then a header for tomorrow. Nothing is colour-coded. You already know which one is the dentist.
+Your day arrives as lines of type. The 9:00 with a Meet link on it. The 10:30 you are supposed to bring something to. Lunch. Then a heading for tomorrow, because tomorrow starts somewhere and you may as well see where. Nothing is colour-coded; you already know which one is the dentist.
 
 WIDGETS
 
-Calendar. Your upcoming events as a text agenda. For anything starting in the next four hours it also shows the meeting link, the location, and the one line of notes a person actually typed. The Gmail and Zoom boilerplate is stripped before it reaches the screen.
+Calendar. Upcoming events as a text agenda, gathered under the day they fall on. For anything starting within four hours it also brings up the meeting link, the location, and the one line of notes a person actually typed. Gmail's and Zoom's boilerplate is stripped on the way to the screen.
 
 Time Zones. What time it is in the cities you choose, ordered by offset, each with a small glyph for whether they are awake.
 
 TUNING
 
-Five text sizes. A transparent background that reads against the wallpaper, or a solid card. A default accent plus four colours. Separate toggles for all-day events, multi-day events, time bars, and the free gaps between things.
+Five text sizes, from two large lines to six small ones in the same square. A transparent background that lets the wallpaper through, or a solid card. A default accent plus four colours. Separate toggles for all-day events, multi-day events, time bars, and the free gaps between things.
 
-There are also two obfuscation modes, Braille and Enigma. They leave your agenda readable to you and not to the person behind you on the bus.
+There are two obfuscation modes as well, Braille and Enigma. They keep your agenda readable to you and not to the person behind you on the bus.
 
 PRIVACY
 
