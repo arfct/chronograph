@@ -32,9 +32,9 @@ Chronograph
 ## Short description (80 max)
 
 ```
-Your calendar, reminders and time zones as clean text on your home screen.
+Your calendar and time zones as clean, readable text on your home screen.
 ```
-*(74 characters)*
+*(73 characters)*
 
 ## Full description (4000 max)
 
