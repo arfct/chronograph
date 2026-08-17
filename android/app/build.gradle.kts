@@ -22,8 +22,10 @@ android {
         // (setWidgetPreviews) — our newest platform dependency.
         minSdk = 35
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        // versionCode 1 is published to open testing; Play rejects a duplicate,
+        // and a discarded upload burns the number just as surely as a live one.
+        versionCode = 2
+        versionName = "1.0.1"
     }
 
     signingConfigs {

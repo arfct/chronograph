@@ -1,0 +1,6 @@
+# The service-account key lives beside the upload keystore, in the gitignored
+# keystore/ directory — it can publish to the store listing, so it is the same
+# class of secret and gets backed up the same way. It is a symlink to the
+# machine-level key shared with the other Artifact Play apps.
+json_key_file("keystore/play-service-account.json")
+package_name("com.artifact.chronograph")

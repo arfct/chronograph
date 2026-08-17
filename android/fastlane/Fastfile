@@ -1,0 +1,56 @@
+# Android release lanes. Play only — the Apple side ships through Xcode.
+#
+# These lanes upload the *binary and nothing else*. Chronograph's store listing
+# is authored in android/play/listing.md, validated by the play-store-assets
+# skill, and entered in the Console; supply has no copy of it, so letting supply
+# write metadata could only ever overwrite good text with nothing. Every
+# metadata/image/changelog channel is therefore explicitly skipped rather than
+# left to default.
+
+default_platform(:android)
+
+# Anchored to this file rather than the working directory, which fastlane sets
+# for itself and is not reliably the Gradle project root.
+AAB = File.expand_path("../app/build/outputs/bundle/release/app-release.aab", __dir__)
+
+# supply's name for each Play track. "beta" is the open testing track — the one
+# testers join from the store listing.
+TRACKS = %w[internal alpha beta production].freeze
+
+platform :android do
+  desc "Check the service account key actually works before relying on it"
+  lane :check do
+    validate_play_store_json_key
+  end
+
+  desc "Dry run: everything supply would do, stopping before the commit"
+  lane :preview do |options|
+    upload(track: options.fetch(:track, "internal"), validate_only: true)
+  end
+
+  desc "Upload the bundle to a track (default: internal)"
+  lane :publish do |options|
+    upload(track: options.fetch(:track, "internal"), validate_only: false)
+  end
+
+  # A lane's parameters are always a single hash, never positional.
+  private_lane :upload do |options|
+    track = options[:track]
+    validate_only = options[:validate_only]
+    UI.user_error!("unknown track #{track}; expected one of #{TRACKS.join(', ')}") unless TRACKS.include?(track)
+    UI.user_error!("no bundle at #{AAB} — run ./gradlew :app:bundleRelease") unless File.exist?(AAB)
+
+    upload_to_play_store(
+      track: track,
+      aab: AAB,
+      validate_only: validate_only,
+      # A new release stays a draft until it is rolled out in the Console, so an
+      # accidental run cannot put a build in front of people.
+      release_status: "draft",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true,
+    )
+  end
+end
