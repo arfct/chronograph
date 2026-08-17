@@ -88,21 +88,23 @@ private fun TimeZonesContent(
     val height = previewHeight ?: LocalSize.current.height.value
     val rows = RowBuilder.timezoneRows(config)
     // Transparent widgets go full bleed, like iOS fullBleed.
-    val inset = if (transparent) 0 else 12
+    val vInset = WidgetInsets.vertical(fullBleed = transparent)
     // Compact time (hour + small AM/PM) — the iOS TimeStringView default.
-    val metrics = RowMetrics.forWidget(config.fontSize, height - inset * 2f, compactTime = true)
+    // Full canvas height, matching where iOS derives its metrics; see CalendarWidget.
+    val metrics = RowMetrics.forWidget(config.fontSize, height, compactTime = true)
+    val hInset = WidgetInsets.horizontal(fullBleed = transparent, fontSize = metrics.fontSize)
     val palette = rowPalette(transparent)
 
     // Always set a background: omitting the modifier leaves the launcher's
     // recycled host view holding the previous color (RemoteViews properties
     // are never reset, only overwritten).
-    val modifier = GlanceModifier.fillMaxSize().padding(inset.dp)
+    val modifier = GlanceModifier.fillMaxSize()
+        .padding(horizontal = hInset.dp, vertical = vInset.dp)
         .background(if (transparent) transparentColor else GlanceTheme.colors.widgetBackground)
 
-    Column(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
+    // Top-aligned: ChronographWidget wraps the row stack in
+    // .frame(maxHeight: .infinity, alignment: .top) for every content type.
+    Column(modifier = modifier) {
         for (row in rows.take(maxOf(metrics.visibleRows, 1))) {
             TimeZoneRow(row, metrics, config, dictionary, palette)
         }
@@ -124,8 +126,10 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig
     ) {
         AndroidRemoteViews(
             remoteViews = zoneClock(context, zone.id, metrics.fontSize, textColor.getColor(context).toArgb()),
-            // Wider than the keyline: iOS keylines are minWidth and stretch
-            // for two-digit hours like "11 PM"; fixed widths must pre-fit.
+            // Wider than the keyline: iOS keylines are minWidth and stretch for
+            // two-digit hours like "11 PM"; a Glance width is fixed, so it must
+            // pre-fit the widest time. Narrowing this to keyline clips the
+            // meridiem off "11 AM" and "12 AM" — verified, don't.
             modifier = GlanceModifier.width((metrics.fontSize * 2.9f).dp),
         )
         Text(
@@ -136,11 +140,15 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig
                 fontStyle = if (isLikelySleeping) FontStyle.Italic else FontStyle.Normal,
             ),
             maxLines = 1,
-            modifier = GlanceModifier.padding(start = 8.dp).defaultWeight(),
+            // No defaultWeight: TimeZoneRowView has no Spacer, so the glyph packs
+            // straight after the city name instead of being pushed to the edge.
+            modifier = GlanceModifier.padding(start = metrics.columnSpacing.dp),
         )
+        // TimeZoneRowView draws the day-part symbol at .imageScale(.small).
         Text(
             text = dayPartIcon(hour),
-            style = TextStyle(fontSize = (metrics.fontSize * RowMetrics.SMALL_TEXT_SCALE).sp),
+            style = TextStyle(fontSize = metrics.smallFontSize.sp),
+            modifier = GlanceModifier.padding(start = metrics.columnSpacing.dp),
         )
     }
 }

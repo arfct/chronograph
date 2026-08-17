@@ -30,7 +30,11 @@ object WidgetPrefs {
         prefs[OBFUSCATION]?.let { runCatching { ObfuscationStyle.valueOf(it) }.getOrNull() }
             ?: ObfuscationStyle.NONE
 
-    fun isTransparent(prefs: Preferences): Boolean = prefs[TRANSPARENT_BACKGROUND] == true
+    /**
+     * Transparent by default, matching iOS: `WidgetConfig.backgroundColor` is ""
+     * there, which resolves to `.clear`, and the widget goes full bleed.
+     */
+    fun isTransparent(prefs: Preferences): Boolean = prefs[TRANSPARENT_BACKGROUND] != false
 
     fun calendarConfig(prefs: Preferences): WidgetConfig {
         val features = buildSet {

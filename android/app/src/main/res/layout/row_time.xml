@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Event start time for widget rows. iOS renders this with a raised minute
+     block (`.baselineOffset(fontSize * 0.24)`); Glance's Text takes a String, so
+     the mixed sizing needs a real TextView carrying RelativeSizeSpan +
+     SuperscriptSpan. Same interop the per-zone clock uses in row_clock.xml. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_time"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="end|center_vertical"
+    android:includeFontPadding="false"
+    android:maxLines="1" />
