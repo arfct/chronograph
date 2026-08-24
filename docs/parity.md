@@ -57,6 +57,15 @@ Rows are intrinsically sized on iOS. Glance cannot measure a row containing a
 `fillMaxHeight` child, so `eventHeight`/`headerHeight` sum the same terms the
 SwiftUI frames imply, and the row-packing loop spends that same budget.
 
+### Deliberately off on Android
+
+Meeting and document-link rows (`SHOW_LINK_ROWS` in CalendarWidget.kt) are
+disabled. Apple draws SF Symbols for these; the emoji stand-ins (📹 📄 💬 🔗)
+read as clutter at 0.66x body size against the typography the widget is
+otherwise made of. `RowBuilder.attachDescription` still extracts the meeting
+link and the documents, and the fixtures still cover it, so re-enabling is one
+constant. Locations and notes are unaffected.
+
 ### What Glance cannot reproduce
 
 | iOS | Why not |
