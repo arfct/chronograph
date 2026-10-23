@@ -25,7 +25,7 @@ struct RemindersSettingsView: View {
               .frame(width: 12, height: 12)
             Text(list.title)
             Spacer()
-            if enabledReminders.contains(list.calendarIdentifier) {
+            if enabledReminders.isEmpty || enabledReminders.contains(list.calendarIdentifier) {
               Image(systemName: "checkmark")
                 .foregroundColor(.accentColor)
             }
@@ -44,12 +44,25 @@ struct RemindersSettingsView: View {
   }
   
   private func toggleReminder(_ calendar: EKCalendar) {
-    if enabledReminders.contains(calendar.calendarIdentifier) {
-      enabledReminders.removeAll { $0 == calendar.calendarIdentifier }
-    } else {
-      enabledReminders.append(calendar.calendarIdentifier)
-    }
+    enabledReminders = toggledSelection(enabledReminders,
+                                        id: calendar.calendarIdentifier,
+                                        allIds: lists.map(\.calendarIdentifier))
   }
+}
+
+/// Toggles `id` in a selection where empty means "all". Tapping a row while
+/// everything is implicitly selected deselects only that row, a selection that
+/// grows back to everything collapses to empty again, and the last selected
+/// row stays selected because empty would mean "all" rather than "none".
+func toggledSelection(_ selection: [String], id: String, allIds: [String]) -> [String] {
+  var selected = selection.isEmpty ? allIds : selection
+  if selected.contains(id) {
+    selected.removeAll { $0 == id }
+    if selected.isEmpty { return selection }
+  } else {
+    selected.append(id)
+  }
+  return Set(selected) == Set(allIds) ? [] : selected
 }
 
 #Preview {

@@ -7,18 +7,41 @@ struct WidgetPreviewView: View {
   let kind: String = "calendar"
   var eventStore = EKEventStore()
   func reloadTimeline()  {
+    let key = reloadKey
     Task {
-      timeline = await TimelineEngine().timeline(config: config)
+      let result = await TimelineEngine().timeline(config: config)
+      // A reload started by a notification can hold an older config than the
+      // one now on screen; drop its result rather than show stale rows.
+      if key == currentKey {
+        timeline = result
+      }
     }
   }
   @State private var timeline: Timeline<CalendarTimelineEntry>?
+  @State private var currentKey = ""
+
+  /// The parts of `config` the app can change while the preview is visible,
+  /// such as favorite time zones or the weather zip code.
+  private var reloadKey: String {
+    ([config.content.rawValue, config.weatherLocation]
+     + config.timezones.map(\.id)
+     + config.calendars.map(\.id)
+     + config.reminderLists.map(\.id)).joined(separator: "|")
+  }
   var body: some View {
     ScrollView {
-      if let entry = timeline?.entries.first {
-        ChronographWidgetView(entry: entry)
-      } else {
-        Text("Loading...")
+      Group {
+        if let entry = timeline?.entries.first {
+          ChronographWidgetView(entry: entry)
+        } else {
+          Text("Loading...")
+        }
       }
+      // Widget rows are drawn for widget-sized columns. On wide screens, like
+      // the unfolded iPhone Duo or an iPad, keep a centered column instead of
+      // stretching the rows edge to edge.
+      .frame(maxWidth: 480)
+      .frame(maxWidth: .infinity)
     }
     .clipped()
     .frame(maxWidth:.infinity)
@@ -45,7 +68,8 @@ struct WidgetPreviewView: View {
       reloadTimeline()
       print("Updating due to UserDefaults change \(change.userInfo)")
     }
-    .task {
+    .task(id: reloadKey) {
+      currentKey = reloadKey
       reloadTimeline()
     }
     

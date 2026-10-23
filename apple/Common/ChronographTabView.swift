@@ -19,8 +19,6 @@ extension Bool {
 }
 
 struct ChronographTabView: View {
-  @Environment(\.horizontalSizeClass) var horizontalSizeClass
-  
   let eventStore = EKEventStore()
   @State var remindersAccessGranted: Bool = false
   @State var eventsAccessGranted: Bool = false
@@ -132,12 +130,30 @@ struct ChronographTabView: View {
     .frame(maxWidth: .infinity)
   }
   
+  /// A widget preview with a settings button that opens `settings` in a sheet.
+  private func previewTab<Settings: View>(config: WidgetConfig,
+                                          settingsVisible: Binding<Bool>,
+                                          @ViewBuilder settings: @escaping () -> Settings) -> some View {
+    NavigationStack {
+      WidgetPreviewView(config: config)
+        .background(.regularMaterial)
+        .toolbar {
+          ToolbarItemGroup(placement: .primaryAction) {
+            Button(action: {
+              settingsVisible.wrappedValue.toggle()
+            }) {
+              Label("Settings", systemImage: "ellipsis")
+            }
+          }
+        }
+        .sheet(isPresented: settingsVisible, content: settings)
+    }
+  }
+  
   var body: some View {
     let eventsAccessible = eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess
     let remindersAccessible = remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
     let locationAccessible = locationAccessGranted || LocationManager().isAuthorized
-    
-    let isCompact = horizontalSizeClass == .compact
     
     TabView(selection:$selectedTab) {
       
@@ -146,7 +162,7 @@ struct ChronographTabView: View {
           
           VStack(alignment: .leading, spacing:10) {
             Image("Wordmark")
-            Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed using the tabs below. Add widgets from the home screen.")
+            Text("A simple text-based widget for reminders and calendars. Each widget can customize the visible items and style.\n\nPreview the items that will be displayed using the tabs. Add widgets from the home screen.")
               .font(.body)
               .foregroundStyle(.secondary)
             
@@ -188,22 +204,9 @@ struct ChronographTabView: View {
       
       Tab(value:Values.calendarTab) {
         if (eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess) {
-          NavigationStack {
-            WidgetPreviewView(config: .appCombo)
-              .background(.regularMaterial)
-              .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-                  Button(action: {
-                    calendarSettingsVisible.toggle()
-                  }) {
-                    Label("Settings", systemImage: "ellipsis")
-                  }
-                }
-              }
-              .sheet(isPresented: $calendarSettingsVisible) {
-                CalendarSettingsView()
-                  .presentationDetents([.medium, .large])
-              }
+          previewTab(config: .appCombo, settingsVisible: $calendarSettingsVisible) {
+            CalendarSettingsView()
+              .settingsSheetChrome("Calendar")
           }
         } else {
           enableCalendarButton
@@ -215,22 +218,9 @@ struct ChronographTabView: View {
       
       Tab(value: Values.reminderTab) {
         if (remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess) {
-          NavigationStack {
-            WidgetPreviewView(config: .reminders)
-              .background(.regularMaterial)
-              .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-                  Button(action: {
-                    reminderSettingsVisible.toggle()
-                  }) {
-                    Label("Settings", systemImage: "ellipsis")
-                  }
-                }
-              }
-              .sheet(isPresented: $reminderSettingsVisible) {
-                RemindersSettingsView()
-                  .presentationDetents([.medium, .large])
-              }
+          previewTab(config: .reminders, settingsVisible: $reminderSettingsVisible) {
+            RemindersSettingsView()
+              .settingsSheetChrome("Reminders")
           }
         } else {
           enableRemindersButton
@@ -241,23 +231,10 @@ struct ChronographTabView: View {
       }
       
       Tab(value:Values.timezoneTab) {
-          NavigationStack {
-            WidgetPreviewView(config: timezonesPreviewConfig)
-              .background(.regularMaterial)
-              .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-                  Button(action: {
-                    timezoneSettingsVisible.toggle()
-                  }) {
-                    Label("Settings", systemImage: "ellipsis")
-                  }
-                }
-              }
-              .sheet(isPresented: $timezoneSettingsVisible) {
-                TimezonesSettingsView()
-                  .presentationDetents([.medium, .fraction(0.35), .large])
-              }
-          }
+        previewTab(config: timezonesPreviewConfig, settingsVisible: $timezoneSettingsVisible) {
+          TimezonesSettingsView()
+            .settingsSheetChrome("Time Zones")
+        }
       } label: {
         Image(systemName: "globe.americas")
           .environment(\.symbolVariants, selectedTab == Values.timezoneTab ? .fill : .none)
@@ -266,33 +243,23 @@ struct ChronographTabView: View {
       Tab(value:Values.weatherTab) {
         let hasFixedLocation = !weatherUseCurrentLocation && !weatherZipCode.isEmpty
         if locationAccessible || hasFixedLocation {
-          NavigationStack {
-            WidgetPreviewView(config: weatherPreviewConfig)
-              .background(.regularMaterial)
-              .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-                  Button(action: {
-                    weatherSettingsVisible.toggle()
-                  }) {
-                    Label("Settings", systemImage: "ellipsis")
-                  }
-                }
-              }
-              .sheet(isPresented: $weatherSettingsVisible) {
-                WeatherSettingsView()
-                  .presentationDetents([.medium, .fraction(0.35), .large])
-              }
+          previewTab(config: weatherPreviewConfig, settingsVisible: $weatherSettingsVisible) {
+            WeatherSettingsView()
+              .settingsSheetChrome("Weather")
           }
         } else {
           VStack(spacing: 16) {
             enableLocationButton
             Button("Use a Zip Code Instead") {
+              // Open straight to the zip field rather than a toggle the user
+              // has to find first.
+              weatherUseCurrentLocation = false
               weatherSettingsVisible = true
             }
           }
           .sheet(isPresented: $weatherSettingsVisible) {
             WeatherSettingsView()
-              .presentationDetents([.medium, .fraction(0.35), .large])
+              .settingsSheetChrome("Weather")
           }
         }
       } label: {
@@ -312,6 +279,37 @@ struct ChronographTabView: View {
   
 }
 
+
+extension View {
+  /// Title, Done button, and detents shared by every settings sheet. The
+  /// settings views stay chrome-free so they can be hosted anywhere.
+  func settingsSheetChrome(_ title: String) -> some View {
+    modifier(SettingsSheetChrome(title: title))
+  }
+}
+
+private struct SettingsSheetChrome: ViewModifier {
+  let title: String
+  @Environment(\.dismiss) private var dismiss
+
+  func body(content: Content) -> some View {
+    NavigationStack {
+      content
+        .navigationTitle(title)
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .toolbar {
+          ToolbarItem(placement: .confirmationAction) {
+            Button("Done") { dismiss() }
+          }
+        }
+    }
+    // Medium keeps the preview visible behind the sheet on phones and the
+    // folded iPhone Duo; regular-width screens present a form sheet instead.
+    .presentationDetents([.medium, .large])
+  }
+}
 
 #Preview {
   ChronographTabView()

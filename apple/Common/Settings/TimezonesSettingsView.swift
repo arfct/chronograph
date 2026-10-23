@@ -42,79 +42,83 @@ struct TimezonesSettingsView: View {
   }
   
   private func simplifiedTimezoneName(_ identifier: String) -> String {
-    identifier.components(separatedBy: "/")
+    let name = identifier.components(separatedBy: "/")
              .dropFirst()
              .joined(separator: "/")
              .replacingOccurrences(of: "_", with: " ")
+    // Identifiers without a region, such as "GMT", would otherwise be blank.
+    return name.isEmpty ? identifier : name
   }
   
-  private func formatTime(for timezone: TimeZone) -> String {
+  private static let timeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.timeZone = timezone
     formatter.timeStyle = .short
-    return formatter.string(from: Date())
+    return formatter
+  }()
+  
+  private func formatTime(for timezone: TimeZone) -> String {
+    Self.timeFormatter.timeZone = timezone
+    return Self.timeFormatter.string(from: Date())
   }
   
   var body: some View {
-    NavigationStack {
-      Form {
-        // Favorites section
-        Section(header: Text("Favorites")) {
-          if favoriteTimezones.isEmpty {
-            Text("No favorites added")
-              .foregroundColor(.secondary)
-          } else {
-            ForEach(favoriteTimezones, id: \.self) { identifier in
-              if let timezone = TimeZone(identifier: identifier) {
-                HStack {
-                  Image(systemName: "line.3.horizontal")
-                    .foregroundColor(.gray)
-                  VStack(alignment: .leading) {
-                    Text(simplifiedTimezoneName(timezone.identifier))
-                    Text(formatTime(for: timezone))
-                      .font(.caption)
-                      .foregroundColor(.secondary)
-                  }
-                  Spacer()
-                  Button(action: {
-                    favoriteTimezones.removeAll(where: { $0 == identifier })
-                  }) {
-                    Image(systemName: "star.fill")
-                      .foregroundColor(.yellow)
-                  }
+    Form {
+      // Favorites section
+      Section(header: Text("Favorites")) {
+        if favoriteTimezones.isEmpty {
+          Text("No favorites added")
+            .foregroundColor(.secondary)
+        } else {
+          ForEach(favoriteTimezones, id: \.self) { identifier in
+            if let timezone = TimeZone(identifier: identifier) {
+              HStack {
+                Image(systemName: "line.3.horizontal")
+                  .foregroundColor(.gray)
+                VStack(alignment: .leading) {
+                  Text(simplifiedTimezoneName(timezone.identifier))
+                  Text(formatTime(for: timezone))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                }
+                Spacer()
+                Button(action: {
+                  favoriteTimezones.removeAll(where: { $0 == identifier })
+                }) {
+                  Image(systemName: "star.fill")
+                    .foregroundColor(.yellow)
                 }
               }
             }
-            .onMove { from, to in
-              favoriteTimezones.move(fromOffsets: from, toOffset: to)
-            }
+          }
+          .onMove { from, to in
+            favoriteTimezones.move(fromOffsets: from, toOffset: to)
           }
         }
-        
-        // Replace single section with multiple sections by region
-        ForEach(groupedTimezones.keys.sorted(), id: \.self) { region in
-          Section(header: Text(region)) {
-            ForEach(groupedTimezones[region] ?? [], id: \.identifier) { timezone in
-              HStack {
-                Text(simplifiedTimezoneName(timezone.identifier))
-                Spacer()
-                Button(action: {
-                  if favoriteTimezones.contains(timezone.identifier) {
-                    favoriteTimezones.removeAll(where: { $0 == timezone.identifier })
-                  } else {
-                    favoriteTimezones.append(timezone.identifier)
-                  }
-                }) {
-                  Image(systemName: favoriteTimezones.contains(timezone.identifier) ? "star.fill" : "star")
-                    .foregroundColor(favoriteTimezones.contains(timezone.identifier) ? .yellow : .gray)
+      }
+      
+      // Replace single section with multiple sections by region
+      ForEach(groupedTimezones.keys.sorted(), id: \.self) { region in
+        Section(header: Text(region)) {
+          ForEach(groupedTimezones[region] ?? [], id: \.identifier) { timezone in
+            HStack {
+              Text(simplifiedTimezoneName(timezone.identifier))
+              Spacer()
+              Button(action: {
+                if favoriteTimezones.contains(timezone.identifier) {
+                  favoriteTimezones.removeAll(where: { $0 == timezone.identifier })
+                } else {
+                  favoriteTimezones.append(timezone.identifier)
                 }
+              }) {
+                Image(systemName: favoriteTimezones.contains(timezone.identifier) ? "star.fill" : "star")
+                  .foregroundColor(favoriteTimezones.contains(timezone.identifier) ? .yellow : .gray)
               }
             }
           }
         }
       }
-      .searchable(text: $searchText)
     }
+    .searchable(text: $searchText)
   }
 }
 
