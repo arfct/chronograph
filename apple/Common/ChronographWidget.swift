@@ -175,7 +175,7 @@ struct ChronographWidgetView : View {
     
     let backgroundColor = Color.withHex(entry.config.backgroundColor) ?? .clear
     
-    let isDark = backgroundColor == .clear ? colorScheme == .dark : backgroundColor.isDark()
+    let isDark = backgroundColor.isDark(over: colorScheme)
     
     let row = {
       var config = RowViewConfig(widget: entry.config, date: entry.date)
