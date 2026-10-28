@@ -20,10 +20,10 @@ struct CalendarWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent 
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for no background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437, or #DB443780 to make it translucent. Leave empty for the default accent.", default: "")
   var accentColor: String
 
   @Parameter(title: "Skip Pages", description: "Pages of items to skip. Lets side-by-side widgets continue where the previous one left off.", default: 0)
@@ -80,10 +80,10 @@ struct RemindersWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for no background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437, or #DB443780 to make it translucent. Leave empty for the default accent.", default: "")
   var accentColor: String
 
   @Parameter(title: "Skip Pages", description: "Pages of items to skip. Lets side-by-side widgets continue where the previous one left off.", default: 0)
@@ -134,10 +134,10 @@ struct TimezonesWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for no background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437, or #DB443780 to make it translucent. Leave empty for the default accent.", default: "")
   var accentColor: String
 
   static var parameterSummary: some ParameterSummary {
@@ -189,10 +189,10 @@ struct WeatherWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent {
   @Parameter(title: "Font Size", default: .medium)
   var fontSize: FontSize
 
-  @Parameter(title: "Background Color (Hex)", description: "A color like #112233. Leave empty for the default background.", default: "")
+  @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for no background.", default: "")
   var backgroundColor: String
 
-  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437. Leave empty for the default accent.", default: "")
+  @Parameter(title: "Accent Color (Hex)", description: "A color like #DB4437, or #DB443780 to make it translucent. Leave empty for the default accent.", default: "")
   var accentColor: String
 
   static var parameterSummary: some ParameterSummary {

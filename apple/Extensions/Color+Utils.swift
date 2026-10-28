@@ -119,27 +119,34 @@ extension Color {
     return Color(hue: hue, saturation: saturation, brightness: scheme == .dark ? 0.8 : 0.6 )
   }
   func isDark() -> Bool {
-    // Extract the RGB components
-    
-#if os(macOS)
-    let uic = NSColor(self)
-#else
-    let uic = UIColor(self)
-#endif
-    
-    
-    let components = uic.cgColor.components
-    
-    
-    let red = components?[0] ?? 0
-    let green = components?[1] ?? 0
-    let blue = components?[2] ?? 0
-    
-    // Calculate luminance
-    let luminance = (0.299 * red + 0.587 * green + 0.114 * blue)
-    
-    // Return black or white based on luminance
-    return luminance < 0.5
+    guard let rgba = rgba() else { return false }
+    return luminance(rgba) < 0.5
   }
-  
+
+  /// Whether this color reads as dark once composited over a `scheme`
+  /// background, so a translucent fill still gets legible text. A fully
+  /// transparent color falls back to the scheme itself.
+  func isDark(over scheme: ColorScheme) -> Bool {
+    let behind = scheme == .dark ? 0.0 : 1.0
+    guard let rgba = rgba() else { return behind < 0.5 }
+    return luminance(rgba) * rgba.alpha + behind * (1 - rgba.alpha) < 0.5
+  }
+
+  private func luminance(_ rgba: (red: Double, green: Double, blue: Double, alpha: Double)) -> Double {
+    0.299 * rgba.red + 0.587 * rgba.green + 0.114 * rgba.blue
+  }
+
+  /// sRGB components, including grayscale colors like `.white` whose
+  /// `cgColor` carries only two components.
+  private func rgba() -> (red: Double, green: Double, blue: Double, alpha: Double)? {
+    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+#if os(macOS)
+    guard let color = NSColor(self).usingColorSpace(.sRGB) else { return nil }
+    color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+#else
+    guard UIColor(self).getRed(&red, green: &green, blue: &blue, alpha: &alpha) else { return nil }
+#endif
+    return (red, green, blue, alpha)
+  }
+
 }
