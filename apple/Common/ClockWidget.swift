@@ -57,7 +57,7 @@ struct ClockConfigurationIntent: WidgetConfigurationIntent {
   @Parameter(title: "Foreground (Hex)", default: "")
   var accentColor: String
   
-  @Parameter(title: "Background (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for no background.", default: "")
+  @Parameter(title: "Background (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for the system glass background.", default: "")
   var backgroundColor: String
 
   @Parameter(title: "Font Style", default: .normal)

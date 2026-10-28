@@ -6,9 +6,9 @@
 //  `containerBackground(.clear, for: .widget)` still sits on a white or dark
 //  platter. Whether a widget gets that platter is decided by flags on the
 //  widget descriptors the extension sends to the system over XPC. This file
-//  intercepts that reply and marks every Chronograph descriptor transparent,
-//  so widgets draw straight on the wallpaper and paint a background only when
-//  the user sets a background color.
+//  intercepts that reply and gives every Chronograph descriptor the glass
+//  style, so widgets sit on a blurred tile of the wallpaper and paint a solid
+//  background only when the user sets a background color.
 //
 //  All of this is private API, looked up by name at runtime. When a name is
 //  missing, as it may be on a future iOS, nothing is hooked or changed and the
@@ -53,8 +53,10 @@ static void ChronographSetInteger(id object, NSString *setterName, NSUInteger va
   id descriptor = [object mutableCopy];
   ChronographSetBool(descriptor, @"setTransparent:", YES);
   ChronographSetBool(descriptor, @"setBackgroundRemovable:", YES);
-  // 1 is the clear style; 2 would blur the wallpaper behind the widget.
-  ChronographSetInteger(descriptor, @"setPreferredBackgroundStyle:", 1);
+  // Lets the system tint text for legibility against the blur.
+  ChronographSetBool(descriptor, @"setSupportsVibrantContent:", YES);
+  // 2 is the glass style, a blurred wallpaper tile; 1 would draw no tile.
+  ChronographSetInteger(descriptor, @"setPreferredBackgroundStyle:", 2);
   return descriptor;
 }
 
