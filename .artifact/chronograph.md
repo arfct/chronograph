@@ -6,6 +6,7 @@ tags:
   - ios
   - android
   - widget
+  - time
 links:
   testflight: https://testflight.apple.com/join/qP1EtCvZ
   play: https://play.google.com/store/apps/details?id=com.artifact.chronograph
