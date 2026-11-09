@@ -20,7 +20,6 @@ media:
   - src: options.png
     caption: Per-widget options on Android, from text size to obfuscation
     alt: A settings sheet with a font size slider, Braille and Enigma obfuscation buttons, accent color swatches and calendar toggles
-role: Design, Engineering
 unconfirmed:
   - date
 ---
