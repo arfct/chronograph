@@ -24,7 +24,7 @@ unconfirmed:
   - date
 ---
 
-Most widgets fight the wallpaper. Chronograph declines. Calendar events, reminders and the time in other cities — set as plain text in the system's own fonts, tinted only with the accent color the device already wears. On the home screen and the lock screen it reads as part of the interface itself, not a badge stuck on top of it.
+Most widgets fight the wallpaper. Chronograph declines. Calendar events, reminders and the time in other cities—set as plain text in the system's own fonts, tinted only with the accent color the device already wears. On the home screen and the lock screen it reads as part of the interface itself, not a badge stuck on top of it.
 
 There are no dials, no gauges, no illustration. The typography carries everything. Two obfuscation modes, Braille and Enigma, keep the agenda readable to its owner and not to the person behind them. Android arrived in 2026; reminders stay on the Apple side. On iOS it is in TestFlight, not the App Store.
 
