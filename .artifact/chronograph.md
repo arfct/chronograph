@@ -1,6 +1,7 @@
 ---
 title: Chronograph
 date: 2024-06
+status: released
 category: product
 tags:
   - ios
@@ -30,8 +31,7 @@ media:
   - src: options.png
     caption: One widget's options on Android, with a text size slider, Braille and Enigma buttons and accent swatches
     alt: A settings sheet with a font size slider, Braille and Enigma obfuscation buttons, accent color swatches and calendar toggles
-unconfirmed:
-  - date
+unconfirmed: [date, status]
 ---
 
 On a home screen, a Chronograph widget is a short column of type. Calendar events, reminders, the time in other cities and the weather are set as lines under day headings. There are versions for iOS, macOS, watchOS and Android; on iOS the widgets run on the lock screen as well, and a separate clock is made for StandBy.
