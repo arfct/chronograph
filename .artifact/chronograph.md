@@ -4,9 +4,12 @@ date: 2024-06
 category: product
 tags:
   - ios
+  - macos
+  - watchos
   - android
   - widget
   - time
+url: https://chronograph.fyi
 links:
   testflight: https://testflight.apple.com/join/qP1EtCvZ
   play: https://play.google.com/store/apps/details?id=com.artifact.chronograph
@@ -20,7 +23,7 @@ media:
     alt: A phone home screen with a widget listing four cities and their local times above a widget listing events by day
   - src: ios-calendar.png
     caption: The calendar tab of the iOS app, three days of events and reminders with their times at the left
-    alt: A phone screen with a plain list of events and reminders under the day headings Monday 9, Tuesday 10 and Wednesday 11, with small times at the left and a row of five tab icons along the bottom
+    alt: A phone screen with a plain list of events and reminders under the day headings Monday 9, Tuesday 10 and Wednesday 11, a fourth heading cut off below them, small times at the left and a row of five tab icons along the bottom
   - src: ios-calendar-dark.png
     caption: The same three days in dark appearance
     alt: A phone screen in dark mode with white text listing events and reminders by day, Monday 9 to Wednesday 11, above a row of five tab icons
