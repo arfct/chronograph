@@ -1,5 +1,6 @@
 import SwiftUI
 import EventKit
+import WidgetKit
 
 struct ChronographTabView: View {
   let eventStore = EKEventStore()
@@ -114,15 +115,49 @@ struct ChronographTabView: View {
     .frame(maxWidth: .infinity)
   }
   
+#if DEBUG && !os(watchOS)
+  /// Seeds through EventKit and nudges WidgetKit so the home-screen widget
+  /// re-renders without waiting for its normal refresh.
+  private func seedSampleEvents() {
+    Task {
+      do {
+        let count = try await SampleCalendar.seed()
+        widgetLog.debug("Seeded \(count) sample events")
+        WidgetCenter.shared.reloadAllTimelines()
+      } catch {
+        widgetLog.error("Seeding sample events failed: \(error.localizedDescription, privacy: .public)")
+      }
+    }
+  }
+#endif
+
   /// A widget preview with a settings button that opens `settings` in a sheet.
+  /// `sampleData` adds the DEBUG-only seeding menu; see SampleCalendar.
   private func previewTab<Settings: View>(config: WidgetConfig,
                                           settingsVisible: Binding<Bool>,
+                                          sampleData: Bool = false,
                                           @ViewBuilder settings: @escaping () -> Settings) -> some View {
     NavigationStack {
       WidgetPreviewView(config: config)
         .background(.regularMaterial)
         .toolbar {
           ToolbarItemGroup(placement: .primaryAction) {
+            #if DEBUG && !os(watchOS)
+            // Widget layout can only be judged against real rows, and there
+            // is no supported way to put them in a simulator from outside.
+            // See SampleCalendar.
+            if sampleData {
+              Menu {
+                Button("Seed sample events") { seedSampleEvents() }
+                Button("Clear sample events", role: .destructive) {
+                  SampleCalendar.clear()
+                  WidgetCenter.shared.reloadAllTimelines()
+                }
+              } label: {
+                Label("Sample data", systemImage: "calendar.badge.plus")
+              }
+            }
+            #endif
             Button(action: {
               settingsVisible.wrappedValue.toggle()
             }) {
@@ -190,7 +225,8 @@ struct ChronographTabView: View {
       
       Tab(value:Values.calendarTab) {
         if (eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess) {
-          previewTab(config: .appCombo, settingsVisible: $calendarSettingsVisible) {
+          previewTab(config: .appCombo, settingsVisible: $calendarSettingsVisible,
+                     sampleData: true) {
             CalendarSettingsView()
               .settingsSheetChrome("Calendar")
           }
@@ -253,6 +289,15 @@ struct ChronographTabView: View {
           .environment(\.symbolVariants, selectedTab == Values.weatherTab ? .fill : .none)
       }
     }
+#if DEBUG && !os(watchOS)
+    // `-seedSampleEvents YES` seeds on launch, for headless simulator checks
+    // where the toolbar menu cannot be tapped.
+    .task {
+      if UserDefaults.standard.bool(forKey: "seedSampleEvents") {
+        seedSampleEvents()
+      }
+    }
+#endif
     
 //    .tabViewStyle(.page)
 //    .indexViewStyle(.page)

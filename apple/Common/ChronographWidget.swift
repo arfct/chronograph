@@ -25,6 +25,8 @@ struct ChronographWidgetView : View {
   private var fullBleed: Bool = false
   
   private var lineHeight: CGFloat = 10.0
+  /// Leading applied on top of the font's own line height; see init.
+  private var lineSpread: CGFloat = 1.5
   private var fontSize: CGFloat = 16.0
   
   let textStyle: UIFont.TextStyle
@@ -49,7 +51,6 @@ struct ChronographWidgetView : View {
     let widgetFamily = context?.family
     
     // Accessory rows are packed tight; everywhere else lines get 1.5x leading.
-    let lineSpread: CGFloat
 #if os(watchOS)
     self.isAccessory = true
     self.heightIsLimited = true
@@ -105,8 +106,6 @@ struct ChronographWidgetView : View {
   
   // MARK: body
   var body: some View {
-
-    let content = entry.config.content
     
     let backgroundColor = Color.withHex(entry.config.backgroundColor) ?? .clear
     
@@ -172,43 +171,17 @@ struct ChronographWidgetView : View {
     let filteredItems = items.filter { $0.isVisible(entry.date) }
 
     let offsetCount = max(0, entry.config.pageOffset) * visibleItemCount
-    let clippedItems: [EventEntry] = Array(filteredItems[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
-    let index = clippedItems.lastIndex { $0.removeIfOrphaned != true}
-    let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
-
+    let pageItems: [EventEntry] = Array(filteredItems[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
 
     GeometryReader { container in
-      VStack(spacing: 0) {
-        ForEach(visibleItems, id: \.self) { entry in
-          if let event = entry.item as? EKEvent {
-            EventRowView(event: event, entry: entry, config: row)
-          } else if let reminder = entry.item as? EKReminder {
-            ReminderRowView(reminder: reminder, entry: entry, config: row)
-          } else if entry.type == "error" {
-            ErrorRowView(entry: entry, config: row)
-          } else if entry.type == "header" {
-            #if !os(watchOS)
-            let large = !widthIsLimited && !heightIsLimited && content == .calendar
-            HeaderRowView(entry: entry, config: row, large: large)
-            #else
-            HeaderRowView(entry: entry, config: row, large: false)
-            #endif
-          } else if entry.type == "free" {
-            FreeRowView(entry: entry, config: row)
-          } else if entry.type == "timezone" {
-            TimeZoneRowView(entry: entry, config: row)
-          } else if let weather = entry.weather {
-            CurrentWeatherRowView(entry: entry, weather: weather, config: row)
-          } else if let forecast = entry.hourForecast {
-            HourlyWeatherRowView(entry: entry, forecast: forecast, config: row)
-          } else if let forecast = entry.dayForecast {
-            DailyWeatherRowView(entry: entry, forecast: forecast, config: row)
-          } else  {
-            HeaderRowView(entry: entry, config: row, large: false)
-          }
-        }
-      }
-
+      // `visibleItemCount` assumes every row is exactly lineHeight tall, which
+      // day headers and rows carrying details are not, so rows are packed
+      // against a height budget using the heights the views actually imply.
+      rowStack(fittedItems(pageItems,
+                           available: container.size.height - insets.top - insets.bottom,
+                           width: container.size.width - insets.leading - insets.trailing,
+                           config: row),
+               config: row)
       .frame(maxHeight: .infinity, alignment: .top)
       .frame(maxWidth: .infinity, alignment: .top)
       .padding(.top, insets.top)
@@ -224,6 +197,159 @@ struct ChronographWidgetView : View {
     }
     
       .containerBackground(.clear, for: .widget)
+  }
+
+  // MARK: row packing
+
+  /// Rows that fit `available`, in order, with any trailing orphaned day header
+  /// removed.
+  ///
+  /// SwiftUI cannot be asked this: the rows carry greedy children
+  /// (TimeBarView and the title block both use maxHeight: .infinity), so
+  /// ViewThatFits measures a candidate stack as far taller than it draws and
+  /// settles on two rows where six fit. The heights are therefore derived from
+  /// the same constants the row views lay themselves out with, which is what
+  /// CalendarWidget.kt does on Android; the two must change together.
+  ///
+  /// Deliberately not a measure-then-store loop either: feeding measurements
+  /// back into @State is what blanked widgets before 01962c3.
+  private func fittedItems(_ items: [EventEntry], available: CGFloat, width: CGFloat,
+                           config row: RowViewConfig) -> [EventEntry] {
+    // The in-app preview hosts this view in a ScrollView, which proposes no
+    // height, so the GeometryReader collapses to its 10pt default. There is no
+    // budget to pack against then; show the page as before.
+    guard available >= row.lineHeight else { return items }
+    var used: CGFloat = 0
+    var kept: [EventEntry] = []
+    for item in items {
+      let height = rowHeight(item, width: width, config: row)
+      if used + height > available && !kept.isEmpty { break }
+      used += height
+      kept.append(item)
+    }
+    return trimmed(kept)
+  }
+
+  /// What each row type occupies, mirroring the frames and padding in
+  /// ChronographRow.swift. `lineHeight` is the font's line height times
+  /// `lineSpread`, so a line of text without the spread is `textLine`.
+  private func rowHeight(_ item: EventEntry, width: CGFloat, config row: RowViewConfig) -> CGFloat {
+    let line = row.lineHeight
+    let textLine = line / lineSpread
+    switch item.type {
+    case "header":
+      // HeaderRowView's large branch needs both flags, like rowStack below.
+      // watchOS never takes it: heightIsLimited is always set there.
+      let large = !widthIsLimited && !heightIsLimited
+        && entry.config.content == .calendar && row.showTimeBars
+      // The large header draws 1.45–1.66 lines (the 1.8x day number, or two
+      // small lines plus padding when there are all-day items). 1.75 covers
+      // both and matches CalendarWidget.kt; under-counting would slice a row.
+      if large { return line + line / 4 + line / 2 }
+      return heightIsLimited ? line : line + line / 2 + line / 8
+    case "error":
+      return line * 1.5
+    case "free", "timezone":
+      return line
+    default:
+      guard item.item is EKEvent else { return line }
+      let column = titleColumnWidth(width, config: row)
+      // The title may take a second line when the row is happening or soon.
+      var height = line
+      if titleWraps(item, column: column, config: row) {
+        height = max(line, 2 * textLine)
+      }
+      guard detailsVisible(item, config: row) else { return height }
+      return height + detailHeight(item, column: column, config: row)
+        + row.smallLineHeight / 3
+    }
+  }
+
+  /// Width left for an event's title and details once the time keyline, time
+  /// bar and column spacing are taken.
+  private func titleColumnWidth(_ width: CGFloat, config row: RowViewConfig) -> CGFloat {
+    let bar = row.showTimeBars ? row.fontSize : 0
+    return max(0, width - row.keyline - bar - row.columnSpacing * 2)
+  }
+
+  /// Characters per line, from a mean advance of 0.55 em: generous for SF, so
+  /// a wrap is over- rather than under-predicted. Over-predicting costs a row
+  /// of whitespace; under-predicting slices the last row.
+  private func charactersPerLine(_ column: CGFloat, fontSize: CGFloat) -> Int {
+    max(8, Int(column / (fontSize * 0.55)))
+  }
+
+  /// EventRowView's lineLimit(2) on the title.
+  private func titleWraps(_ item: EventEntry, column: CGFloat, config row: RowViewConfig) -> Bool {
+    guard !heightIsLimited, item.isHappening(entry.date) || item.isSoon(entry.date),
+          let title = (item.item as? EKEvent)?.title else { return false }
+    return title.count > charactersPerLine(column, fontSize: row.fontSize)
+  }
+
+  /// EventRowView's gate on the detail block.
+  private func detailsVisible(_ item: EventEntry, config row: RowViewConfig) -> Bool {
+    guard !heightIsLimited, item.item != nil else { return false }
+    guard item.isHappening(entry.date) || item.isSoon(entry.date) else { return false }
+    return item.hasAttachments || item.hasLocation || item.hasNotes
+  }
+
+  /// The detail block: every line is at least smallLineHeight tall; a note
+  /// that wraps (lineLimit(2)) is two small text lines.
+  private func detailHeight(_ item: EventEntry, column: CGFloat, config row: RowViewConfig) -> CGFloat {
+    let small = row.smallLineHeight
+    var lines = 0
+    if let locations = item.locations, !locations.isEmpty { lines += 1 }
+    lines += item.attachments?.count ?? 0
+    if let event = item.item as? EKEvent, event.hasAttendees { lines += 1 }
+    var height = CGFloat(lines) * small
+    if let notes = item.notes, notes.characters.count > 1 {
+      let text = String(notes.characters)
+      let wraps = text.contains("\n")
+        || text.count > charactersPerLine(column, fontSize: row.smallFontSize)
+      height += wraps ? max(small, 2 * small / lineSpread) : small
+    }
+    return height
+  }
+
+  /// `items` with any trailing orphaned day header removed, so dropping the
+  /// last event of a day never leaves its header dangling.
+  private func trimmed(_ items: [EventEntry]) -> [EventEntry] {
+    guard let last = items.lastIndex(where: { $0.removeIfOrphaned != true }) else { return items }
+    return Array(items[...last])
+  }
+
+  private func rowStack(_ items: [EventEntry], config row: RowViewConfig) -> some View {
+    let content = entry.config.content
+    return VStack(spacing: 0) {
+      ForEach(items, id: \.self) { entry in
+        if let event = entry.item as? EKEvent {
+          EventRowView(event: event, entry: entry, config: row)
+        } else if let reminder = entry.item as? EKReminder {
+          ReminderRowView(reminder: reminder, entry: entry, config: row)
+        } else if entry.type == "error" {
+          ErrorRowView(entry: entry, config: row)
+        } else if entry.type == "header" {
+          #if !os(watchOS)
+          let large = !widthIsLimited && !heightIsLimited && content == .calendar
+          HeaderRowView(entry: entry, config: row, large: large)
+          #else
+          HeaderRowView(entry: entry, config: row, large: false)
+          #endif
+        } else if entry.type == "free" {
+          FreeRowView(entry: entry, config: row)
+        } else if entry.type == "timezone" {
+          TimeZoneRowView(entry: entry, config: row)
+        } else if let weather = entry.weather {
+          CurrentWeatherRowView(entry: entry, weather: weather, config: row)
+        } else if let forecast = entry.hourForecast {
+          HourlyWeatherRowView(entry: entry, forecast: forecast, config: row)
+        } else if let forecast = entry.dayForecast {
+          DailyWeatherRowView(entry: entry, forecast: forecast, config: row)
+        } else  {
+          HeaderRowView(entry: entry, config: row, large: false)
+        }
+      }
+    }
   }
   
 }
