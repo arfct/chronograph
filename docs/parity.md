@@ -77,7 +77,7 @@ attendee line (FacePile) shows above two attendees; the note is
 (`ic_row_meeting`, `ic_row_link`, `ic_row_document`, `ic_row_chat`,
 `ic_row_attendees`, `ic_row_conflict` for `exclamationmark.triangle`), tinted
 with the row's secondary colour and sized to the small font, where iOS uses
-`.foregroundStyle(.secondary)`. No emoji stand-ins remain in the calendar row.
+`.foregroundStyle(.secondary)`. No emoji stand-ins remain in the calendar row. Time Zones day parts use Material Symbols vectors (`ic_daypart_*`) in place of the SF Symbols, tinted with the average of that hour's two daylight-gradient stops, because a Glance tint is one colour.
 
 Note cleanup (shared, fixture-verified on both platforms) treats Zoom for
 Workspace's "Zoom Meeting Info" block as boilerplate, drops `Telephone:` dial-in

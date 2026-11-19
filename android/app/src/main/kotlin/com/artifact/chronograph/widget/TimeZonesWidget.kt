@@ -7,14 +7,21 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.SuperscriptSpan
 import android.util.TypedValue
 import android.widget.RemoteViews
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.core.graphics.toColorInt
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.LocalSize
 import androidx.glance.appwidget.AndroidRemoteViews
 import androidx.glance.appwidget.GlanceAppWidget
@@ -30,6 +37,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontStyle
@@ -145,11 +153,17 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig
             // straight after the city name instead of being pushed to the edge.
             modifier = GlanceModifier.padding(start = metrics.columnSpacing.dp),
         )
-        // TimeZoneRowView draws the day-part symbol at .imageScale(.small).
-        Text(
-            text = dayPart.icon,
-            style = TextStyle(fontSize = metrics.smallFontSize.sp),
-            modifier = GlanceModifier.padding(start = metrics.columnSpacing.dp),
+        // TimeZoneRowView draws the day-part symbol at .imageScale(.small),
+        // filled with that hour's daylight gradient. A tint is one colour, so
+        // the two gradient stops are averaged.
+        val hour = Instant.now().atZone(zone).hour
+        Image(
+            provider = ImageProvider(dayPart.drawable),
+            contentDescription = dayPart.name.lowercase().replace('_', ' '),
+            colorFilter = ColorFilter.tint(androidx.glance.unit.ColorProvider(daylightTint(hour))),
+            modifier = GlanceModifier
+                .padding(start = metrics.columnSpacing.dp)
+                .size((metrics.smallFontSize * 1.15f).dp),
         )
     }
 }
@@ -181,6 +195,34 @@ private fun zoneClock(context: Context, zoneId: String, fontSizeSp: Float, color
         setTextViewTextSize(R.id.row_clock, TypedValue.COMPLEX_UNIT_SP, fontSizeSp)
         setTextColor(R.id.row_clock, colorArgb)
     }
+
+private val DayPart.drawable: Int
+    @DrawableRes get() = when (this) {
+        DayPart.DAWN -> R.drawable.ic_daypart_dawn
+        DayPart.SUNRISE -> R.drawable.ic_daypart_sunrise
+        DayPart.MORNING -> R.drawable.ic_daypart_morning
+        DayPart.DAY -> R.drawable.ic_daypart_day
+        DayPart.END_OF_DAY -> R.drawable.ic_daypart_end_of_day
+        DayPart.EVENING -> R.drawable.ic_daypart_evening
+        DayPart.NIGHT -> R.drawable.ic_daypart_night
+        DayPart.SLEEPING -> R.drawable.ic_daypart_sleeping
+    }
+
+/** TimeZoneRowView.daylightColors: a top and bottom gradient stop per hour. */
+private val daylightColors = listOf(
+    "#012459", "#001322", "#003972", "#001322", "#003972", "#001322", "#004372", "#00182b",
+    "#004372", "#011d34", "#016792", "#00182b", "#07729f", "#042c47", "#12a1c0", "#07506e",
+    "#74d4cc", "#1386a6", "#efeebc", "#61d0cf", "#fee154", "#a3dec6", "#fdc352", "#e8ed92",
+    "#ffac6f", "#ffe467", "#fda65a", "#ffe467", "#fd9e58", "#ffe467", "#f18448", "#ffd364",
+    "#f06b7e", "#f9a856", "#ca5a92", "#f4896b", "#5b2c83", "#d1628b", "#371a79", "#713684",
+    "#28166b", "#45217c", "#192861", "#372074", "#040b3c", "#233072", "#040b3c", "#012459",
+)
+
+private fun daylightTint(hour: Int): Color {
+    val top = Color(daylightColors[hour * 2].toColorInt())
+    val bottom = Color(daylightColors[hour * 2 + 1].toColorInt())
+    return lerp(top, bottom, 0.5f)
+}
 
 internal val transparentColor = androidx.glance.unit.ColorProvider(
     androidx.compose.ui.graphics.Color.Transparent,
