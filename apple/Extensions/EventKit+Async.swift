@@ -33,7 +33,6 @@ extension EKReminder {
 
 extension EKEvent {
   var participantStatus: EKParticipantStatus? {
-    print ("attendees:", self.attendees)
     return attendees?.filter({$0.isCurrentUser}).first?.participantStatus
   }
 }

@@ -66,9 +66,7 @@ struct ChronographTabView: View {
         openAppSettings()
       }
     } catch {
-      print("Access to reminders denied: \(String(describing: error.localizedDescription))")
-      
-      
+      remindersAccessGranted = false
     }
   }
   
@@ -81,7 +79,7 @@ struct ChronographTabView: View {
         openAppSettings()
       }
     } catch {
-      print("Access to events denied: \(String(describing: error.localizedDescription))")
+      eventsAccessGranted = false
     }
   }
   

@@ -55,18 +55,15 @@ struct WidgetPreviewView: View {
       
       if output.userInfo?["EKEventStoreCalendarDataChangedUserInfoKey"] as? Int == 1  &&  config.content != .reminders {
         reloadTimeline()
-        print("Updating Calendar")
       }
       if output.userInfo?["EKEventStoreRemindersDataChangedUserInfoKey"] as? Int == 1 && config.content != .calendar {
         reloadTimeline()
-        print("Updating Reminders")
       }
       
       WidgetCenter.shared.reloadAllTimelines()
     }
-    .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { change in
+    .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in
       reloadTimeline()
-      print("Updating due to UserDefaults change \(change.userInfo)")
     }
     .task(id: reloadKey) {
       currentKey = reloadKey

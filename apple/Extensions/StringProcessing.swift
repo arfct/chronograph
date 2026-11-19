@@ -27,7 +27,6 @@ func attributedString(from html: String) -> AttributedString? {
     
     return AttributedString(attributedString.trimWhiteSpace())
   } catch {
-    print("Error creating attributed string from HTML: \(error)")
     return nil
   }
 }
@@ -54,7 +53,7 @@ func extractMeetingUrls(from text: String) -> [EventAttachment] {
         }
       }
     } catch {
-      print("Invalid regex pattern: \(pattern)")
+      assertionFailure("Invalid meeting URL pattern: \(pattern)")
     }
   }
 
@@ -172,7 +171,7 @@ func extractAttachments(from html: String) -> ([EventAttachment], String) {
 
     return (results, cleanedHTML)
   } catch {
-    print("Invalid regex: \(error.localizedDescription)")
+    assertionFailure("Invalid attachment pattern: \(error.localizedDescription)")
     return ([], html)
   }
 }
@@ -190,7 +189,7 @@ func extractTitleFromURL(from urlString: String) -> String? {
       }
     }
   } catch {
-    print("Invalid regex: \(error.localizedDescription)")
+    assertionFailure("Invalid Paper URL pattern: \(error.localizedDescription)")
   }
   
   if urlString.contains("zoom.us") { return "Zoom" }

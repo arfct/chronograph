@@ -41,11 +41,8 @@ struct GradientMaskedHStack<Content: View>: View {
         
         .overlay(GeometryReader { proxy in
           Color.clear.onChange(of: proxy.size) {
-            print("size changed: \(proxy.size.width)")
             containerSize = proxy.size
           }.task {
-            
-              print("size changed: \(proxy.size.width)")
             containerSize = proxy.size
           }
         }.padding(2))

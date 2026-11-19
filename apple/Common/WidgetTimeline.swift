@@ -260,10 +260,6 @@ struct TimelineEngine {
                 eventEntry.notes = AttributedString(noteWithoutDocs)
               }
 
-              //print("\n===\(event.title ?? "UNTITLED") ===")
-              if (docs.count > 0) { print("Docs \(docs.map({ "\($0.title) <\($0.urlString)>"}))")}
-              //              if (noteWithoutDocs.count > 0) { print("Note:[\(noteWithoutDocs.trimmingCharacters(in: .whitespacesAndNewlines))]\n \(note)")}
-
             }
 
 
@@ -467,11 +463,7 @@ struct TimelineEngine {
 
   func timeline(config: WidgetConfig, context: TimelineProviderContext? = nil) async -> Timeline<CalendarTimelineEntry> {
 
-    let identifier = "\(context?.family.description ?? "none").\(config.content).\(String(reflecting: config))"
-
     let now = Date()
-
-   print("\nMaking timeline for \(identifier)" )
 
     let calendar = Calendar.current
     let startDate: Date
@@ -595,8 +587,10 @@ struct TimelineEngine {
       timelineEntries.append(timelineEntry)
 
     }
-    print ("Returning timeline in \(round(-now.timeIntervalSinceNow * 1000))ms\nTimes: [\(timelineEntries.map({ shortTimeFormatter.string(from:$0.date)}).joined(separator:", "))]")
-    widgetLog.info("Timeline built: content=\(String(describing: config.content), privacy: .public) events=\(calendarEntries.count) reminders=\(reminderEntries.count) timezones=\(timezoneEntries.count) weather=\(weather != nil ? "yes" : "nil", privacy: .public) location=\(location ?? "nil", privacy: .public)")
+    // Counts and timings only: titles, links, coordinates and place names
+    // never go to the log.
+    let elapsed = Int((-now.timeIntervalSinceNow * 1000).rounded())
+    widgetLog.info("Timeline built in \(elapsed, privacy: .public)ms: content=\(String(describing: config.content), privacy: .public) events=\(calendarEntries.count, privacy: .public) reminders=\(reminderEntries.count, privacy: .public) timezones=\(timezoneEntries.count, privacy: .public) weather=\(weather != nil ? "yes" : "nil", privacy: .public)")
 
     let timeline = Timeline(entries: timelineEntries, policy: .atEnd)
 
@@ -608,7 +602,7 @@ struct TimelineEngine {
     do {
       return try await weatherManager.fetchWeather(zipCode: config.weatherLocation)
     } catch {
-      widgetLog.error("Weather fetch failed (zip=\(config.weatherLocation, privacy: .public)): \(error.localizedDescription, privacy: .public)")
+      widgetLog.error("Weather fetch failed (fixed location: \(!config.weatherLocation.isEmpty, privacy: .public)): \(error.localizedDescription, privacy: .public)")
     }
     return nil
   }
@@ -619,12 +613,10 @@ struct TimelineEngine {
     var reminderIDs = config.reminderLists.map({$0.id})
     if (reminderIDs.count == 0) {
       reminderIDs = selectedReminderIds
-      print("REMINDERS \(reminderIDs)")
     }
     let calendars: [EKCalendar] = reminderIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
     let reminderPredicate = eventStore.predicateForIncompleteReminders(withDueDateStarting: nil, ending: nil, calendars: calendars)
 
-    print("Fetching Reminders")
     if let reminders = try? await eventStore.fetchRemindersAsync(predicate:reminderPredicate) {
       return reminders.filter { $0.dueDateComponents?.date ?? .distantPast < endDate }
     }
@@ -634,13 +626,12 @@ struct TimelineEngine {
   private func fetchScheduledReminders(config: WidgetConfig, startDate: Date, endDate: Date) async -> [EKReminder] {
     guard config.content == .reminders || config.content == .calendar else { return [] }
 
-    print("Fetching Scheduled Reminders")
     do {
       return try await eventStore.fetchRemindersAsync(predicate: eventStore.predicateForIncompleteReminders(
         withDueDateStarting: Calendar.current.startOfDay(for: startDate),
         ending: endDate, calendars: nil))
     } catch {
-      print("Reminder Error: \(error)")
+      widgetLog.error("Scheduled reminders fetch failed: \(error.localizedDescription, privacy: .public)")
       return []
     }
   }
@@ -655,13 +646,9 @@ struct TimelineEngine {
 
     let calendars: [EKCalendar] = calendarIDs.compactMap({eventStore.calendar(withIdentifier: $0)})
 
-    print("Getting Calendars: \(calendars.map(\.title))")
-
     let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
 
-    let events = eventStore.events(matching: predicate)
-    print("Fetching Events", events)
-    return events
+    return eventStore.events(matching: predicate)
   }
 
 }
