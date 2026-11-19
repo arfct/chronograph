@@ -20,6 +20,10 @@ data class CalendarItem(
     val description: String? = null,
     /** Mirrors EKEventStore.defaultCalendarForNewEvents membership on iOS. */
     val isDefaultCalendar: Boolean = true,
+    /** Short names of the attendees other than the calendar's owner (FacePile). */
+    val attendeeNames: List<String> = emptyList(),
+    /** Every attendee, the owner included — FacePile's trailing count. */
+    val attendeeCount: Int = 0,
 )
 
 /**
@@ -57,6 +61,22 @@ class RowEntry(
         if (item == null || other.item == null) return false
         val otherStart = other.startAt ?: return false
         return otherStart < end
+    }
+
+    val hasLocation: Boolean get() = !locations.isNullOrEmpty()
+
+    /** EventEntry.hasNotes: a note survived boilerplate stripping. */
+    val hasNotes: Boolean get() = (notes?.length ?: 0) > 1
+
+    val hasAttachments: Boolean get() = !attachments.isNullOrEmpty()
+
+    /** FacePile draws its line only above two attendees. */
+    val showsAttendees: Boolean get() = (item?.attendeeCount ?: 0) > 2
+
+    /** EventEntry.isSoon: starts within two hours (or already has). */
+    fun isSoon(at: Instant): Boolean {
+        val start = startAt ?: return false
+        return start.epochSecond - at.epochSecond < 2 * 3600
     }
 
     fun hasEnded(at: Instant): Boolean = endAt?.isBefore(at) ?: false

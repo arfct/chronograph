@@ -12,6 +12,7 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.SuperscriptSpan
 import android.util.TypedValue
 import android.widget.RemoteViews
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -19,7 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceTheme
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
@@ -42,6 +46,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontStyle
@@ -53,6 +58,7 @@ import com.artifact.chronograph.MainActivity
 import com.artifact.chronograph.R
 import com.artifact.chronograph.core.CalendarItem
 import com.artifact.chronograph.core.Cmudict
+import com.artifact.chronograph.core.EventLayout
 import com.artifact.chronograph.core.RowBuilder
 import com.artifact.chronograph.core.RowEntry
 import com.artifact.chronograph.core.RowMetrics
@@ -271,21 +277,14 @@ private fun visibleRows(
     return result
 }
 
-private fun rowShowsDetails(row: RowEntry, now: Instant, style: RowStyle): Boolean {
-    if (style.heightIsLimited || row.item == null) return false
-    val soon = row.startAt?.let { it.epochSecond - now.epochSecond < 2 * 3600 } ?: false
-    return (row.isHappening(now) || soon) &&
-        (!row.locations.isNullOrEmpty() || !row.notes.isNullOrBlank() ||
-            (SHOW_LINK_ROWS && (row.meetingUrl != null || !row.attachments.isNullOrEmpty())))
-}
-
 // MARK: heights
 //
-// EventRowView is intrinsically sized on iOS: the title is `minHeight:
-// lineHeight`, each detail line `minHeight: smallLineHeight`, and the detail
-// block carries `.padding(.bottom, smallLineHeight/3)`. Glance has no intrinsic
-// height for a Row that contains a fillMaxHeight child, so the same sum is
-// computed here and used both to lay the row out and to spend the height budget.
+// EventRowView is intrinsically sized on iOS, and ChronographWidget.swift packs
+// rows with an estimate of that size (`rowHeight`). Glance has no intrinsic
+// height for a Row that contains a fillMaxHeight child, so the same estimate —
+// EventLayout in :core — is used both to lay each row out and to spend the
+// height budget. A title or note never gets less room than it is allowed to
+// draw in, which is what clipped wrapped titles through their second line.
 
 /** HeaderRowView: lineHeight of content plus its top/bottom padding. */
 private fun headerHeight(style: RowStyle): Float {
@@ -297,29 +296,18 @@ private fun headerHeight(style: RowStyle): Float {
     return m.lineHeight + m.lineHeight / 2f + m.lineHeight / 8f
 }
 
-private fun eventHeight(row: RowEntry, now: Instant, style: RowStyle): Float {
-    val m = style.metrics
-    if (!rowShowsDetails(row, now, style)) return m.lineHeight
-    return m.lineHeight + detailLines(row, style) * m.smallLineHeight + m.smallLineHeight / 3f
-}
+private fun eventHeight(row: RowEntry, now: Instant, style: RowStyle): Float =
+    EventLayout.eventHeight(row, now, style.contentWidth, style.metrics, style.heightIsLimited)
 
 /**
- * How many small lines the detail block will occupy. Notes are the only variable
- * one: iOS lets `lineLimit(2)` grow to fit, so the wrap is estimated from the
- * column width rather than clipped — 0.55 em is a reasonable mean advance for
- * Roboto at these sizes, and over-estimating costs whitespace while
- * under-estimating truncates a note mid-sentence.
+ * Whether [text] will likely fill its line. Glance rows cannot shrink one child
+ * to make room for the next the way an HStack truncates, so a long text gets
+ * the row's remaining weight (its trailing symbol then sits at the line end,
+ * where the HStack would also have put it) and a short one keeps its natural
+ * width (the symbol sits right after it).
  */
-private fun detailLines(row: RowEntry, style: RowStyle): Int {
-    var lines = 0
-    if (!row.locations.isNullOrEmpty() || (SHOW_LINK_ROWS && row.meetingUrl != null)) lines++
-    if (SHOW_LINK_ROWS) lines += (row.attachments?.size ?: 0).coerceAtMost(MAX_ATTACHMENT_ROWS)
-    row.notes?.takeIf { it.isNotBlank() }?.let { notes ->
-        val perLine = (style.contentWidth / (style.smallSize * 0.55f)).toInt().coerceAtLeast(8)
-        lines += if (notes.length > perLine) 2 else 1
-    }
-    return lines
-}
+private fun fillsLine(text: String, style: RowStyle, fontSize: Float): Boolean =
+    EventLayout.graphemeCount(text) * 4 >= EventLayout.charactersPerLine(style.contentWidth, fontSize) * 3
 
 // MARK: compact numerals — TimeStringView with compactTime (the iOS default):
 // monospaced-feel big hour, small semibold minutes top-aligned to read raised.
@@ -511,9 +499,9 @@ private fun HeaderRow(row: RowEntry, style: RowStyle) {
 private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
     val m = style.metrics
     val isHappening = row.isHappening(now)
-    val soon = row.startAt?.let { it.epochSecond - now.epochSecond < 2 * 3600 } ?: false
-    val showDetails = rowShowsDetails(row, now, style)
-    val twoLines = !style.heightIsLimited && (isHappening || soon)
+    val expanded = EventLayout.isExpanded(row, now, style.heightIsLimited)
+    val showDetails = EventLayout.detailsVisible(row, expanded)
+    val titleWraps = EventLayout.titleWraps(row.item?.title, style.contentWidth, m, expanded)
 
     // EventRowView's .opacity(opacity): later rows are dimmer. Glance has no
     // per-view alpha for text, so the fade is folded into the text colours.
@@ -548,137 +536,219 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
         }
 
         Column(modifier = GlanceModifier.defaultWeight().padding(start = (if (style.showTimeBars) cs else cs * 2f).dp)) {
-            Row(
-                modifier = GlanceModifier.height(m.lineHeight.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = style.transform(row.item?.title ?: row.title ?: "Untitled"),
-                    style = TextStyle(
-                        color = primary,
-                        fontSize = m.fontSize.sp,
-                        fontWeight = if (isHappening) FontWeight.Medium else FontWeight.Normal,
-                    ),
-                    maxLines = if (twoLines) 2 else 1,
-                )
-                // iOS spaces this HStack by 2pt rather than padding the glyphs.
-                if (row.hasConflict && !style.widthIsLimited) {
-                    Text(
-                        text = "⚠︎",
-                        style = TextStyle(color = secondary, fontSize = style.smallSize.sp),
-                        modifier = GlanceModifier.padding(start = 2.dp),
-                    )
-                }
-                if (row.item?.isDefaultCalendar == false) {
-                    Text(
-                        text = circledInitial(row.item?.calendarTitle),
-                        style = TextStyle(color = style.accent, fontSize = m.fontSize.sp),
-                        modifier = GlanceModifier.padding(start = 2.dp),
-                    )
-                }
-            }
-            if (showDetails) {
-                // .padding(.bottom, smallLineHeight/3) on the detail block.
-                Column(modifier = GlanceModifier.padding(bottom = (m.smallLineHeight / 3f).dp)) {
-                    if ((SHOW_LINK_ROWS && row.meetingUrl != null) || !row.locations.isNullOrEmpty()) {
-                        Row(
-                            modifier = GlanceModifier.height(m.smallLineHeight.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            if (SHOW_LINK_ROWS) row.meetingUrl?.let { url ->
-                                Text(
-                                    text = "📹 " + style.transform(row.meetingTitle ?: "Video conference"),
-                                    style = TextStyle(
-                                        color = primary,
-                                        fontSize = style.smallSize.sp,
-                                        fontWeight = SMALL_TEXT_WEIGHT,
-                                    ),
-                                    maxLines = 1,
-                                    modifier = GlanceModifier.clickable(
-                                        actionStartActivityIntent(Intent(Intent.ACTION_VIEW, Uri.parse(url))),
-                                    ),
-                                )
-                            }
-                            row.locations?.takeIf { it.isNotEmpty() }?.let { locations ->
-                                Text(
-                                    text = style.transform(locations.joinToString(", ")),
-                                    style = TextStyle(
-                                        color = secondary,
-                                        fontSize = style.smallSize.sp,
-                                        fontWeight = SMALL_TEXT_WEIGHT,
-                                        fontStyle = FontStyle.Italic,
-                                    ),
-                                    maxLines = 1,
-                                    // SwiftUI's default HStack spacing.
-                                    modifier = if (SHOW_LINK_ROWS && row.meetingUrl != null) {
-                                        GlanceModifier.padding(start = 8.dp)
-                                    } else {
-                                        GlanceModifier
-                                    },
-                                )
-                            }
-                        }
-                    }
-                    // Document links lifted out of the description, one row each.
-                    if (SHOW_LINK_ROWS) row.attachments?.take(MAX_ATTACHMENT_ROWS)?.forEach { doc ->
-                        Text(
-                            text = attachmentGlyph(doc.displayIcon) + " " +
-                                (doc.prefix?.takeIf { it.isNotBlank() }?.let { "$it " } ?: "") +
-                                style.transform(doc.displayName),
-                            style = TextStyle(
-                                color = primary,
-                                fontSize = style.smallSize.sp,
-                                fontWeight = SMALL_TEXT_WEIGHT,
-                            ),
-                            maxLines = 1,
-                            modifier = GlanceModifier
-                                .height(m.smallLineHeight.dp)
-                                .clickable(
-                                    actionStartActivityIntent(Intent(Intent.ACTION_VIEW, Uri.parse(doc.urlString))),
-                                ),
-                        )
-                    }
-                    // Whatever a human actually wrote, boilerplate already stripped.
-                    row.notes?.takeIf { it.isNotBlank() }?.let { notes ->
-                        val noteLines = if (notes.length >
-                            (style.contentWidth / (style.smallSize * 0.55f)).toInt().coerceAtLeast(8)
-                        ) 2 else 1
-                        Text(
-                            text = style.transform(notes),
-                            style = TextStyle(
-                                color = secondary,
-                                fontSize = style.smallSize.sp,
-                                fontWeight = SMALL_TEXT_WEIGHT,
-                            ),
-                            maxLines = noteLines,
-                            modifier = GlanceModifier.height((m.smallLineHeight * noteLines).dp),
-                        )
-                    }
-                }
-            }
+            TitleLine(row, style, titleWraps, isHappening, primary, secondary)
+            if (showDetails) DetailBlock(row, style, primary, secondary)
         }
     }
 }
 
 /**
- * Meeting and document-link rows are off on Android for now: Apple draws SF
- * Symbols for these, and the emoji stand-ins (📹 📄 💬 🔗) read as clutter at
- * 0.66x body size next to the typography the widget is otherwise made of.
- *
- * The data still flows — RowBuilder.attachDescription keeps extracting the
- * meeting link and the documents, and the fixtures still cover it — so this is
- * one line to reverse once the rows have a treatment worth showing. Locations
- * and notes are unaffected.
+ * The title HStack: the title (emoji pulled out and drawn small after it, as
+ * `extractEmoji` does), then the conflict symbol and the calendar initial. Two
+ * lines tall exactly when EventLayout says the title wraps; otherwise one line
+ * that ellipsizes, so no glyph is ever cut by the row's height.
  */
-private const val SHOW_LINK_ROWS = false
+@Composable
+private fun TitleLine(
+    row: RowEntry,
+    style: RowStyle,
+    wraps: Boolean,
+    isHappening: Boolean,
+    primary: GlanceColorProvider,
+    secondary: GlanceColorProvider,
+) {
+    val m = style.metrics
+    val title = style.transform(row.item?.title?.takeIf { it.isNotEmpty() } ?: row.title ?: "Untitled")
+    val (emoji, remaining) = EventLayout.extractEmoji(title)
+    Row(
+        modifier = GlanceModifier.fillMaxWidth().height(EventLayout.titleHeight(m, wraps).dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = remaining,
+            style = TextStyle(
+                color = primary,
+                fontSize = m.fontSize.sp,
+                fontWeight = if (isHappening) FontWeight.Medium else FontWeight.Normal,
+            ),
+            maxLines = if (wraps) 2 else 1,
+            modifier = if (wraps || fillsLine(remaining, style, m.fontSize)) {
+                GlanceModifier.defaultWeight()
+            } else {
+                GlanceModifier
+            },
+        )
+        if (emoji.isNotEmpty()) {
+            Text(
+                text = emoji,
+                style = TextStyle(color = primary, fontSize = style.smallSize.sp),
+                maxLines = 1,
+                modifier = GlanceModifier.padding(start = 1.dp),
+            )
+        }
+        // iOS spaces this HStack by 2pt rather than padding the glyphs.
+        if (row.hasConflict && !style.widthIsLimited) {
+            // exclamationmark.triangle at .imageScale(.small) of the title font.
+            RowSymbol(R.drawable.ic_row_conflict, m.fontSize * 0.8f, secondary, "Conflict", start = 2f)
+        }
+        if (row.item?.isDefaultCalendar == false) {
+            Text(
+                text = circledInitial(row.item?.calendarTitle),
+                style = TextStyle(color = style.accent, fontSize = m.fontSize.sp),
+                maxLines = 1,
+                modifier = GlanceModifier.padding(start = 2.dp),
+            )
+        }
+    }
+}
 
-/** Apple renders SF Symbols here; the glyphs are the closest text analogue. */
-private const val MAX_ATTACHMENT_ROWS = 2
+/**
+ * EventRowView's detail block, in its order: location line (meeting link first),
+ * one line per document link, the attendee line, then the note. Each line is
+ * at least smallLineHeight tall; the block carries smallLineHeight/3 below.
+ * Symbols are vector drawables tinted secondary, where iOS draws SF Symbols
+ * with `.foregroundStyle(.secondary)`.
+ */
+@Composable
+private fun DetailBlock(
+    row: RowEntry,
+    style: RowStyle,
+    primary: GlanceColorProvider,
+    secondary: GlanceColorProvider,
+) {
+    val m = style.metrics
+    val small = style.smallSize
+    val symbolSize = small * SYMBOL_SCALE
+    val textStyle = TextStyle(color = primary, fontSize = small.sp, fontWeight = SMALL_TEXT_WEIGHT)
+    val secondaryStyle = textStyle.copy(color = secondary)
+    val lineModifier = GlanceModifier.fillMaxWidth().height(m.smallLineHeight.dp)
 
-private fun attachmentGlyph(icon: String): String = when (icon) {
-    "document" -> "📄"
-    "bubble" -> "💬"
-    else -> "🔗"
+    Column(modifier = GlanceModifier.fillMaxWidth().padding(bottom = (m.smallLineHeight / 3f).dp)) {
+        // iOS draws the meeting link only inside the location line.
+        row.locations?.takeIf { it.isNotEmpty() }?.let { locations ->
+            Row(modifier = lineModifier, verticalAlignment = Alignment.CenterVertically) {
+                row.meetingUrl?.let { url ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = GlanceModifier.clickable(
+                            actionStartActivityIntent(Intent(Intent.ACTION_VIEW, Uri.parse(url))),
+                        ),
+                    ) {
+                        RowSymbol(R.drawable.ic_row_meeting, symbolSize, secondary, "Video call")
+                        Text(
+                            text = style.transform(row.meetingTitle ?: "Video conference"),
+                            style = textStyle,
+                            maxLines = 1,
+                            modifier = GlanceModifier.padding(start = 4.dp),
+                        )
+                    }
+                }
+                Text(
+                    text = style.transform(locations.joinToString(", ")),
+                    style = secondaryStyle.copy(fontStyle = FontStyle.Italic),
+                    maxLines = 1,
+                    // SwiftUI's default HStack spacing.
+                    modifier = if (row.meetingUrl != null) GlanceModifier.padding(start = 8.dp) else GlanceModifier,
+                )
+            }
+        }
+        // Document links lifted out of the description, one line each.
+        row.attachments?.forEach { doc ->
+            Row(
+                modifier = lineModifier.clickable(
+                    actionStartActivityIntent(Intent(Intent.ACTION_VIEW, Uri.parse(doc.urlString))),
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                RowSymbol(attachmentSymbol(doc.displayIcon), symbolSize, secondary, "Link")
+                doc.prefix?.takeIf { it.isNotBlank() }?.let { prefix ->
+                    Text(
+                        text = style.transform(prefix),
+                        style = secondaryStyle,
+                        maxLines = 1,
+                        modifier = GlanceModifier.padding(start = 4.dp),
+                    )
+                }
+                Text(
+                    text = style.transform(doc.displayName),
+                    style = textStyle,
+                    maxLines = 1,
+                    modifier = GlanceModifier.padding(start = 4.dp),
+                )
+            }
+        }
+        // FacePile: person symbol, the other attendees, the total — all secondary.
+        if (row.showsAttendees) {
+            val item = row.item!!
+            val names = style.transform(item.attendeeNames.joinToString(", "))
+            Row(modifier = lineModifier, verticalAlignment = Alignment.CenterVertically) {
+                RowSymbol(R.drawable.ic_row_attendees, symbolSize, secondary, "Attendees")
+                Text(
+                    text = names,
+                    style = secondaryStyle,
+                    maxLines = 1,
+                    modifier = if (fillsLine(names, style, small)) {
+                        GlanceModifier.defaultWeight().padding(start = 4.dp)
+                    } else {
+                        GlanceModifier.padding(start = 4.dp)
+                    },
+                )
+                Text(
+                    text = item.attendeeCount.toString(),
+                    style = secondaryStyle,
+                    maxLines = 1,
+                    modifier = GlanceModifier.padding(start = 4.dp),
+                )
+            }
+        }
+        // Whatever a human actually wrote, boilerplate and emoji bullets
+        // already stripped by NoteCleanup; lineLimit(2) like iOS.
+        row.notes?.takeIf { row.hasNotes }?.let { notes ->
+            val wraps = EventLayout.noteWraps(notes, style.contentWidth, m)
+            Text(
+                text = style.transform(notes),
+                style = secondaryStyle,
+                maxLines = if (wraps) 2 else 1,
+                modifier = GlanceModifier.fillMaxWidth().height(EventLayout.noteHeight(m, wraps).dp),
+            )
+        }
+    }
+}
+
+/**
+ * Counterpart of an SF Symbol in a SwiftUI Text run: a monochrome vector
+ * tinted like the text beside it and sized to its font. Glance cannot put an
+ * image inside a Text, so it is a sibling in the line's Row.
+ */
+@Composable
+private fun RowSymbol(
+    @DrawableRes symbol: Int,
+    size: Float,
+    color: GlanceColorProvider,
+    description: String,
+    start: Float = 0f,
+) {
+    Image(
+        provider = ImageProvider(symbol),
+        contentDescription = description,
+        colorFilter = ColorFilter.tint(color),
+        modifier = GlanceModifier.padding(start = start.dp).size(size.dp),
+    )
+}
+
+/**
+ * A symbol's box relative to the small font size. Material Symbols draw inside
+ * ~83% of their 24-unit box, so 1.15× lands the glyph near the small text's
+ * cap-to-descender height, as SF Symbols do at the text's own point size.
+ */
+private const val SYMBOL_SCALE = 1.15f
+
+/** EventAttachment.displayIcon → the SF Symbol's Material counterpart. */
+@DrawableRes
+private fun attachmentSymbol(icon: String): Int = when (icon) {
+    "document" -> R.drawable.ic_row_document
+    "bubble" -> R.drawable.ic_row_chat
+    else -> R.drawable.ic_row_link
 }
 
 /** iOS `<initial>.circle` indicator for events off the default calendar. */
