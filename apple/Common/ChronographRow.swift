@@ -15,17 +15,17 @@ struct TimeZoneRowView: View {
   }
 
   private var isNightTime: Bool {
-    let hour = calendar.component(.hour, from: Date())
+    let hour = calendar.component(.hour, from: config.date)
     return hour < 6 || hour >= 22
   }
   
   private var isLikelySleeping: Bool {
-    let hour = calendar.component(.hour, from: Date())
+    let hour = calendar.component(.hour, from: config.date)
     return hour >= 0 && hour < 7
   }
   
   private var isLikelyWorking: Bool {
-    let hour = calendar.component(.hour, from: Date())
+    let hour = calendar.component(.hour, from: config.date)
     return hour >= 8 && hour < 18
   }
   
@@ -109,18 +109,18 @@ struct TimeZoneRowView: View {
   }
   
   private var timeOfDay: TimeOfDay {
-    getTimeOfDay(hour: calendar.component(.hour, from: Date()))
+    getTimeOfDay(hour: calendar.component(.hour, from: config.date))
   }
   
   var body: some View {
-    let hour = calendar.component(.hour, from: Date())
+    let hour = calendar.component(.hour, from: config.date)
     
     let daylightGradient = LinearGradient(colors: [Color.withHex(daylightColors[hour * 2]) ?? .white, Color.withHex(daylightColors[hour * 2 + 1]) ?? .black], startPoint: .top, endPoint: .bottom)
       
     HStack(spacing: config.columnSpacing) {
       HStack {
         
-        TimeStringView(entry: entry, config: config, date: Date(), timeZone: entry.timeZone, showAMPM: true)
+        TimeStringView(entry: entry, config: config, date: config.date, timeZone: entry.timeZone, showAMPM: true)
 //          .foregroundColor(isLikelySleeping ? .secondary : .primary)
           
 
@@ -422,8 +422,8 @@ struct EventRowView: View {
     
     let opacity = distanceOpacity(from: config.date, to: entry.startDate)
     
-    let isHappening = entry.isHappening()
-    let isSoon = entry.isSoon()
+    let isHappening = entry.isHappening(config.date)
+    let isSoon = entry.isSoon(config.date)
     
     //    let availability = event.availability
     //    let attending = event.participantStatus
