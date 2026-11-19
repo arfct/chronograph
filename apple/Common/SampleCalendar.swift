@@ -80,6 +80,34 @@ enum SampleCalendar {
     ]
   }
 
+  /// `-sampleScenario rows`: the dense hour from `seed-calendar.sh rows` — long
+  /// titles that wrap, Zoom links beside locations, document links and Zoom
+  /// "Meeting Info" boilerplate with emoji bullets — for side-by-side row
+  /// checks against Android. Attendees cannot be written through EventKit.
+  private static var rowSamples: [Sample] {
+    let zoom = "https://example.zoom.us/j/1234567890?pwd=abcDEF123"
+    let zoomInfo = """
+    📹 Zoom Meeting Info:
+    \(zoom)
+    ☎️ Telephone:
+    +1 669 900 6833 (US)
+    Meeting ID: 123 456 7890
+    """
+    return [
+      Sample(title: "Muse WatchOS, WearOS Live workout experience", start: -10 * minute, duration: 50 * minute,
+             location: "\(zoom), NYC - Farley-04-Albert S. Burleson, Menlo Park (12) [Zoom Room]",
+             notes: zoomInfo),
+      Sample(title: "Muse Design Review", start: 15 * minute, duration: 30 * minute,
+             location: "\(zoom), SF - 250-30-Handing out snacks during a fire drill",
+             notes: "1 - https://docs.google.com/document/d/paid-messaging\n2 - https://docs.google.com/document/d/mba\n\(zoomInfo)"),
+      Sample(title: "MSL Muse OS walkthrough refresher and prototype", start: 45 * minute, duration: 55 * minute,
+             location: zoom,
+             notes: "Walk through the prototype before the refresher.\n\(zoomInfo)"),
+      Sample(title: "Stadium Monthly Happy Hour", start: 100 * minute, duration: hour,
+             location: "The Whole Enchilada"),
+    ]
+  }
+
   /// Replaces any previously seeded events and returns how many were written.
   @discardableResult
   static func seed(using store: EKEventStore = EKEventStore()) async throws -> Int {
@@ -92,7 +120,8 @@ enum SampleCalendar {
     clear(in: store)
 
     let now = Date()
-    for sample in samples {
+    let chosen = UserDefaults.standard.string(forKey: "sampleScenario") == "rows" ? rowSamples : samples
+    for sample in chosen {
       let event = EKEvent(eventStore: store)
       event.calendar = calendar
       event.title = sample.title
@@ -103,7 +132,7 @@ enum SampleCalendar {
       try store.save(event, span: .thisEvent, commit: false)
     }
     try store.commit()
-    return samples.count
+    return chosen.count
   }
 
   /// Removes seeded events, identified by the marker in their notes.

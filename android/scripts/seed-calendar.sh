@@ -8,9 +8,14 @@
 # boilerplate, and a following day — so a screenshot taken from this state shows
 # what the widget is actually for.
 #
-#   android/scripts/seed-calendar.sh
+#   android/scripts/seed-calendar.sh          # the store-screenshot day
+#   android/scripts/seed-calendar.sh rows     # detail-row stress case, around now
 #
-# Store screenshots are captured from this state; see android/RELEASING.md.
+# Store screenshots are captured from the default state; see android/RELEASING.md.
+# `rows` instead seeds a dense hour starting at the device's current time: long
+# titles that wrap, Zoom links beside locations, document links, Zoom "Meeting
+# Info" boilerplate carrying emoji, attendees, and an overlap — the shape of a
+# real work calendar, used to check row heights and detail icons against iOS.
 #
 # Two quirks of `adb shell content` shape the whole script:
 #
@@ -92,6 +97,43 @@ add() {
 }
 
 H=3600
+sql() { adb shell "sqlite3 $CAL_DB \"$1\""; }
+
+if [ "${1:-}" = "rows" ]; then
+  # Offsets from the current five-minute mark, so every row is happening or
+  # soon and draws its detail block.
+  BASE=$(( (NOW / 300) * 300 - MIDNIGHT ))
+  M=60
+  add $((BASE - 10 * M)) $((50 * M)) "Muse WatchOS, WearOS Live workout experience"
+  add $((BASE + 15 * M)) $((30 * M)) "Muse Design Review"
+  add $((BASE + 45 * M)) $((55 * M)) "MSL Muse OS walkthrough refresher and prototype"
+  add $((BASE + 100 * M)) $((60 * M)) "Stadium Monthly Happy Hour" "The Whole Enchilada"
+
+  ZOOM="https://example.zoom.us/j/1234567890?pwd=abcDEF123"
+  # ~NL~ becomes a newline in SQL; the device shell would eat a literal one.
+  ZOOM_INFO="📹 Zoom Meeting Info:~NL~$ZOOM~NL~☎️ Telephone:~NL~+1 669 900 6833 (US)~NL~Meeting ID: 123 456 7890"
+  setsql() { sql "UPDATE Events SET $1=replace('$2','~NL~',char(10)) WHERE title='$3';"; }
+  setsql eventLocation "$ZOOM, NYC - Farley-04-Albert S. Burleson, Menlo Park (12) [Zoom Room]" "Muse WatchOS, WearOS Live workout experience"
+  setsql description "$ZOOM_INFO" "Muse WatchOS, WearOS Live workout experience"
+  setsql eventLocation "$ZOOM, SF - 250-30-Handing out snacks during a fire drill" "Muse Design Review"
+  setsql description "1 - https://docs.google.com/document/d/paid-messaging~NL~2 - https://docs.google.com/document/d/mba~NL~$ZOOM_INFO" "Muse Design Review"
+  setsql eventLocation "$ZOOM" "MSL Muse OS walkthrough refresher and prototype"
+  setsql description "Walk through the prototype before the refresher.~NL~$ZOOM_INFO" "MSL Muse OS walkthrough refresher and prototype"
+
+  # Attendees for the review, so the people row draws (iOS FacePile needs > 2).
+  REVIEW_ID=$(sql "SELECT _id FROM Events WHERE title='Muse Design Review';" | tr -d '\r' | head -1)
+  for who in "Priya Raman/priya" "Ana Lopez/ana" "Sam Ortiz/sam" "Lee Chen/lee"; do
+    adb shell "content insert --uri content://com.android.calendar/attendees \
+      --bind event_id:l:$REVIEW_ID --bind attendeeName:s:'${who%%/*}' \
+      --bind attendeeEmail:s:'${who##*/}@example.com' --bind attendeeRelationship:i:1 \
+      --bind attendeeType:i:1 --bind attendeeStatus:i:1"
+  done
+  echo "  ~ rows scenario: locations, Zoom boilerplate, documents, attendees (event $REVIEW_ID)"
+  adb shell am force-stop com.android.providers.calendar >/dev/null 2>&1 || true
+  adb shell am broadcast -a android.appwidget.action.APPWIDGET_UPDATE >/dev/null 2>&1 || true
+  exit 0
+fi
+
 # Today. The 09:00 standup sits inside the four-hour detail window, so its
 # meeting link, note and boilerplate-stripping all render.
 add $((9 * H))            $((15 * 60)) "Standup"
@@ -104,7 +146,6 @@ add $((24 * H + 9 * H))  $((60 * 60))  "Sprint kickoff"
 add $((24 * H + 14 * H)) $((120 * 60)) "Museum with Ana" "SFMOMA"
 
 # --- the fields content cannot bind ----------------------------------------
-sql() { adb shell "sqlite3 $CAL_DB \"$1\""; }
 sql "UPDATE Events SET eventLocation='$MEET_URL' WHERE title='Standup';"
 sql "UPDATE Events SET description='$STANDUP_NOTE' WHERE title='Standup';"
 sql "UPDATE Events SET description='Bring the Play screenshots.' WHERE title='Design review — widgets';"
