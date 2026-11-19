@@ -231,10 +231,12 @@ struct ChronographWidgetView : View {
     let _ = items.append(contentsOf: entry.timezones)
     let _ = items.append(contentsOf: entry.events)
     let _ = items.append(contentsOf: entry.reminders.prefix(entry.config.content == .calendar ? (visibleItemCount / 2) : visibleItemCount))
-    let filteredItems = items.filter { $0.isVisible() }
-    
-    let offsetCount = entry.config.pageOffset * visibleItemCount
-    let clippedItems: [EventEntry] = Array(items[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
+    // Entries are rendered ahead of time, one per minute, so "now" is the
+    // entry's date rather than the moment the view happens to be built.
+    let filteredItems = items.filter { $0.isVisible(entry.date) }
+
+    let offsetCount = max(0, entry.config.pageOffset) * visibleItemCount
+    let clippedItems: [EventEntry] = Array(filteredItems[min(filteredItems.count, offsetCount) ..< min(filteredItems.count, offsetCount + visibleItemCount)])
     let index = clippedItems.lastIndex { $0.removeIfOrphaned != true}
     let visibleItems =  index != nil ?  Array(clippedItems[...index!]) : clippedItems
 
