@@ -17,11 +17,11 @@ struct ClockWidget: Widget {
     
     .contentMarginsDisabled()
     .configurationDisplayName("StandBy Clock")
-    .description("A minimal clock for StandBy that shows only the hour overnight.")
+    .description("A minimal clock that shows only the hour overnight.")
     .supportedFamilies([
       .systemSmall,
     ])
-    .disfavoredLocations([.lockScreen, .homeScreen], for: [.systemSmall])
+    .disfavoredLocations([.lockScreen], for: [.systemSmall])
   }
 }
 
@@ -113,11 +113,13 @@ struct ClockEntry: TimelineEntry {
   let configuration: ClockConfigurationIntent
 }
 
-let hourFormatter: DateFormatter = {
+/// Built per use rather than cached, so a change to the 24-Hour Time setting
+/// shows on the next timeline reload.
+var hourFormatter: DateFormatter {
   let formatter = DateFormatter()
-  formatter.dateFormat = "h"
+  formatter.dateFormat = localizedHourPattern
   return formatter
-}()
+}
 
 let minuteFormatter: DateFormatter = {
   let formatter = DateFormatter()
