@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
 import android.text.SpannableString
+import android.text.format.DateFormat
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
 import android.text.style.SuperscriptSpan
@@ -185,11 +186,25 @@ private fun CalendarContent(
             when (row.type) {
                 "header" -> HeaderRow(row, style)
                 "error", "empty" -> MessageRow(row, style)
-                "free" -> FreeTimeRow(row, style)
+                "free" -> FreeTimeRow(row, style, now)
                 else -> EventRow(row, style, now)
             }
         }
     }
+}
+
+/** Distance fade for a row — see RowMetrics.distanceOpacity. */
+private fun rowFade(row: RowEntry, now: Instant): Float {
+    val start = row.startAt ?: return 1f
+    return RowMetrics.distanceOpacity((start.epochSecond - now.epochSecond) / 3600.0)
+}
+
+/** The same colour at `fade` of its own alpha. */
+@Composable
+private fun GlanceColorProvider.faded(fade: Float): GlanceColorProvider {
+    if (fade >= 1f) return this
+    val color = getColor(LocalContext.current)
+    return GlanceColorProvider(color.copy(alpha = color.alpha * fade))
 }
 
 /** Everything EventRowView reads off RowViewConfig, resolved once per render. */
@@ -309,7 +324,8 @@ private fun detailLines(row: RowEntry, style: RowStyle): Int {
 // MARK: compact numerals — TimeStringView with compactTime (the iOS default):
 // monospaced-feel big hour, small semibold minutes top-aligned to read raised.
 
-private val hourFormat = DateTimeFormatter.ofPattern("h", Locale.US)
+private val hourFormat12 = DateTimeFormatter.ofPattern("h", Locale.US)
+private val hourFormat24 = DateTimeFormatter.ofPattern("HH", Locale.US)
 private val minuteFormat = DateTimeFormatter.ofPattern("mm", Locale.US)
 
 /**
@@ -325,6 +341,8 @@ private val minuteFormat = DateTimeFormatter.ofPattern("mm", Locale.US)
 private fun CompactTime(instant: Instant, style: RowStyle, color: GlanceColorProvider) {
     val context = LocalContext.current
     val zoned = instant.atZone(ZoneId.systemDefault())
+    // Follows the device's 24-hour setting, as iOS follows the locale.
+    val hourFormat = if (DateFormat.is24HourFormat(context)) hourFormat24 else hourFormat12
     val hour = hourFormat.format(zoned)
     val minute = minuteFormat.format(zoned)
     val text = SpannableString(hour + minute).apply {
@@ -497,6 +515,12 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
     val showDetails = rowShowsDetails(row, now, style)
     val twoLines = !style.heightIsLimited && (isHappening || soon)
 
+    // EventRowView's .opacity(opacity): later rows are dimmer. Glance has no
+    // per-view alpha for text, so the fade is folded into the text colours.
+    val fade = rowFade(row, now)
+    val primary = style.palette.primary.faded(fade)
+    val secondary = style.palette.secondary.faded(fade)
+
     val cs = m.columnSpacing
     var rowModifier = GlanceModifier.fillMaxWidth().height(eventHeight(row, now, style).dp)
     eventIntent(row)?.let { rowModifier = rowModifier.clickable(actionStartActivityIntent(it)) }
@@ -531,7 +555,7 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                 Text(
                     text = style.transform(row.item?.title ?: row.title ?: "Untitled"),
                     style = TextStyle(
-                        color = style.palette.primary,
+                        color = primary,
                         fontSize = m.fontSize.sp,
                         fontWeight = if (isHappening) FontWeight.Medium else FontWeight.Normal,
                     ),
@@ -541,7 +565,7 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                 if (row.hasConflict && !style.widthIsLimited) {
                     Text(
                         text = "⚠︎",
-                        style = TextStyle(color = style.palette.secondary, fontSize = style.smallSize.sp),
+                        style = TextStyle(color = secondary, fontSize = style.smallSize.sp),
                         modifier = GlanceModifier.padding(start = 2.dp),
                     )
                 }
@@ -565,7 +589,7 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                                 Text(
                                     text = "📹 " + style.transform(row.meetingTitle ?: "Video conference"),
                                     style = TextStyle(
-                                        color = style.palette.primary,
+                                        color = primary,
                                         fontSize = style.smallSize.sp,
                                         fontWeight = SMALL_TEXT_WEIGHT,
                                     ),
@@ -579,7 +603,7 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                                 Text(
                                     text = style.transform(locations.joinToString(", ")),
                                     style = TextStyle(
-                                        color = style.palette.secondary,
+                                        color = secondary,
                                         fontSize = style.smallSize.sp,
                                         fontWeight = SMALL_TEXT_WEIGHT,
                                         fontStyle = FontStyle.Italic,
@@ -602,7 +626,7 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                                 (doc.prefix?.takeIf { it.isNotBlank() }?.let { "$it " } ?: "") +
                                 style.transform(doc.displayName),
                             style = TextStyle(
-                                color = style.palette.primary,
+                                color = primary,
                                 fontSize = style.smallSize.sp,
                                 fontWeight = SMALL_TEXT_WEIGHT,
                             ),
@@ -622,7 +646,7 @@ private fun EventRow(row: RowEntry, style: RowStyle, now: Instant) {
                         Text(
                             text = style.transform(notes),
                             style = TextStyle(
-                                color = style.palette.secondary,
+                                color = secondary,
                                 fontSize = style.smallSize.sp,
                                 fontWeight = SMALL_TEXT_WEIGHT,
                             ),
@@ -664,8 +688,9 @@ private fun circledInitial(calendarTitle: String?): String {
 }
 
 @Composable
-private fun FreeTimeRow(row: RowEntry, style: RowStyle) {
+private fun FreeTimeRow(row: RowEntry, style: RowStyle, now: Instant) {
     val m = style.metrics
+    val secondary = style.palette.secondary.faded(rowFade(row, now))
     Row(
         modifier = GlanceModifier.fillMaxWidth().height(m.lineHeight.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -681,7 +706,7 @@ private fun FreeTimeRow(row: RowEntry, style: RowStyle) {
         Text(
             text = style.transform(row.title ?: "Free"),
             style = TextStyle(
-                color = style.palette.secondary,
+                color = secondary,
                 fontSize = style.smallSize.sp,
                 fontWeight = SMALL_TEXT_WEIGHT,
                 fontStyle = FontStyle.Italic,

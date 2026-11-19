@@ -10,11 +10,7 @@
 	<array>
 		<string>$(TeamIdentifierPrefix)com.artifact.chronograph</string>
 	</array>
-	<key>com.apple.security.files.user-selected.read-only</key>
-	<true/>
 	<key>com.apple.security.network.client</key>
-	<true/>
-	<key>com.apple.security.personal-information.addressbook</key>
 	<true/>
 	<key>com.apple.security.personal-information.calendars</key>
 	<true/>

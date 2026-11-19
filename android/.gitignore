@@ -13,3 +13,6 @@ keystore/
 
 # Play listing assets are committed; generated intermediates are not.
 play/.*.png
+
+# fastlane run report
+fastlane/report.xml

@@ -1,6 +1,7 @@
 package com.artifact.chronograph.core
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class RowMetricsTest {
@@ -30,6 +31,20 @@ class RowMetricsTest {
         assertEquals(17f / 6f, metrics.columnSpacing)
         // config.keyline = fontSize * 2.25 with compactTime
         assertEquals(17f * 2.25f, metrics.keyline)
+    }
+
+    @Test
+    fun `rows dim with distance but never below the floor`() {
+        // Now and anything already under way is full strength.
+        assertEquals(1f, RowMetrics.distanceOpacity(0.0))
+        assertEquals(1f, RowMetrics.distanceOpacity(-2.0))
+        // pow(1 - 2/4, 0.33) ≈ 0.795 — the same curve as the Swift helper.
+        assertEquals(0.795f, RowMetrics.distanceOpacity(2.0), 0.001f)
+        // Past four hours the base would go negative (NaN in pow); it clamps.
+        assertEquals(RowMetrics.MIN_DISTANCE_OPACITY, RowMetrics.distanceOpacity(4.0))
+        assertEquals(RowMetrics.MIN_DISTANCE_OPACITY, RowMetrics.distanceOpacity(72.0))
+        // Monotonic on the way down.
+        assertTrue(RowMetrics.distanceOpacity(1.0) > RowMetrics.distanceOpacity(3.0))
     }
 
     @Test

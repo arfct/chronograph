@@ -17,12 +17,6 @@
 		2C72C0722C3F857E00AB3A1A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3172C1B6A9600F22C21 /* WidgetKit.framework */; };
 		2C72C0732C3F857E00AB3A1A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C6BA3192C1B6A9600F22C21 /* SwiftUI.framework */; };
 		2C72C0812C3F857E00AB3A1A /* Widget-mac.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C72C0712C3F857E00AB3A1A /* Widget-mac.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2CC8A1EE2C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
-		2CC8A1EF2C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
-		2CC8A1F02C5E66060012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
-		2CC8A1F12C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
-		2CC8A1F22C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
-		2CC8A1F32C5E66190012AA34 /* AppIntentPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */; };
 		2CDC5ABE2C4C779A008B3139 /* Colorful in Frameworks */ = {isa = PBXBuildFile; productRef = 2CDC5ABD2C4C779A008B3139 /* Colorful */; };
 /* End PBXBuildFile section */
 
@@ -105,8 +99,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentPerform.swift; sourceTree = "<group>"; };
-		2C41B9C52C56BDAB007D4519 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		2C6BA2EA2C1B6A4F00F22C21 /* Chronograph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronograph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA2FA2C1B6A5000F22C21 /* Chronograph-watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chronograph-watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C6BA3152C1B6A9600F22C21 /* Widget-watch.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Widget-watch.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,22 +285,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2C0EFA3D2C226BB900012A78 /* Experiments */ = {
-			isa = PBXGroup;
-			children = (
-				2C0EFA332C21496C00012A78 /* AppIntentPerform.swift */,
-			);
-			path = Experiments;
-			sourceTree = "<group>";
-		};
-		2C41B9C42C56BDAB007D4519 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				2C41B9C52C56BDAB007D4519 /* RealityKitContent */,
-			);
-			path = Packages;
-			sourceTree = "<group>";
-		};
 		2C6BA2E12C1B6A4F00F22C21 = {
 			isa = PBXGroup;
 			children = (
@@ -318,9 +294,7 @@
 				2CD092372D29D18300563241 /* Watch */,
 				2CD0924A2D29D19700563241 /* Mac */,
 				2C12D5502DA1532800EA3DBE /* Resources */,
-				2C0EFA3D2C226BB900012A78 /* Experiments */,
 				2C6BA3162C1B6A9600F22C21 /* Frameworks */,
-				2C41B9C42C56BDAB007D4519 /* Packages */,
 				2C6BA2EB2C1B6A4F00F22C21 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -596,7 +570,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CC8A1EE2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,7 +577,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CC8A1EF2C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,7 +584,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CC8A1F22C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,7 +591,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CC8A1F12C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,7 +598,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CC8A1F02C5E66060012AA34 /* AppIntentPerform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,7 +605,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CC8A1F32C5E66190012AA34 /* AppIntentPerform.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,7 +764,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
-				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.artifact.chronograph;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -833,7 +800,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Watch/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
-				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.artifact.chronograph;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -872,8 +838,7 @@
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Chronograph uses your location to show the local weather forecast in its widgets.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -917,8 +882,7 @@
 				INFOPLIST_FILE = iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Chronograph looks up names and images for meeting participants";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Chronograph uses your location to show the local weather forecast in its widgets.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1105,11 +1069,10 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Chronograph uses your location to show the local weather forecast in its widgets.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1143,11 +1106,10 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Look up meeting attendees";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get location and weather for widget";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Chronograph uses your location to show the local weather forecast in its widgets.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1178,7 +1140,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Widget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1210,7 +1172,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mac/Widget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_CFBundleDisplayName = Chronograph;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

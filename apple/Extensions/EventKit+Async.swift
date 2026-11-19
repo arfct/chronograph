@@ -19,9 +19,6 @@ extension EKReminder {
     guard let components = self.dueDateComponents else { return nil }
     return components.date
   }
-  var primaryDate: Date? {
-    return dueDate
-  }
   
   //  Per RFC 5545, priorities of 1-4 are considered "high," a priority of 5 is "medium," and priorities of 6-9 are "low."
   var priorityPrefix: String {
@@ -31,25 +28,8 @@ extension EKReminder {
   }
 }
 
-extension EKEvent {
-  var participantStatus: EKParticipantStatus? {
-    print ("attendees:", self.attendees)
-    return attendees?.filter({$0.isCurrentUser}).first?.participantStatus
-  }
-}
 extension EKCalendarItem {
 
-  
-  func valid(at date: Date) -> Bool{
-    if let end = end {
-      if allDay, let earlyEnd = Calendar.current.date(byAdding: .minute, value: -6, to: end) {
-        return earlyEnd > date
-      } else {
-        return end > date
-      }
-    }
-    return allDay
-  }
   
   var allDay: Bool {
     if let reminder = self as? EKReminder,
@@ -95,9 +75,6 @@ extension EKCalendarItem {
     return nil
   }
   
-  func compareDate(with: EKCalendarItem) -> Bool {
-    return self.date < with.date
-  }
   
   
   var color: Color? {
@@ -170,29 +147,37 @@ func replaceBirthdayString(_ input: String) -> String {
 
 
 
-extension Array {
-  mutating func removeAllFromEnd(where predicate: (Element) -> Bool) {
-    while let last = self.last, predicate(last) {
-      self.removeLast()
-    }
-  }
+
+/// True when the user's locale or the system 24-Hour Time setting asks for a
+/// 24-hour clock. The "j" template resolves to the preferred hour symbol:
+/// h/K for 12-hour, H/k for 24-hour.
+var uses24HourClock: Bool {
+  let format = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: .current) ?? "h"
+  return format.contains("H") || format.contains("k")
 }
 
+/// The hour pattern that matches the user's clock preference.
+var localizedHourPattern: String { uses24HourClock ? "HH" : "h" }
+
 extension Date {
+  /// Hour, minute and meridiem in the user's clock style. On a 24-hour clock the
+  /// hour is zero-padded and `ampm` is empty.
   func formattedHourAndMinute(timeZone: TimeZone? = nil) -> (hour: String, minute: String, ampm: String) {
     let dateFormatter = DateFormatter()
     dateFormatter.locale = Locale.current
     dateFormatter.timeZone = timeZone
 
-    dateFormatter.dateFormat = "h"
+    dateFormatter.dateFormat = localizedHourPattern
     let hourString = dateFormatter.string(from: self)
 
     dateFormatter.dateFormat = "mm"
     let minuteString = dateFormatter.string(from: self)
-    
-    dateFormatter.dateFormat = "a"
-    let ampmString = dateFormatter.string(from: self)
-      //.replacingOccurrences(of: "M", with: "")
+
+    var ampmString = ""
+    if !uses24HourClock {
+      dateFormatter.dateFormat = "a"
+      ampmString = dateFormatter.string(from: self)
+    }
 
     return (hourString, minuteString, ampmString)
   }
@@ -225,6 +210,8 @@ func openAppSettings() {
   
   
 #elseif os(macOS)
-  
+  if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices") {
+    NSWorkspace.shared.open(url)
+  }
 #endif
 }

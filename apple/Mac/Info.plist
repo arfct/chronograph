@@ -2,13 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Show calender events in a widget</string>
+	<string>Chronograph shows your upcoming calendar events in its widgets.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Chronograph uses your location to show the local weather forecast in its widgets.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Chronograph uses your location to show the local weather forecast in its widgets.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
-	<string>Show reminders in a widget</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Ishihara-Regular.otf</string>
-	</array>
+	<string>Chronograph shows your reminders in its widgets.</string>
+	<key>ATSApplicationFontsPath</key>
+	<string>.</string>
 </dict>
 </plist>

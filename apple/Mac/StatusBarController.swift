@@ -10,7 +10,9 @@ class StatusBarController {
     statusItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
     
     if let button = statusItem.button {
-      button.title = "Hello"
+      button.image = NSImage(systemSymbolName: "calendar.day.timeline.left",
+                             accessibilityDescription: "Chronograph")
+      button.toolTip = "Chronograph"
       button.target = self
       button.action = #selector(showPopover)
     }

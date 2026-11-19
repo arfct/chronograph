@@ -43,7 +43,7 @@ struct TimeZoneQuery: EntityQuery {
   }
   
   func suggestedEntities() async throws -> IntentItemCollection<TimeZoneSelectionEntity> {
-    var knownTimeZoneIdentifiers = TimeZone.knownTimeZoneIdentifiers
+    let knownTimeZoneIdentifiers = TimeZone.knownTimeZoneIdentifiers
     
     var knownTimeZones = knownTimeZoneIdentifiers.compactMap({ TimeZone(identifier: $0) })
     knownTimeZones = knownTimeZones.sorted(by: { (timeZone1, timeZone2) -> Bool in

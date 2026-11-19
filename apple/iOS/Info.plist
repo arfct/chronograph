@@ -5,9 +5,9 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Show calender events in a widget</string>
+	<string>Chronograph shows your upcoming calendar events in its widgets.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
-	<string>Show reminders in a widget</string>
+	<string>Chronograph shows your reminders in its widgets.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ishihara-Regular.otf</string>

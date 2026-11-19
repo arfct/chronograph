@@ -37,6 +37,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.artifact.chronograph.R
 import com.artifact.chronograph.core.Cmudict
+import com.artifact.chronograph.core.DayPart
 import com.artifact.chronograph.core.RowBuilder
 import com.artifact.chronograph.core.RowEntry
 import com.artifact.chronograph.core.RowMetrics
@@ -115,8 +116,8 @@ private fun TimeZonesContent(
 private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig, dictionary: Cmudict?, palette: RowPalette) {
     val context = LocalContext.current
     val zone = ZoneId.of(row.zoneId ?: "UTC")
-    val hour = Instant.now().atZone(zone).hour
-    val isLikelySleeping = hour < 7
+    val dayPart = DayPart.forHour(Instant.now().atZone(zone).hour)
+    val isLikelySleeping = dayPart.isLikelySleeping
 
     val textColor = if (isLikelySleeping) palette.secondary else palette.primary
 
@@ -146,7 +147,7 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig
         )
         // TimeZoneRowView draws the day-part symbol at .imageScale(.small).
         Text(
-            text = dayPartIcon(hour),
+            text = dayPart.icon,
             style = TextStyle(fontSize = metrics.smallFontSize.sp),
             modifier = GlanceModifier.padding(start = metrics.columnSpacing.dp),
         )
@@ -156,8 +157,9 @@ private fun TimeZoneRow(row: RowEntry, metrics: RowMetrics, config: WidgetConfig
 /**
  * iOS TimeStringView compact + showAMPM: big hour, small raised meridiem, no
  * minutes. Spans on the format pattern survive TextClock's formatting, so the
- * live clock keeps the mixed sizing. Both format slots get the same pattern so
- * the layout doesn't shift with the device's 24-hour preference.
+ * live clock keeps the mixed sizing. TextClock picks the slot from the
+ * device's 24-hour setting; on a 24-hour clock there is no meridiem, so the
+ * raised run is the minutes instead, as on iOS.
  */
 private fun compactHourFormat(): CharSequence =
     SpannableString("h a").apply {
@@ -165,27 +167,20 @@ private fun compactHourFormat(): CharSequence =
         setSpan(SuperscriptSpan(), 1, 3, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
 
+private fun compactHourFormat24(): CharSequence =
+    SpannableString("HHmm").apply {
+        setSpan(RelativeSizeSpan(0.66f), 2, 4, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+        setSpan(SuperscriptSpan(), 2, 4, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+    }
+
 private fun zoneClock(context: Context, zoneId: String, fontSizeSp: Float, colorArgb: Int): RemoteViews =
     RemoteViews(context.packageName, R.layout.row_clock).apply {
         setString(R.id.row_clock, "setTimeZone", zoneId)
         setCharSequence(R.id.row_clock, "setFormat12Hour", compactHourFormat())
-        setCharSequence(R.id.row_clock, "setFormat24Hour", compactHourFormat())
+        setCharSequence(R.id.row_clock, "setFormat24Hour", compactHourFormat24())
         setTextViewTextSize(R.id.row_clock, TypedValue.COMPLEX_UNIT_SP, fontSizeSp)
         setTextColor(R.id.row_clock, colorArgb)
     }
-
-/** Same hour buckets as TimeZoneRowView.getTimeOfDay (first match wins). */
-private fun dayPartIcon(hour: Int): String = when (hour) {
-    in 6..7 -> "🌄"
-    in 8..9 -> "🌅"
-    10 -> "🌤️"
-    in 11..16 -> "☀️"
-    in 17..18 -> "🌇"
-    19 -> "🌆"
-    in 20..21 -> "🌙"
-    22 -> "😴"
-    else -> "🌙"
-}
 
 internal val transparentColor = androidx.glance.unit.ColorProvider(
     androidx.compose.ui.graphics.Color.Transparent,

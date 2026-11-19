@@ -7,9 +7,9 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Ishihara-Regular.otf</string>
-	</array>
+	<key>NSWidgetWantsLocation</key>
+	<true/>
+	<key>ATSApplicationFontsPath</key>
+	<string>.</string>
 </dict>
 </plist>

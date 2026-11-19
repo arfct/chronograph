@@ -1,4 +1,5 @@
 import SwiftUI
+import WidgetKit
 import EventKit
 import WeatherKit
 
@@ -14,24 +15,15 @@ struct TimeZoneRowView: View {
     return calendar
   }
 
-  private var isNightTime: Bool {
-    let hour = calendar.component(.hour, from: Date())
-    return hour < 6 || hour >= 22
-  }
-  
+  /// One source of truth with the icon, so the dimmed italic text and the
+  /// moon.zzz glyph always agree about who is asleep.
   private var isLikelySleeping: Bool {
-    let hour = calendar.component(.hour, from: Date())
-    return hour >= 0 && hour < 7
+    timeOfDay == .sleeping
   }
-  
-  private var isLikelyWorking: Bool {
-    let hour = calendar.component(.hour, from: Date())
-    return hour >= 8 && hour < 18
-  }
-  
+
   var daylightColors = ["#012459", "#001322", "#003972", "#001322", "#003972", "#001322", "#004372", "#00182b", "#004372", "#011d34", "#016792", "#00182b", "#07729f", "#042c47", "#12a1c0", "#07506e", "#74d4cc", "#1386a6", "#efeebc", "#61d0cf", "#fee154", "#a3dec6", "#fdc352", "#e8ed92", "#ffac6f", "#ffe467", "#fda65a", "#ffe467", "#fd9e58", "#ffe467", "#f18448", "#ffd364", "#f06b7e", "#f9a856", "#ca5a92", "#f4896b", "#5b2c83", "#d1628b", "#371a79", "#713684", "#28166b", "#45217c", "#192861", "#372074", "#040b3c", "#233072", "#040b3c", "#012459" ];
 
-  private enum TimeOfDay {
+  private enum TimeOfDay: Equatable {
     case sunrise
     case morning
     case day
@@ -84,12 +76,13 @@ struct TimeZoneRowView: View {
     }
   }
   
+  /// Contiguous, non-overlapping buckets covering all 24 hours. Mirrored by
+  /// `DayPart.forHour` on Android.
   private func getTimeOfDay(hour: Int) -> TimeOfDay {
     switch hour {
-      
-    case 6..<8:
+    case 7..<8:
       return .dawn
-    case 8..<10:
+    case 8..<9:
       return .sunrise
     case 9..<11:
       return .morning
@@ -99,28 +92,26 @@ struct TimeZoneRowView: View {
       return .endOfDay
     case 19..<20:
       return .evening
-    case 20..<22:
+    case 20..<23:
       return .night
-    case 22..<23:
+    default: // 23 and 0–6
       return .sleeping
-    default:
-      return .night
     }
   }
   
   private var timeOfDay: TimeOfDay {
-    getTimeOfDay(hour: calendar.component(.hour, from: Date()))
+    getTimeOfDay(hour: calendar.component(.hour, from: config.date))
   }
   
   var body: some View {
-    let hour = calendar.component(.hour, from: Date())
+    let hour = calendar.component(.hour, from: config.date)
     
     let daylightGradient = LinearGradient(colors: [Color.withHex(daylightColors[hour * 2]) ?? .white, Color.withHex(daylightColors[hour * 2 + 1]) ?? .black], startPoint: .top, endPoint: .bottom)
       
     HStack(spacing: config.columnSpacing) {
       HStack {
         
-        TimeStringView(entry: entry, config: config, date: Date(), timeZone: entry.timeZone, showAMPM: true)
+        TimeStringView(entry: entry, config: config, date: config.date, timeZone: entry.timeZone, showAMPM: true)
 //          .foregroundColor(isLikelySleeping ? .secondary : .primary)
           
 
@@ -176,6 +167,15 @@ struct RowViewConfig {
   var columnSpacing: CGFloat = 0.0
 }
 
+/// Rows dim with distance: full strength now, easing down over four hours to
+/// a floor that keeps far-off rows legible. Mirrored by
+/// `RowMetrics.distanceOpacity` on Android.
+func distanceOpacity(from now: Date, to start: Date?) -> Double {
+  guard let start else { return 1.0 }
+  let hoursAway = start.timeIntervalSince(now) / 3600.0
+  return min(1.0, max(0.6, pow(max(0.0, 1.0 - hoursAway / 4.0), 0.33)))
+}
+
 var tempFormatter: MeasurementFormatter {
   let formatter = MeasurementFormatter()
   formatter.unitStyle = .medium
@@ -200,7 +200,7 @@ struct HourlyWeatherRowView: View {
   var body: some View {
     let title = entry.title
     if let date = entry.startDate {
-      let (hour, minute, ampm) = date.formattedHourAndMinute()
+      let (hour, minute, _) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
           Text(hour).font(config.font.monospacedDigit())
@@ -250,7 +250,6 @@ struct DailyWeatherRowView: View {
 
   var body: some View {
     if let date = entry.startDate {
-      let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
           Text((dayOfWeekFormat.string(for:date) ?? "").apply(config.obfuscation.textTransform)).textCase(.uppercase)
@@ -356,7 +355,7 @@ struct TimeStringView: View {
             Text(hour).font(config.font.monospacedDigit())
               .kerning(-0.5)
             
-            if (showAMPM) {
+            if (showAMPM && !ampm.isEmpty) {
               Text(ampm)
                 .font(config.smallFont.monospacedDigit())
                 .baselineOffset(config.fontSize * 0.24)
@@ -403,19 +402,15 @@ struct EventRowView: View {
   @Environment(\.widgetRenderingMode) var widgetRenderingMode
   
   var body: some View {
-    let (hour, minute, ampm) = event.date.formattedHourAndMinute()
-    
-    
     let color = config.widget.viewOptions.contains(.showColors)
     ? event.color?.forScheme(scheme: config.colorScheme)
     : config.accentColor
     
     
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.date) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
+    let opacity = distanceOpacity(from: config.date, to: entry.startDate)
     
-    let isHappening = entry.isHappening()
-    let isSoon = entry.isSoon()
+    let isHappening = entry.isHappening(config.date)
+    let isSoon = entry.isSoon(config.date)
     
     //    let availability = event.availability
     //    let attending = event.participantStatus
@@ -592,8 +587,7 @@ struct ReminderRowView: View {
   @Environment(\.widgetRenderingMode) var widgetRenderingMode
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.date) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
+    let opacity = distanceOpacity(from: config.date, to: entry.startDate)
     
     HStack(alignment:.center, spacing: config.columnSpacing) {
       
@@ -692,8 +686,7 @@ struct FreeRowView: View {
   let config: RowViewConfig
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
+    let opacity = distanceOpacity(from: config.date, to: entry.startDate)
     
     HStack(alignment: .center, spacing: config.columnSpacing) {
       
@@ -730,9 +723,6 @@ struct ErrorRowView: View {
   let config: RowViewConfig
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
-    
     HStack(alignment: .bottom) {
       if let destination = entry.url {
         Link(destination: destination){
@@ -740,7 +730,6 @@ struct ErrorRowView: View {
         }
       }
     }
-    .opacity(opacity)
     .frame(maxWidth:.infinity, minHeight: config.lineHeight * 1.5, alignment: .bottomLeading)
     
   }
@@ -761,20 +750,12 @@ struct HeaderRowView: View {
   let large: Bool
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
-    let opacity = 1.0 // max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
-    
-    
-    
-    let hasAllDayItems = entry.allDayItems?.count ?? 0 > 0
-    
     let allDayItems = VStack(alignment:.leading) {
       HStack(alignment:.center) {
         if let allDayItems = entry.allDayItems?.prefix(config.widthIsLimited ? 2: 3) {
-          let visibleItems = config.widthIsLimited ? allDayItems : allDayItems
-          ForEach(visibleItems) { item in
+          ForEach(allDayItems) { item in
             if let title = item.item?.title {
-              let (emoji, remaining) = extractEmoji(from: title)
+              let (_, remaining) = extractEmoji(from: title)
               Text(sanitizeAllDayEvents(remaining).apply(config.obfuscation.textTransform))
                 .font(config.smallFont)
                 .foregroundColor(Color.secondary)

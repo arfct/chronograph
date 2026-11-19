@@ -15,7 +15,6 @@ struct ChronographApp: App {
                   urlToOpen = appSettings
                 }
               }
-              print("Opening URL: \(urlToOpen)")
               UIApplication.shared.open(urlToOpen, options: [:], completionHandler: nil)
             }
         }
