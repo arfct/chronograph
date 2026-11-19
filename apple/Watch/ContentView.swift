@@ -23,6 +23,7 @@ struct ContentView: View {
   var body: some View {
     let _ = accessRefresh
 
+    NavigationStack {
     ScrollView {
       
       VStack {
@@ -44,11 +45,15 @@ struct ContentView: View {
       .padding(.bottom, 16)
       .background(.white.opacity(0.1))
       
+      // The default wheel has no intrinsic height inside a ScrollView and
+      // collapsed to a sliver; a navigation-link row sizes itself.
       Picker("Obfuscation", selection: obfuscation) {
         ForEach(ObfuscationStyle.allCases) { style in
           Text(style.displayName).tag(style)
         }
       }
+      .pickerStyle(.navigationLink)
+      .padding(.horizontal)
       
       VStack(spacing:10) {
         if EKEventStore.authorizationStatus(for: .event) == .fullAccess {
@@ -84,7 +89,7 @@ struct ContentView: View {
       }.padding(.vertical)
     }
       .edgesIgnoringSafeArea(.all)
-    
+    }
   }
 }
 
