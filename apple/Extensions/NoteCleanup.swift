@@ -29,6 +29,7 @@ let noteBlockMarkers = [
   // Zoom
   "Join Zoom Meeting",
   "is inviting you to a scheduled Zoom meeting",
+  "Zoom Meeting Info",       // Zoom for Google Workspace: link, then dial-in
   ZOOM_SEPARATOR,
   // Microsoft Teams
   "Microsoft Teams meeting",
@@ -49,7 +50,7 @@ let noteNoiseLinePrefixes = [
   "one tap mobile", "dial by your location", "or dial:", "dial-in",
   "find your local number", "more phone numbers",
   "learn more about meet at", "learn more at",
-  "phone conference id:", "video call:",
+  "phone conference id:", "video call:", "telephone:",
 ]
 
 /// Hosts whose links are plumbing, never a document worth surfacing as an
@@ -83,9 +84,28 @@ func removeMeetingMetadata(from text: String, containing markers: [String] = not
   return String(head)
 }
 
-/// Drops lines that are nothing but conferencing chrome or a bare noise link.
+/// Emoji that conferencing tools put in front of a line as a bullet ("📹 Zoom
+/// Meeting Info:", "☎️ Telephone:"). Widget rows are typography plus symbols,
+/// so a leading run of them is dropped; emoji inside a sentence are kept.
+func strippedOfLeadingEmoji(_ line: String) -> String {
+  let indent = line.prefix { $0 == " " || $0 == "\t" }
+  let body = line.dropFirst(indent.count).unicodeScalars
+  guard let first = body.first, isDecorativeEmoji(first) else { return line }
+  let rest = body.drop { isDecorativeEmoji($0) || $0.properties.isWhitespace }
+  return String(indent) + String(Substring(rest))
+}
+
+/// Emoji, their variation selector, joiner and keycap combiner. Latin-1 is
+/// excluded: digits, `#`, `*`, © and ® carry the Emoji property too.
+private func isDecorativeEmoji(_ scalar: Unicode.Scalar) -> Bool {
+  if scalar.value == 0xFE0F || scalar.value == 0x200D || scalar.value == 0x20E3 { return true }
+  return scalar.value > 0xFF && scalar.properties.isEmoji
+}
+
+/// Drops lines that are nothing but conferencing chrome or a bare noise link,
+/// and the emoji bullets in front of the lines that stay.
 func stripNoiseLines(from text: String) -> String {
-  let kept = text.components(separatedBy: "\n").filter { line in
+  let kept = text.components(separatedBy: "\n").map(strippedOfLeadingEmoji).filter { line in
     let trimmed = line.trimmingCharacters(in: .whitespaces)
     let bare = strippedOfMarkup(trimmed).trimmingCharacters(in: .whitespaces)
     if bare.isEmpty { return true }  // blank lines collapse later
