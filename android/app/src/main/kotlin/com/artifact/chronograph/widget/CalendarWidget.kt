@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
 import android.text.SpannableString
+import android.text.format.DateFormat
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
 import android.text.style.SuperscriptSpan
@@ -323,7 +324,8 @@ private fun detailLines(row: RowEntry, style: RowStyle): Int {
 // MARK: compact numerals — TimeStringView with compactTime (the iOS default):
 // monospaced-feel big hour, small semibold minutes top-aligned to read raised.
 
-private val hourFormat = DateTimeFormatter.ofPattern("h", Locale.US)
+private val hourFormat12 = DateTimeFormatter.ofPattern("h", Locale.US)
+private val hourFormat24 = DateTimeFormatter.ofPattern("HH", Locale.US)
 private val minuteFormat = DateTimeFormatter.ofPattern("mm", Locale.US)
 
 /**
@@ -339,6 +341,8 @@ private val minuteFormat = DateTimeFormatter.ofPattern("mm", Locale.US)
 private fun CompactTime(instant: Instant, style: RowStyle, color: GlanceColorProvider) {
     val context = LocalContext.current
     val zoned = instant.atZone(ZoneId.systemDefault())
+    // Follows the device's 24-hour setting, as iOS follows the locale.
+    val hourFormat = if (DateFormat.is24HourFormat(context)) hourFormat24 else hourFormat12
     val hour = hourFormat.format(zoned)
     val minute = minuteFormat.format(zoned)
     val text = SpannableString(hour + minute).apply {

@@ -148,21 +148,36 @@ func replaceBirthdayString(_ input: String) -> String {
 
 
 
+/// True when the user's locale or the system 24-Hour Time setting asks for a
+/// 24-hour clock. The "j" template resolves to the preferred hour symbol:
+/// h/K for 12-hour, H/k for 24-hour.
+var uses24HourClock: Bool {
+  let format = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: .current) ?? "h"
+  return format.contains("H") || format.contains("k")
+}
+
+/// The hour pattern that matches the user's clock preference.
+var localizedHourPattern: String { uses24HourClock ? "HH" : "h" }
+
 extension Date {
+  /// Hour, minute and meridiem in the user's clock style. On a 24-hour clock the
+  /// hour is zero-padded and `ampm` is empty.
   func formattedHourAndMinute(timeZone: TimeZone? = nil) -> (hour: String, minute: String, ampm: String) {
     let dateFormatter = DateFormatter()
     dateFormatter.locale = Locale.current
     dateFormatter.timeZone = timeZone
 
-    dateFormatter.dateFormat = "h"
+    dateFormatter.dateFormat = localizedHourPattern
     let hourString = dateFormatter.string(from: self)
 
     dateFormatter.dateFormat = "mm"
     let minuteString = dateFormatter.string(from: self)
-    
-    dateFormatter.dateFormat = "a"
-    let ampmString = dateFormatter.string(from: self)
-      //.replacingOccurrences(of: "M", with: "")
+
+    var ampmString = ""
+    if !uses24HourClock {
+      dateFormatter.dateFormat = "a"
+      ampmString = dateFormatter.string(from: self)
+    }
 
     return (hourString, minuteString, ampmString)
   }
@@ -195,6 +210,8 @@ func openAppSettings() {
   
   
 #elseif os(macOS)
-  
+  if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices") {
+    NSWorkspace.shared.open(url)
+  }
 #endif
 }

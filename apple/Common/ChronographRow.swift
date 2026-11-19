@@ -355,7 +355,7 @@ struct TimeStringView: View {
             Text(hour).font(config.font.monospacedDigit())
               .kerning(-0.5)
             
-            if (showAMPM) {
+            if (showAMPM && !ampm.isEmpty) {
               Text(ampm)
                 .font(config.smallFont.monospacedDigit())
                 .baselineOffset(config.fontSize * 0.24)
