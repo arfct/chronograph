@@ -193,13 +193,12 @@ struct TimelineEngine {
         }
 
         if event.isAllDay {
-          if true || calendar.isDateInToday(event.startDate)
-              && (renderDate.advanced(by: 60 * 60 * 3) < event.endDate) // remove all day events after 9
-          {
-            calendarEntries[headerIndex].allDayItems?.insert(eventEntry, at:0)
-            calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
-            calendarEntries[headerIndex].removeIfOrphaned = false
-          }
+          // All-day events stay on their day header until the day ends; the
+          // old "drop them late in the day" rule was short-circuited for so
+          // long that showing them is the behaviour people know.
+          calendarEntries[headerIndex].allDayItems?.insert(eventEntry, at:0)
+          calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
+          calendarEntries[headerIndex].removeIfOrphaned = false
         } else {
           calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
           let fetchDetails = event.startDate < calendar.date(byAdding: .hour, value: 4, to: renderDate)!
@@ -279,8 +278,10 @@ struct TimelineEngine {
           calendarEntries.append(eventEntry)
 
         }
-      } else if let reminder = item as? EKReminder {
-
+      } else if item is EKReminder {
+        // Register with the day header too: a day holding only scheduled
+        // reminders must keep its header instead of losing it as childless.
+        calendarEntries[headerIndex].children?.insert(eventEntry, at:0)
         calendarEntries.append(eventEntry)
       }
 
