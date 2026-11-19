@@ -14,24 +14,15 @@ struct TimeZoneRowView: View {
     return calendar
   }
 
-  private var isNightTime: Bool {
-    let hour = calendar.component(.hour, from: config.date)
-    return hour < 6 || hour >= 22
-  }
-  
+  /// One source of truth with the icon, so the dimmed italic text and the
+  /// moon.zzz glyph always agree about who is asleep.
   private var isLikelySleeping: Bool {
-    let hour = calendar.component(.hour, from: config.date)
-    return hour >= 0 && hour < 7
+    timeOfDay == .sleeping
   }
-  
-  private var isLikelyWorking: Bool {
-    let hour = calendar.component(.hour, from: config.date)
-    return hour >= 8 && hour < 18
-  }
-  
+
   var daylightColors = ["#012459", "#001322", "#003972", "#001322", "#003972", "#001322", "#004372", "#00182b", "#004372", "#011d34", "#016792", "#00182b", "#07729f", "#042c47", "#12a1c0", "#07506e", "#74d4cc", "#1386a6", "#efeebc", "#61d0cf", "#fee154", "#a3dec6", "#fdc352", "#e8ed92", "#ffac6f", "#ffe467", "#fda65a", "#ffe467", "#fd9e58", "#ffe467", "#f18448", "#ffd364", "#f06b7e", "#f9a856", "#ca5a92", "#f4896b", "#5b2c83", "#d1628b", "#371a79", "#713684", "#28166b", "#45217c", "#192861", "#372074", "#040b3c", "#233072", "#040b3c", "#012459" ];
 
-  private enum TimeOfDay {
+  private enum TimeOfDay: Equatable {
     case sunrise
     case morning
     case day
@@ -84,12 +75,13 @@ struct TimeZoneRowView: View {
     }
   }
   
+  /// Contiguous, non-overlapping buckets covering all 24 hours. Mirrored by
+  /// `DayPart.forHour` on Android.
   private func getTimeOfDay(hour: Int) -> TimeOfDay {
     switch hour {
-      
-    case 6..<8:
+    case 7..<8:
       return .dawn
-    case 8..<10:
+    case 8..<9:
       return .sunrise
     case 9..<11:
       return .morning
@@ -99,12 +91,10 @@ struct TimeZoneRowView: View {
       return .endOfDay
     case 19..<20:
       return .evening
-    case 20..<22:
+    case 20..<23:
       return .night
-    case 22..<23:
+    default: // 23 and 0–6
       return .sleeping
-    default:
-      return .night
     }
   }
   
