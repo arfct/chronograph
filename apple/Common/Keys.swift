@@ -1,7 +1,22 @@
+#if os(macOS)
+import Security
+#endif
+
 struct Keys {
   #if os(macOS)
-  
-  static let suiteName = "TVA9Z8LD95.com.artifact.chronograph"
+  /// macOS app groups are prefixed with the signing team, so ask the running
+  /// binary which group it was actually signed into rather than repeating a
+  /// team ID here. The literal only covers unsigned builds (previews, CI).
+  static let suiteName: String = {
+    let fallback = "TVA9Z8LD95.com.artifact.chronograph"
+    guard let task = SecTaskCreateFromSelf(nil),
+          let value = SecTaskCopyValueForEntitlement(
+            task, "com.apple.security.application-groups" as CFString, nil),
+          let groups = value as? [String],
+          let group = groups.first(where: { $0.hasSuffix(".com.artifact.chronograph") })
+    else { return fallback }
+    return group
+  }()
   #else
   static let suiteName = "group.com.artifact.chronograph"
   #endif

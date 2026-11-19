@@ -128,6 +128,7 @@ struct ChronographWidgetView : View {
       let obfuscation = ObfuscationStyle.resolve(rawValue: obfuscationRaw,
                                                  legacyBrailleMode: legacyBrailleMode)
       let ishihara = obfuscation == .ishihara
+      if ishihara { BundledFonts.registerIfNeeded() }
 
       config.font = ishihara ? Font.custom("Ishihara", size: config.fontSize) :
       Font.system(size: config.fontSize, design: design).width(.standard)
