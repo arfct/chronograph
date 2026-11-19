@@ -2,7 +2,6 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 import EventKit
-import Contacts
 import WeatherKit
 import os
 

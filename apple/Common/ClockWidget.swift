@@ -17,7 +17,7 @@ struct ClockWidget: Widget {
     
     .contentMarginsDisabled()
     .configurationDisplayName("StandBy Clock")
-    .description("Minimal Clock that only shows hours overnight")
+    .description("A minimal clock for StandBy that shows only the hour overnight.")
     .supportedFamilies([
       .systemSmall,
     ])
@@ -48,8 +48,8 @@ enum ClockStyle: String, AppEnum {
 }
 
 struct ClockConfigurationIntent: WidgetConfigurationIntent {
-  static var title: LocalizedStringResource { "Configuration" }
-  static var description: IntentDescription { "Vermillion Widget" }
+  static var title: LocalizedStringResource { "StandBy Clock" }
+  static var description: IntentDescription { "Choose what the clock shows and its colors." }
   
   @Parameter(title: "View", default: .timeAdaptive)
   var clockStyle: ClockStyle
