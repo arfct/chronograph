@@ -176,6 +176,15 @@ struct RowViewConfig {
   var columnSpacing: CGFloat = 0.0
 }
 
+/// Rows dim with distance: full strength now, easing down over four hours to
+/// a floor that keeps far-off rows legible. Mirrored by
+/// `RowMetrics.distanceOpacity` on Android.
+func distanceOpacity(from now: Date, to start: Date?) -> Double {
+  guard let start else { return 1.0 }
+  let hoursAway = start.timeIntervalSince(now) / 3600.0
+  return min(1.0, max(0.6, pow(max(0.0, 1.0 - hoursAway / 4.0), 0.33)))
+}
+
 var tempFormatter: MeasurementFormatter {
   let formatter = MeasurementFormatter()
   formatter.unitStyle = .medium
@@ -411,8 +420,7 @@ struct EventRowView: View {
     : config.accentColor
     
     
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.date) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
+    let opacity = distanceOpacity(from: config.date, to: entry.startDate)
     
     let isHappening = entry.isHappening()
     let isSoon = entry.isSoon()
@@ -592,8 +600,7 @@ struct ReminderRowView: View {
   @Environment(\.widgetRenderingMode) var widgetRenderingMode
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(config.date) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
+    let opacity = distanceOpacity(from: config.date, to: entry.startDate)
     
     HStack(alignment:.center, spacing: config.columnSpacing) {
       
@@ -692,8 +699,7 @@ struct FreeRowView: View {
   let config: RowViewConfig
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
+    let opacity = distanceOpacity(from: config.date, to: entry.startDate)
     
     HStack(alignment: .center, spacing: config.columnSpacing) {
       
@@ -730,9 +736,6 @@ struct ErrorRowView: View {
   let config: RowViewConfig
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
-    let opacity = max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
-    
     HStack(alignment: .bottom) {
       if let destination = entry.url {
         Link(destination: destination){
@@ -740,7 +743,6 @@ struct ErrorRowView: View {
         }
       }
     }
-    .opacity(opacity)
     .frame(maxWidth:.infinity, minHeight: config.lineHeight * 1.5, alignment: .bottomLeading)
     
   }
@@ -761,13 +763,6 @@ struct HeaderRowView: View {
   let large: Bool
   
   var body: some View {
-    let hoursAway = Double(entry.startDate?.timeIntervalSince(Date()) ?? 0.0) / 60.0 / 60.0
-    let opacity = 1.0 // max(1.0, pow(1.0 - hoursAway / 4.0, 0.33))
-    
-    
-    
-    let hasAllDayItems = entry.allDayItems?.count ?? 0 > 0
-    
     let allDayItems = VStack(alignment:.leading) {
       HStack(alignment:.center) {
         if let allDayItems = entry.allDayItems?.prefix(config.widthIsLimited ? 2: 3) {

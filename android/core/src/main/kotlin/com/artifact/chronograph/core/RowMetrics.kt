@@ -38,6 +38,19 @@ data class RowMetrics(
         const val LINE_SPREAD = 1.5f
         const val SMALL_TEXT_SCALE = 0.66f
 
+        /** Floor of [distanceOpacity]: far-off rows stay legible. */
+        const val MIN_DISTANCE_OPACITY = 0.6f
+
+        /**
+         * Port of `distanceOpacity(from:to:)` in ChronographRow.swift: rows dim
+         * with distance, full strength now and easing to the floor over four
+         * hours. Past and current rows stay at 1.
+         */
+        fun distanceOpacity(hoursAway: Double): Float {
+            val eased = Math.pow(maxOf(0.0, 1.0 - hoursAway / 4.0), 0.33)
+            return eased.toFloat().coerceIn(MIN_DISTANCE_OPACITY, 1f)
+        }
+
         fun forWidget(size: FontSize, widgetHeightDp: Float, compactTime: Boolean = true): RowMetrics {
             val baseLine = size.lineHeightSp.toFloat()
             var lineHeight = minOf(baseLine, widgetHeightDp / size.minLines)
