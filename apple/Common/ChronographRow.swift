@@ -1,4 +1,5 @@
 import SwiftUI
+import WidgetKit
 import EventKit
 import WeatherKit
 
@@ -199,7 +200,7 @@ struct HourlyWeatherRowView: View {
   var body: some View {
     let title = entry.title
     if let date = entry.startDate {
-      let (hour, minute, ampm) = date.formattedHourAndMinute()
+      let (hour, minute, _) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
           Text(hour).font(config.font.monospacedDigit())
@@ -249,7 +250,6 @@ struct DailyWeatherRowView: View {
 
   var body: some View {
     if let date = entry.startDate {
-      let (hour, minute, ampm) = date.formattedHourAndMinute()
       let timeString = Group {
         HStack(alignment:.center, spacing:0.5) {
           Text((dayOfWeekFormat.string(for:date) ?? "").apply(config.obfuscation.textTransform)).textCase(.uppercase)
@@ -402,9 +402,6 @@ struct EventRowView: View {
   @Environment(\.widgetRenderingMode) var widgetRenderingMode
   
   var body: some View {
-    let (hour, minute, ampm) = event.date.formattedHourAndMinute()
-    
-    
     let color = config.widget.viewOptions.contains(.showColors)
     ? event.color?.forScheme(scheme: config.colorScheme)
     : config.accentColor
@@ -756,10 +753,9 @@ struct HeaderRowView: View {
     let allDayItems = VStack(alignment:.leading) {
       HStack(alignment:.center) {
         if let allDayItems = entry.allDayItems?.prefix(config.widthIsLimited ? 2: 3) {
-          let visibleItems = config.widthIsLimited ? allDayItems : allDayItems
-          ForEach(visibleItems) { item in
+          ForEach(allDayItems) { item in
             if let title = item.item?.title {
-              let (emoji, remaining) = extractEmoji(from: title)
+              let (_, remaining) = extractEmoji(from: title)
               Text(sanitizeAllDayEvents(remaining).apply(config.obfuscation.textTransform))
                 .font(config.smallFont)
                 .foregroundColor(Color.secondary)

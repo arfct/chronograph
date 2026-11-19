@@ -52,10 +52,13 @@ struct CalendarSelectionEntity: AppEntity {
 //}
 
 struct CalendarQuery: EntityQuery {
-  let eventStore = EKEventStore()
+  // EKEventStore is not Sendable, so the query makes one per call rather
+  // than storing it.
+  private var eventStore: EKEventStore { EKEventStore() }
   
   func entities(for identifiers: [CalendarSelectionEntity.ID]) async throws -> [CalendarSelectionEntity] {
-    return identifiers.map({ CalendarSelectionEntity.with(calendar:eventStore.calendar(withIdentifier:$0))})
+    let store = eventStore
+    return identifiers.map({ CalendarSelectionEntity.with(calendar: store.calendar(withIdentifier:$0))})
   }
   
   func suggestedEntities() async throws -> IntentItemCollection<CalendarSelectionEntity> {

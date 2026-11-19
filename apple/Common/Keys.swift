@@ -37,6 +37,3 @@ struct Values {
   static let weatherTab = "weather"
   
 }
-struct Defaults {
-  //  static let serverAddress = ""
-}

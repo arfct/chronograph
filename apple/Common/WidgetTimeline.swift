@@ -58,7 +58,6 @@ struct TimelineEngine {
     var timezoneEntries: [EventEntry] = []
 
     if config.content == .timezones {
-      let calendar = Calendar.current
       let now = Date()
 
       var timezones = config.timezones.compactMap({TimeZone(identifier: $0.id)})
@@ -112,7 +111,7 @@ struct TimelineEngine {
     var previousItem: EKCalendarItem?
     var headerIndex = -1
 
-    for (i, item) in items.enumerated() {
+    for item in items {
 
       var lastDate: Date = .distantPast
       if let previousItem = previousItem {
@@ -138,7 +137,6 @@ struct TimelineEngine {
 
         let title = calendar.isDateInToday(thisDate) || calendar.isDateInTomorrow(thisDate) ? relativeDateFormatterDay.string(from: thisDate) : dateFormatter.string(from: thisDate)
 
-        let startOfDay = calendar.startOfDay(for: item.date)
         let days = max(0, calendar.dateComponents([.day],
                                                   from: calendar.startOfDay(for: renderDate),
                                                   to: calendar.startOfDay(for:item.date)).day!)
@@ -177,7 +175,7 @@ struct TimelineEngine {
         }
       }
 
-      var eventEntry = EventEntry(id: item.calendarItemIdentifier, startDate:item.start, endDate:item.end, item: item)
+      let eventEntry = EventEntry(id: item.calendarItemIdentifier, startDate:item.start, endDate:item.end, item: item)
 
       if let event = item as? EKEvent {
 
@@ -213,17 +211,6 @@ struct TimelineEngine {
                 eventEntry.meeting =  EventAttachment(url: url.absoluteString, title: "Zoom")
               }
               eventEntry.locations = remainder
-            }
-
-            //            let contactStore = CNContactStore()
-            if event.hasAttendees, let attendees = event.attendees {
-
-              //              attendees.forEach { person in
-              //                let matches = try? contactStore.unifiedContacts(matching: person.contactPredicate, keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor])
-              //              }
-              //              print("attendees", attendees.compactMap({ person in
-              //                if person.isCurrentUser { return nil }
-              //              }))
             }
 
             if event.hasNotes, let notes = event.notes {
@@ -526,7 +513,6 @@ struct TimelineEngine {
 
     // MARK: Creating timeline entries
 
-    let debug = false
     var timelineEntries: [CalendarTimelineEntry] = []
     var calendarEntries: [EventEntry] = []
 
@@ -571,11 +557,7 @@ struct TimelineEngine {
     let fullMinuteDate = calendar.date(from: components)!
 
     for minuteOffset in 0 ..< 15 {
-      let renderDate = calendar.date(byAdding: .minute,
-                                     value: debug ? 60 * 18 + minuteOffset * 30 : minuteOffset, to: fullMinuteDate)!
-      let entryDate = calendar.date(byAdding: debug ? .second : .minute,
-                                    value: minuteOffset,
-                                    to: fullMinuteDate)!
+      let entryDate = calendar.date(byAdding: .minute, value: minuteOffset, to: fullMinuteDate)!
 
       let timelineEntry = CalendarTimelineEntry(date: entryDate,
                                                 config: config,

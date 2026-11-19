@@ -47,7 +47,7 @@ func extractMeetingUrls(from text: String) -> [EventAttachment] {
       for match in matches {
         if let range = Range(match.range, in: text) {
           let urlString = String(text[range])
-          if let url = URL(string: urlString) {
+          if URL(string: urlString) != nil {
             meetings.append(EventAttachment(url: urlString))
           }
         }

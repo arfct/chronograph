@@ -4,31 +4,6 @@ import EventKit
 
 
 
-struct CustomToggleStyle: ToggleStyle {
-  var onLabel: String
-  var offLabel: String
-  var onImageName: String
-  var offImageName: String
-  var onColor: Color
-  var offColor: Color
-
-  func makeBody(configuration: Configuration) -> some View {
-    HStack {
-      Link(destination: URL(string: "https://www.google.com")!) {
-        Text(configuration.isOn ? onLabel : offLabel)
-          .font(.headline)
-
-      }
-      Image(systemName: configuration.isOn ? onImageName : offImageName)
-        .resizable()
-        .frame(width: 24, height: 24)
-        .foregroundColor(configuration.isOn ? onColor : offColor)
-      configuration.label
-    }
-    .padding()
-  }
-}
-
 struct ChronographWidgetView : View {
   @Environment(\.colorScheme) var colorScheme
   @Environment(\.widgetContentMargins) var margins
@@ -39,17 +14,10 @@ struct ChronographWidgetView : View {
   @AppStorage(Keys.compactTime, store: UserDefaults(suiteName: Keys.suiteName)) private var compactTime = true
   @AppStorage(Keys.brailleMode, store: UserDefaults(suiteName: Keys.suiteName)) private var legacyBrailleMode = false
   @AppStorage(Keys.obfuscation, store: UserDefaults(suiteName: Keys.suiteName)) private var obfuscationRaw = ""
-  @AppStorage(Keys.fullBleed, store: UserDefaults(suiteName: Keys.suiteName)) private var wantsFullBleed = true
-  
-//  @AppStorage("KEY", store: UserDefaults(suiteName: Keys.suiteName)) private var defaultValueTest1 = "test1"
-  
-  @AppStorage("view") private var defaultValueTest2 = "view"
-  
+
   @State private var eventStore = EKEventStore()
   private var visibleItemCount: Int
 
-  @State private var toggled = false
-  
   
   private var isAccessory = false
   private var heightIsLimited = false
@@ -80,21 +48,24 @@ struct ChronographWidgetView : View {
     
     let widgetFamily = context?.family
     
+    // Accessory rows are packed tight; everywhere else lines get 1.5x leading.
+    let lineSpread: CGFloat
 #if os(watchOS)
     self.isAccessory = true
     self.heightIsLimited = true
     self.widthIsLimited = true
-    let isIOS = false
+    lineSpread = 1.0
 #elseif os(macOS)
     self.isAccessory = false
-    self.heightIsLimited = isAccessory
-    self.widthIsLimited = isAccessory || (widgetFamily == .systemSmall)
-    let isIOS = false
+    self.heightIsLimited = false
+    self.widthIsLimited = (widgetFamily == .systemSmall)
+    lineSpread = 1.5
 #else
-    self.isAccessory = (widgetFamily == .accessoryRectangular)
-    self.heightIsLimited = isAccessory || widgetFamily == .systemSmall
-    self.widthIsLimited = isAccessory || (widgetFamily == .systemSmall)
-    let isIOS = true
+    let accessory = (widgetFamily == .accessoryRectangular)
+    self.isAccessory = accessory
+    self.heightIsLimited = accessory || widgetFamily == .systemSmall
+    self.widthIsLimited = accessory || (widgetFamily == .systemSmall)
+    lineSpread = accessory ? 1.0 : 1.5
 #endif
     
     
@@ -116,7 +87,7 @@ struct ChronographWidgetView : View {
       self.fontSize = self.lineHeight * baseFont.pointSize / baseFont.lineHeight
     }
     
-    self.lineHeight = self.lineHeight * (self.isAccessory ? 1.0 : 1.5)
+    self.lineHeight = self.lineHeight * lineSpread
     
   
     var visibleCount = 30
@@ -130,48 +101,12 @@ struct ChronographWidgetView : View {
     let family = String(describing: widgetFamily)
     let size = String(describing: entry.context?.displaySize)
     widgetLog.debug("Widget init: family=\(family, privacy: .public) displaySize=\(size, privacy: .public) rows=\(visibleCount)")
-    
-    
-    //    print("\n Init view \(widgetFamily).\(entry.config.content) \(shortTimeFormatter.string(from:entry.date)) ")
   }
-  
-  var defaults = UserDefaults.standard
   
   // MARK: body
   var body: some View {
-    
-    // Preliminary tests of intents and toggles
-//    HStack {
-//      let selectedTab = defaults.string(forKey: "view")
-//      
-//      Button(intent: SetDefault("reminders", for: "view")) {
-//        Image(systemName: "checkmark.square")
-//      }
-//      .foregroundColor(selectedTab == "reminders" ? .red : .blue)
-//      
-//      
-//      Button(intent: SetDefault("calendar", for: "view")) {
-//        Image(systemName: "calendar")
-//      }
-//      .foregroundColor(selectedTab == "calendar" ? .red : .blue)
-//      
-//      let isOn = defaults.string(forKey: "isOn") == "true"
-//      Toggle(isOn: isOn, intent: SetDefault(isOn ? "false" : "true", for: "isOn")) {
-//        
-//      }
-//      .toggleStyle(CustomToggleStyle(
-//        onLabel: "On",
-//        offLabel: "Off",
-//        onImageName: "checkmark.circle.fill",
-//        offImageName: "circle",
-//        onColor: .green,
-//        offColor: .gray
-//      ))
-//    }.hidden()
-    
 
     let content = entry.config.content
-    let now = Date()
     
     let backgroundColor = Color.withHex(entry.config.backgroundColor) ?? .clear
     
@@ -288,7 +223,6 @@ struct ChronographWidgetView : View {
     }
     
       .containerBackground(.clear, for: .widget)
-    //    let _ = print("Rendered \(widgetFamily).\(entry.config.content) for \(shortTimeFormatter.string(from:entry.date)) \(visibleItemCount) in \(round(-now.timeIntervalSinceNow * 1000))ms")
   }
   
 }

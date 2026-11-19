@@ -19,9 +19,6 @@ extension EKReminder {
     guard let components = self.dueDateComponents else { return nil }
     return components.date
   }
-  var primaryDate: Date? {
-    return dueDate
-  }
   
   //  Per RFC 5545, priorities of 1-4 are considered "high," a priority of 5 is "medium," and priorities of 6-9 are "low."
   var priorityPrefix: String {
@@ -31,24 +28,8 @@ extension EKReminder {
   }
 }
 
-extension EKEvent {
-  var participantStatus: EKParticipantStatus? {
-    return attendees?.filter({$0.isCurrentUser}).first?.participantStatus
-  }
-}
 extension EKCalendarItem {
 
-  
-  func valid(at date: Date) -> Bool{
-    if let end = end {
-      if allDay, let earlyEnd = Calendar.current.date(byAdding: .minute, value: -6, to: end) {
-        return earlyEnd > date
-      } else {
-        return end > date
-      }
-    }
-    return allDay
-  }
   
   var allDay: Bool {
     if let reminder = self as? EKReminder,
@@ -94,9 +75,6 @@ extension EKCalendarItem {
     return nil
   }
   
-  func compareDate(with: EKCalendarItem) -> Bool {
-    return self.date < with.date
-  }
   
   
   var color: Color? {
@@ -169,13 +147,6 @@ func replaceBirthdayString(_ input: String) -> String {
 
 
 
-extension Array {
-  mutating func removeAllFromEnd(where predicate: (Element) -> Bool) {
-    while let last = self.last, predicate(last) {
-      self.removeLast()
-    }
-  }
-}
 
 extension Date {
   func formattedHourAndMinute(timeZone: TimeZone? = nil) -> (hour: String, minute: String, ampm: String) {

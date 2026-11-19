@@ -1,23 +1,6 @@
 import SwiftUI
 import EventKit
 
-struct Reminder: Identifiable {
-  var id: String
-  var reminder: EKReminder
-}
-
-struct Event: Identifiable {
-  var id: String
-  var event: EKEvent
-}
-
-extension Bool {
-  var inverted: Self {
-    get { !self }
-    set { self = !newValue }
-  }
-}
-
 struct ChronographTabView: View {
   let eventStore = EKEventStore()
   @State var remindersAccessGranted: Bool = false

@@ -16,7 +16,9 @@ struct ReminderSelectionEntity: AppEntity {
 
 
 struct ReminderQuery: EntityQuery {
-  let eventStore = EKEventStore()
+  // EKEventStore is not Sendable, so the query makes one per call rather
+  // than storing it.
+  private var eventStore: EKEventStore { EKEventStore() }
   
   func entities(for identifiers: [ReminderSelectionEntity.ID]) async throws -> [ReminderSelectionEntity] {
 

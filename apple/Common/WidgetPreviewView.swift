@@ -74,7 +74,6 @@ struct WidgetPreviewView: View {
 }
 
 #Preview("Calendar") {
-  var config = WidgetConfig.combo
   var testConfig: WidgetConfig {
     var c = WidgetConfig.calendar
     c.calendars = []
