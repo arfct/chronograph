@@ -11,7 +11,7 @@
 | Time Zones widget | ✅ | ✅ | ✅ | ✅ (Glance + live TextClock) |
 | Weather widget | ✅ | ✅ [^macweather] | ✅ | 🔜 [phase 3](specs/2026-08-03-android-port-design.md) |
 | Weather via zip code | ✅ | ✅ | ✅ | 🔜 [phase 3](specs/2026-08-03-android-port-design.md) |
-| StandBy Clock widget | ✅ | ➖ | ➖ | ➖ (no StandBy analogue) |
+| StandBy Clock widget | ✅ (StandBy and home screen) | ➖ | ➖ | ➖ (no StandBy analogue) |
 | Lock screen / accessory widgets | ✅ (`accessoryRectangular`) | ➖ | ✅ | 🔜 [^keyguard] |
 | Extra-large page widget | 🔜 (iOS 27, declared) | ➖ | ➖ | ➖ |
 | Obfuscation — Braille | ✅ | ✅ | ✅ | ✅ (`:core`, fixture-verified) |
@@ -25,6 +25,8 @@
 | Accent color | ✅ (hex field) | ✅ | ✅ | ✅ (presets) |
 | Widget gallery previews | ✅ (`recommendedIntents`) | ✅ | ✅ | ✅ (generated previews) |
 | Dynamic system color | ➖ | ➖ | ➖ | ✅ (Material You via GlanceTheme) |
+| 24-hour time | ✅ (locale / system setting) | ✅ | ✅ | ✅ (system 24-hour setting) |
+| Current-location weather prompt | ✅ | ✅ | ✅ | ➖ (no weather yet) |
 
 [^reminders]: Android has no system reminders store; the nearest equivalent (Google Tasks API) needs OAuth + Play verification — disproportionate for one widget type. See the design spec's key decisions.
 [^macweather]: The Mac widget extension carries the WeatherKit and outgoing-network entitlements as of the release-polish pass; a signed build has not yet been checked against live WeatherKit.
