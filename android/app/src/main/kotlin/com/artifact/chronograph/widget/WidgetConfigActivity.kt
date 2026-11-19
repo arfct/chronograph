@@ -28,6 +28,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,14 +89,15 @@ class WidgetConfigActivity : ComponentActivity() {
             }
             MaterialTheme(colorScheme = scheme) {
                 var loaded by remember { mutableStateOf<Preferences?>(null) }
-                if (loaded == null) {
-                    lifecycleScope.launch {
-                        val glanceId = GlanceAppWidgetManager(this@WidgetConfigActivity)
-                            .getGlanceIdBy(appWidgetId)
-                        loaded = getAppWidgetState(
-                            this@WidgetConfigActivity, PreferencesGlanceStateDefinition, glanceId,
-                        )
-                    }
+                // Load once per composition lifetime; launching straight from
+                // the composable body would start a new read on every
+                // recomposition until the first one landed.
+                LaunchedEffect(appWidgetId) {
+                    val glanceId = GlanceAppWidgetManager(this@WidgetConfigActivity)
+                        .getGlanceIdBy(appWidgetId)
+                    loaded = getAppWidgetState(
+                        this@WidgetConfigActivity, PreferencesGlanceStateDefinition, glanceId,
+                    )
                 }
                 loaded?.let { prefs ->
                     ConfigScreen(prefs, isCalendar) { apply ->
