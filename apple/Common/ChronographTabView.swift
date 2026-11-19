@@ -3,9 +3,12 @@ import EventKit
 
 struct ChronographTabView: View {
   let eventStore = EKEventStore()
+  // Held for the life of the view: a location prompt is dropped if the
+  // manager that asked for it is deallocated.
+  private let locationManager = LocationManager()
+  @Environment(\.scenePhase) private var scenePhase
   @State var remindersAccessGranted: Bool = false
   @State var eventsAccessGranted: Bool = false
-  @State var locationAccessGranted: Bool = false
   @State var reloadDate: Date = Date()
   @AppStorage(Keys.hideIntroduction, store: UserDefaults(suiteName: Keys.suiteName)) private var hideIntroduction = false
   
@@ -70,7 +73,6 @@ struct ChronographTabView: View {
     Button {
       Task {
         await checkEventsAccess(interactive: true)
-        eventsAccessGranted = true
       }
     } label: {
       Label("Enable Calendar", systemImage: "calendar")
@@ -85,7 +87,6 @@ struct ChronographTabView: View {
     Button {
       Task {
         await checkRemindersAccess(interactive: true)
-        remindersAccessGranted = true
       }
     } label: {
       Label("Enable Reminders", systemImage: "checkmark.circle")
@@ -98,10 +99,10 @@ struct ChronographTabView: View {
   
   private var enableLocationButton: some View {
     Button {
-      Task {
-        LocationManager().checkAuthorization()
-        locationAccessGranted = true
-      }
+      // Prompts (or opens Settings when already denied). The system alert
+      // takes the scene inactive, so the body re-reads the real status once
+      // the user has answered.
+      locationManager.checkAuthorization()
     } label: {
       Label("Enable Location", systemImage: "map")
         .font(.title2)
@@ -134,7 +135,8 @@ struct ChronographTabView: View {
   var body: some View {
     let eventsAccessible = eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess
     let remindersAccessible = remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
-    let locationAccessible = locationAccessGranted || LocationManager().isAuthorized
+    let _ = scenePhase
+    let locationAccessible = locationManager.isAuthorized
     
     TabView(selection:$selectedTab) {
       

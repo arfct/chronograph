@@ -16,8 +16,13 @@ struct ContentView: View {
     )
   }
 
+  private let eventStore = EKEventStore()
+  /// Bumped after a permission prompt so the body re-reads the status.
+  @State private var accessRefresh = 0
+
   var body: some View {
-    
+    let _ = accessRefresh
+
     ScrollView {
       
       VStack {
@@ -51,7 +56,10 @@ struct ContentView: View {
             .frame(minHeight: 600)
         } else {
           Button(action: {
-            
+            Task {
+              _ = try? await eventStore.requestFullAccessToEvents()
+              accessRefresh += 1
+            }
           }) {
             Label("Enable Calendar Access", systemImage: "lock")
           }
@@ -65,7 +73,10 @@ struct ContentView: View {
             .listRowBackground(Color.clear)
         } else {
           Button(action: {
-            
+            Task {
+              _ = try? await eventStore.requestFullAccessToReminders()
+              accessRefresh += 1
+            }
           }) {
             Label("Enable Reminders Access", systemImage: "lock")
           }
