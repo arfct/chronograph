@@ -6,6 +6,8 @@
 	<false/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Chronograph shows your upcoming calendar events in its widgets.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Chronograph uses your location to show the local weather forecast in its widgets.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>Chronograph shows your reminders in its widgets.</string>
 	<key>UIAppFonts</key>

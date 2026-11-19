@@ -101,7 +101,9 @@ struct ChronographTabView: View {
     Button {
       // Prompts (or opens Settings when already denied). The system alert
       // takes the scene inactive, so the body re-reads the real status once
-      // the user has answered.
+      // the user has answered. macOS shows the prompt without changing the
+      // scene phase, so the delegate callback triggers the re-read there.
+      locationManager.onAuthorizationChange = { reloadDate = Date() }
       locationManager.checkAuthorization()
     } label: {
       Label("Enable Location", systemImage: "map")
@@ -136,6 +138,7 @@ struct ChronographTabView: View {
     let eventsAccessible = eventsAccessGranted || EKEventStore.authorizationStatus(for: .event) == .fullAccess
     let remindersAccessible = remindersAccessGranted || EKEventStore.authorizationStatus(for: .reminder) == .fullAccess
     let _ = scenePhase
+    let _ = reloadDate
     let locationAccessible = locationManager.isAuthorized
     
     TabView(selection:$selectedTab) {

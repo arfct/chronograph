@@ -17,6 +17,9 @@ struct ContentView: View {
   }
 
   private let eventStore = EKEventStore()
+  /// Held for the life of the view: a location prompt is dropped if its
+  /// manager is released before the user answers.
+  @State private var locationManager = LocationManager()
   /// Bumped after a permission prompt so the body re-reads the status.
   @State private var accessRefresh = 0
 
@@ -85,6 +88,19 @@ struct ContentView: View {
           }) {
             Label("Enable Reminders Access", systemImage: "lock")
           }
+        }
+        if !locationManager.isAuthorized {
+          Divider()
+            .padding(.leading, 36)
+          Button(action: {
+            locationManager.onAuthorizationChange = { accessRefresh += 1 }
+            locationManager.checkAuthorization()
+          }) {
+            Label("Enable Location", systemImage: "location")
+          }
+          Text("For local weather in the widget")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
         }
       }.padding(.vertical)
     }

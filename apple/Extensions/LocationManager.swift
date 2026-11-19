@@ -15,12 +15,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     locationManager.delegate = self
   }
 
+  /// Granted in any form. macOS reports a grant as `.authorizedAlways`;
+  /// iOS and watchOS as `.authorizedWhenInUse` (or Always, if upgraded).
   var isAuthorized: Bool  {
-#if os(macOS)
-    return locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .notDetermined
-#else
-    return locationManager.authorizationStatus == .authorizedWhenInUse
-#endif
+    switch locationManager.authorizationStatus {
+    case .authorizedAlways, .authorizedWhenInUse: return true
+    default: return false
+    }
   }
 
   func checkAuthorization() {
@@ -81,6 +82,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
       // the request is over with no fix. Fail now rather than stalling to the timeout.
       takeAll().forEach { $0.resume(throwing: CLError(.locationUnknown)) }
     }
+  }
+
+  /// Called with the user's answer to a prompt (and once at creation).
+  var onAuthorizationChange: (() -> Void)?
+
+  func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    onAuthorizationChange?()
   }
 
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
