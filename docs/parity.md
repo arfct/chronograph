@@ -19,6 +19,7 @@
 | Enigma — acronyms & URLs pass through | ✅ | ✅ | ✅ | ✅ (`:core`, fixture-verified) |
 | Obfuscation — Ishihara font | ✅ | ✅ | ✅ | ➖ [^ishihara] |
 | Per-widget configuration | ✅ (AppIntents sheet) | ✅ | ✅ | ✅ (config activity, reconfigurable) |
+| App-wide Default Size | ✅ (Display Options picker; widget Font Size "Default") | ✅ | ➖ [^watchsize] | ✅ (home-screen slider; "Use default size" switch) |
 | Transparent background | ✅ (clear default) | ✅ | ➖ | ✅ (per-widget toggle, default on) |
 | Wallpaper-adaptive text | ➖ (system vibrancy) | ➖ | ➖ | ✅ (WallpaperColors hint) |
 | Time bars | ✅ | ✅ | ✅ | ✅ |
@@ -31,6 +32,7 @@
 [^reminders]: Android has no system reminders store; the nearest equivalent (Google Tasks API) needs OAuth + Play verification — disproportionate for one widget type. See the design spec's key decisions.
 [^macweather]: The Mac widget extension carries the WeatherKit and outgoing-network entitlements as of the release-polish pass; a signed build has not yet been checked against live WeatherKit.
 [^keyguard]: Declared (`widgetCategory="home_screen|keyguard"`, registers on API 37) but the phone emulator exposes no lock-screen widget surface yet — enabled wherever the OS offers the glanceable hub.
+[^watchsize]: The watch reads its own App Group defaults and has no picker, so its widgets set to Default use Medium.
 [^ishihara]: Glance cannot apply bundled custom fonts (phase-1 spike, 2026-08-03); the bitmap-row workaround isn't worth one novelty mode.
 
 ## Row layout

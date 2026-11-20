@@ -296,6 +296,17 @@ struct ChronographTabView: View {
       if UserDefaults.standard.bool(forKey: "seedSampleEvents") {
         seedSampleEvents()
       }
+      // `-openSettings YES` opens the selected tab's settings sheet, for the
+      // same headless checks.
+      if UserDefaults.standard.bool(forKey: "openSettings") {
+        switch selectedTab {
+        case Values.calendarTab: calendarSettingsVisible = true
+        case Values.reminderTab: reminderSettingsVisible = true
+        case Values.timezoneTab: timezoneSettingsVisible = true
+        case Values.weatherTab: weatherSettingsVisible = true
+        default: break
+        }
+      }
     }
 #endif
     

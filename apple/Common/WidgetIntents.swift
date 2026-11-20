@@ -17,7 +17,7 @@ struct CalendarWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent 
   @Parameter(title: "Font Style", default: .normal)
   var fontStyle: FontStyle
 
-  @Parameter(title: "Font Size", default: .medium)
+  @Parameter(title: "Font Size", default: .automatic)
   var fontSize: FontSize
 
   @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for the system glass background.", default: "")
@@ -77,7 +77,7 @@ struct RemindersWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Font Style", default: .normal)
   var fontStyle: FontStyle
 
-  @Parameter(title: "Font Size", default: .medium)
+  @Parameter(title: "Font Size", default: .automatic)
   var fontSize: FontSize
 
   @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for the system glass background.", default: "")
@@ -131,7 +131,7 @@ struct TimezonesWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent
   @Parameter(title: "Font Style", default: .normal)
   var fontStyle: FontStyle
 
-  @Parameter(title: "Font Size", default: .medium)
+  @Parameter(title: "Font Size", default: .automatic)
   var fontSize: FontSize
 
   @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for the system glass background.", default: "")
@@ -186,7 +186,7 @@ struct WeatherWidgetIntent: WidgetConfigurationIntent, ChronographWidgetIntent {
   @Parameter(title: "Font Style", default: .normal)
   var fontStyle: FontStyle
 
-  @Parameter(title: "Font Size", default: .medium)
+  @Parameter(title: "Font Size", default: .automatic)
   var fontSize: FontSize
 
   @Parameter(title: "Background Color (Hex)", description: "A color like #112233, or #11223380 to make it translucent. Leave empty for the system glass background.", default: "")

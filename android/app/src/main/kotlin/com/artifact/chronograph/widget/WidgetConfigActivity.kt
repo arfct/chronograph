@@ -100,7 +100,7 @@ class WidgetConfigActivity : ComponentActivity() {
                     )
                 }
                 loaded?.let { prefs ->
-                    ConfigScreen(prefs, isCalendar) { apply ->
+                    ConfigScreen(prefs, isCalendar, AppPrefs.defaultFontSize(this@WidgetConfigActivity)) { apply ->
                         lifecycleScope.launch {
                             val glanceId = GlanceAppWidgetManager(this@WidgetConfigActivity)
                                 .getGlanceIdBy(appWidgetId)
@@ -124,9 +124,11 @@ class WidgetConfigActivity : ComponentActivity() {
 private fun ConfigScreen(
     initial: Preferences,
     isCalendar: Boolean,
+    appDefaultSize: FontSize,
     onDone: ((androidx.datastore.preferences.core.MutablePreferences) -> Unit) -> Unit,
 ) {
-    var fontSize by remember { mutableStateOf(WidgetPrefs.fontSize(initial)) }
+    var useDefaultSize by remember { mutableStateOf(WidgetPrefs.usesDefaultSize(initial)) }
+    var fontSize by remember { mutableStateOf(WidgetPrefs.fontSize(initial, appDefaultSize)) }
     var obfuscation by remember { mutableStateOf(WidgetPrefs.obfuscation(initial)) }
     var transparent by remember { mutableStateOf(WidgetPrefs.isTransparent(initial)) }
     var accent by remember { mutableStateOf(initial[WidgetPrefs.ACCENT_COLOR] ?: "") }
@@ -146,10 +148,15 @@ private fun ConfigScreen(
         Text("Widget options", style = MaterialTheme.typography.headlineSmall)
 
         SectionLabel("Font Size")
+        LabeledSwitch("Use default size (${appDefaultSize.label})", useDefaultSize) {
+            useDefaultSize = it
+            if (it) fontSize = appDefaultSize
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Slider(
                 value = fontSize.ordinal.toFloat(),
                 onValueChange = { fontSize = FontSize.entries[it.roundToInt()] },
+                enabled = !useDefaultSize,
                 valueRange = 0f..(FontSize.entries.size - 1).toFloat(),
                 steps = FontSize.entries.size - 2,
                 modifier = Modifier.weight(1f),
@@ -190,7 +197,7 @@ private fun ConfigScreen(
             modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
             onClick = {
                 onDone { prefs ->
-                    prefs[WidgetPrefs.FONT_SIZE] = fontSize.name
+                    prefs[WidgetPrefs.FONT_SIZE] = if (useDefaultSize) WidgetPrefs.DEFAULT_SIZE else fontSize.name
                     prefs[WidgetPrefs.OBFUSCATION] = obfuscation.name
                     prefs[WidgetPrefs.TRANSPARENT_BACKGROUND] = transparent
                     prefs[WidgetPrefs.ACCENT_COLOR] = accent
@@ -260,7 +267,7 @@ private fun AccentSwatch(hex: String, name: String, selected: Boolean, onClick: 
     }
 }
 
-private val FontSize.label: String
+internal val FontSize.label: String
     get() = name.lowercase().replaceFirstChar { it.uppercase() }
 
 private val ObfuscationStyle.label: String

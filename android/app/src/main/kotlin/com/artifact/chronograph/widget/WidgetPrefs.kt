@@ -15,6 +15,8 @@ import com.artifact.chronograph.core.WidgetFeature
  */
 object WidgetPrefs {
     val FONT_SIZE = stringPreferencesKey("fontSize")
+    /** Copy of [AppPrefs.defaultFontSize], written so a running widget recomposes. */
+    val APP_DEFAULT_SIZE = stringPreferencesKey("appDefaultFontSize")
     val OBFUSCATION = stringPreferencesKey("obfuscation")
     val TRANSPARENT_BACKGROUND = booleanPreferencesKey("transparentBackground")
     val ACCENT_COLOR = stringPreferencesKey("accentColor")
@@ -23,8 +25,20 @@ object WidgetPrefs {
     val TIME_BARS = booleanPreferencesKey("timeBars")
     val FREE_TIME = booleanPreferencesKey("freeTime")
 
-    fun fontSize(prefs: Preferences): FontSize =
-        prefs[FONT_SIZE]?.let { runCatching { FontSize.valueOf(it) }.getOrNull() } ?: FontSize.MEDIUM
+    /** Stored in [FONT_SIZE] when the widget follows the app-wide default. */
+    const val DEFAULT_SIZE = "DEFAULT"
+
+    /** True when the widget has no size of its own and uses [AppPrefs.defaultFontSize]. */
+    fun usesDefaultSize(prefs: Preferences): Boolean =
+        prefs[FONT_SIZE]?.let { runCatching { FontSize.valueOf(it) }.getOrNull() } == null
+
+    /** The app-wide default as last copied into this widget's state, if any. */
+    fun appDefaultSize(prefs: Preferences): FontSize? =
+        prefs[APP_DEFAULT_SIZE]?.let { runCatching { FontSize.valueOf(it) }.getOrNull() }
+
+    /** The widget's own size, or [default] when it follows the app-wide default. */
+    fun fontSize(prefs: Preferences, default: FontSize): FontSize =
+        prefs[FONT_SIZE]?.let { runCatching { FontSize.valueOf(it) }.getOrNull() } ?: default
 
     fun obfuscation(prefs: Preferences): ObfuscationStyle =
         prefs[OBFUSCATION]?.let { runCatching { ObfuscationStyle.valueOf(it) }.getOrNull() }
@@ -36,7 +50,7 @@ object WidgetPrefs {
      */
     fun isTransparent(prefs: Preferences): Boolean = prefs[TRANSPARENT_BACKGROUND] != false
 
-    fun calendarConfig(prefs: Preferences): WidgetConfig {
+    fun calendarConfig(prefs: Preferences, defaultSize: FontSize): WidgetConfig {
         val features = buildSet {
             if (prefs[ALL_DAY_EVENTS] != false) add(WidgetFeature.ALL_DAY_EVENTS)
             if (prefs[MULTI_DAY_EVENTS] != false) add(WidgetFeature.MULTI_DAY_EVENTS)
@@ -45,15 +59,15 @@ object WidgetPrefs {
         }
         return WidgetConfig.calendar.copy(
             features = features,
-            fontSize = fontSize(prefs),
+            fontSize = fontSize(prefs, defaultSize),
             obfuscation = obfuscation(prefs),
             accentColor = prefs[ACCENT_COLOR] ?: "",
         )
     }
 
-    fun timezonesConfig(prefs: Preferences): WidgetConfig =
+    fun timezonesConfig(prefs: Preferences, defaultSize: FontSize): WidgetConfig =
         WidgetConfig.timezones.copy(
-            fontSize = fontSize(prefs),
+            fontSize = fontSize(prefs, defaultSize),
             obfuscation = obfuscation(prefs),
         )
 }

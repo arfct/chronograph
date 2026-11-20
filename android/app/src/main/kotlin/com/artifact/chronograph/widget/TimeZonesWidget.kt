@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
+import androidx.datastore.preferences.core.Preferences
+import androidx.glance.currentState
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
@@ -67,12 +69,16 @@ class TimeZonesWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val prefs = getAppWidgetState(context, PreferencesGlanceStateDefinition, id)
-        val config = WidgetPrefs.timezonesConfig(prefs)
+        val config = WidgetPrefs.timezonesConfig(prefs, AppPrefs.defaultFontSize(context))
         val transparent = WidgetPrefs.isTransparent(prefs)
         val dictionary = Dictionaries.cmudict(context)
         provideContent {
+            // Read inside composition so a Default Size change reaches a running session.
+            val state = currentState<Preferences>()
+            val defaultSize = WidgetPrefs.appDefaultSize(state) ?: AppPrefs.defaultFontSize(context)
+            val sized = config.copy(fontSize = WidgetPrefs.fontSize(state, defaultSize))
             GlanceTheme {
-                TimeZonesContent(config, transparent, dictionary)
+                TimeZonesContent(sized, transparent, dictionary)
             }
         }
     }
@@ -81,7 +87,7 @@ class TimeZonesWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 // No host size during preview generation; use the 3×2 bucket.
-                TimeZonesContent(WidgetConfig.timezones, transparent = false, dictionary = null, previewHeight = 212f)
+                TimeZonesContent(WidgetConfig.timezones.copy(fontSize = AppPrefs.defaultFontSize(context)), transparent = false, dictionary = null, previewHeight = 212f)
             }
         }
     }

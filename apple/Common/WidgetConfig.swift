@@ -14,7 +14,7 @@ struct WidgetConfig {
   var weatherLocation: String = ""
   var viewOptions: [WidgetViewOptions] = []
   var fontStyle: FontStyle = .normal
-  var fontSize: FontSize = .medium
+  var fontSize: FontSize = .automatic
   var backgroundColor: String = ""
   var accentColor: String = ""
   var pageOffset: Int = 0

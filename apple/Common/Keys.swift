@@ -26,6 +26,7 @@ struct Keys {
   static let brailleMode = "brailleMode"  // legacy toggle; migrated to obfuscation
   static let obfuscation = "obfuscation"
   static let hideIntroduction = "hideIntroduction"
+  static let defaultFontSize = "defaultFontSize"
 
   static let fullBleed = "fullBleed"
   static let selectedTab = "selectedTab"

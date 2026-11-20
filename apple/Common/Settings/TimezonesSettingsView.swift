@@ -63,6 +63,10 @@ struct TimezonesSettingsView: View {
   
   var body: some View {
     Form {
+      Section(header: Text("Display Options")) {
+        DefaultFontSizePicker()
+      }
+
       // Favorites section
       Section(header: Text("Favorites")) {
         if favoriteTimezones.isEmpty {

@@ -19,6 +19,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
+import androidx.datastore.preferences.core.Preferences
+import androidx.glance.currentState
 import androidx.glance.GlanceModifier
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceTheme
@@ -86,13 +88,17 @@ class CalendarWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val prefs = getAppWidgetState(context, PreferencesGlanceStateDefinition, id)
-        val config = WidgetPrefs.calendarConfig(prefs)
+        val config = WidgetPrefs.calendarConfig(prefs, AppPrefs.defaultFontSize(context))
         val transparent = WidgetPrefs.isTransparent(prefs)
         val dictionary = Dictionaries.cmudict(context)
         val rows = buildRows(context, config)
         provideContent {
+            // Read inside composition so a Default Size change reaches a running session.
+            val state = currentState<Preferences>()
+            val defaultSize = WidgetPrefs.appDefaultSize(state) ?: AppPrefs.defaultFontSize(context)
+            val sized = config.copy(fontSize = WidgetPrefs.fontSize(state, defaultSize))
             GlanceTheme {
-                CalendarContent(rows, config, transparent, dictionary)
+                CalendarContent(rows, sized, transparent, dictionary)
             }
         }
     }
@@ -101,7 +107,7 @@ class CalendarWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 CalendarContent(
-                    sampleRows(), WidgetConfig.calendar,
+                    sampleRows(), WidgetConfig.calendar.copy(fontSize = AppPrefs.defaultFontSize(context)),
                     transparent = false, dictionary = null, previewHeight = 212f,
                 )
             }

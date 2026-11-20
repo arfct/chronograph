@@ -32,9 +32,12 @@ enum WeatherStyle: String, AppEnum {
 }
 
 enum FontSize: String, AppEnum {
+  /// Follows the app-wide Default Size setting (`Keys.defaultFontSize`).
+  case automatic
   case tiny, small, medium, large, huge
   static var typeDisplayRepresentation: TypeDisplayRepresentation = "Font Size"
   static var caseDisplayRepresentations: [FontSize : DisplayRepresentation] = [
+    .automatic: "Default",
     .tiny: "Tiny",
     .small: "Small",
     .medium: "Medium",
@@ -57,6 +60,21 @@ enum FontSize: String, AppEnum {
     .large: 3,
     .huge: 2,
   ]
+
+  /// The sizes a person can pick as the app-wide default.
+  static let sizes: [FontSize] = [.tiny, .small, .medium, .large, .huge]
+
+  /// The app-wide default, set in the app's Display Options. Medium when unset.
+  static var appDefault: FontSize {
+    let raw = UserDefaults(suiteName: Keys.suiteName)?.string(forKey: Keys.defaultFontSize)
+    guard let raw, let size = FontSize(rawValue: raw), size != .automatic else { return .medium }
+    return size
+  }
+
+  /// This size, with `.automatic` replaced by the app-wide default.
+  var resolved: FontSize {
+    self == .automatic ? FontSize.appDefault : self
+  }
 }
 
 enum DisplayedContent: String, AppEnum {

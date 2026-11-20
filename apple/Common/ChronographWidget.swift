@@ -46,7 +46,8 @@ struct ChronographWidgetView : View {
   init(entry: CalendarTimelineEntry) {
     self.entry = entry
     self.context = entry.context
-    self.textStyle = FontSize.caseSize[entry.config.fontSize] ?? .body
+    let resolvedSize = entry.config.fontSize.resolved
+    self.textStyle = FontSize.caseSize[resolvedSize] ?? .body
     
     let widgetFamily = context?.family
     
@@ -82,7 +83,7 @@ struct ChronographWidgetView : View {
     self.fontSize = baseFont.pointSize
     
     
-    if let minLines = FontSize.caseMinLines[entry.config.fontSize],
+    if let minLines = FontSize.caseMinLines[resolvedSize],
        let height = entry.context?.displaySize.height {
       self.lineHeight = min(self.lineHeight, height / CGFloat(minLines))
       self.fontSize = self.lineHeight * baseFont.pointSize / baseFont.lineHeight

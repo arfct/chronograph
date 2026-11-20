@@ -36,6 +36,7 @@ struct WeatherSettingsView: View {
       }
 
       Section(header: Text("Display Options")) {
+        DefaultFontSizePicker()
         Toggle("Compact Time", isOn: $compactTime)
         Toggle("Wrap Parentheses", isOn: $tokenize)
       }

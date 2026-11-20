@@ -24,6 +24,7 @@ struct CalendarSettingsView: View {
   var body: some View {
     Form {
       Section("Display Options") {
+        DefaultFontSizePicker()
         Toggle(isOn: $tokenize) {
           Text("Wrap Parentheses")
         }
