@@ -33,6 +33,7 @@ val noteBlockMarkers = listOf(
     // Zoom
     "Join Zoom Meeting",
     "is inviting you to a scheduled Zoom meeting",
+    "Zoom Meeting Info", // Zoom for Google Workspace: link, then dial-in
     ZOOM_SEPARATOR,
     // Microsoft Teams
     "Microsoft Teams meeting",
@@ -55,7 +56,7 @@ val noteNoiseLinePrefixes = listOf(
     "one tap mobile", "dial by your location", "or dial:", "dial-in",
     "find your local number", "more phone numbers",
     "learn more about meet at", "learn more at",
-    "phone conference id:", "video call:",
+    "phone conference id:", "video call:", "telephone:",
 )
 
 /**
@@ -89,9 +90,39 @@ fun removeMeetingMetadata(text: String, markers: List<String> = noteBlockMarkers
     return head
 }
 
-/** Drops lines that are nothing but conferencing chrome or a bare noise link. */
+/**
+ * Emoji that conferencing tools put in front of a line as a bullet ("📹 Zoom
+ * Meeting Info:", "☎️ Telephone:"). Widget rows are typography plus symbols, so
+ * a leading run of them is dropped; emoji inside a sentence are kept.
+ */
+fun strippedOfLeadingEmoji(line: String): String {
+    val indent = line.takeWhile { it == ' ' || it == '\t' }
+    val body = line.substring(indent.length)
+    if (body.isEmpty() || !isDecorativeEmoji(body.codePointAt(0))) return line
+    var i = 0
+    while (i < body.length) {
+        val cp = body.codePointAt(i)
+        if (!isDecorativeEmoji(cp) && !Character.isWhitespace(cp)) break
+        i += Character.charCount(cp)
+    }
+    return indent + body.substring(i)
+}
+
+/**
+ * Emoji, their variation selector, joiner and keycap combiner. Latin-1 is
+ * excluded: digits, `#`, `*`, © and ® carry the Emoji property too.
+ */
+private fun isDecorativeEmoji(cp: Int): Boolean {
+    if (cp == 0xFE0F || cp == 0x200D || cp == 0x20E3) return true
+    return cp > 0xFF && Character.isEmoji(cp)
+}
+
+/**
+ * Drops lines that are nothing but conferencing chrome or a bare noise link,
+ * and the emoji bullets in front of the lines that stay.
+ */
 fun stripNoiseLines(text: String): String {
-    val kept = text.split("\n").filter { line ->
+    val kept = text.split("\n").map(::strippedOfLeadingEmoji).filter { line ->
         val bare = strippedOfMarkup(line.trim()).trim()
         if (bare.isEmpty()) return@filter true // blank lines collapse later
 

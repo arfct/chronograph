@@ -177,6 +177,8 @@ class RowBuilderTest {
         val rows = RowBuilder.calendarRows(WidgetConfig.calendar, listOf(item), now, zone, locale)
         val entry = rows.first { it.item != null }
         assertEquals("https://zoom.us/j/123", entry.meetingUrl)
+        // Titled without a description, as iOS titles a location link "Zoom".
+        assertEquals("Zoom", entry.meetingTitle)
         assertEquals(listOf("SF Office"), entry.locations)
     }
 

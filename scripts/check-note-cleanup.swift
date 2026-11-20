@@ -131,6 +131,32 @@ let cases: [Case] = [
     raw: "<p></p><br>&nbsp;",
     expected: ""
   ),
+  Case(
+    name: "Zoom for Workspace block, emoji bullets and all, is boilerplate",
+    raw: """
+    Walk through the prototype first.
+    📹 Zoom Meeting Info:
+    https://example.zoom.us/j/1234567890?pwd=abc
+    ☎️ Telephone:
+    +1 669 900 6833 (US)
+    """,
+    expected: "Walk through the prototype first."
+  ),
+  Case(
+    name: "a stray dial-in line goes even behind an emoji bullet",
+    raw: "Bring snacks 🍕 for everyone.\n☎️ Telephone: +1 669 900 6833",
+    expected: "Bring snacks 🍕 for everyone."
+  ),
+  Case(
+    name: "leading emoji bullets are dropped, indentation kept",
+    raw: "🎉 Launch party\n  ✅ RSVP by Friday",
+    expected: "Launch party\n  RSVP by Friday"
+  ),
+  Case(
+    name: "Latin-1 emoji-property characters are not bullets",
+    raw: "© 2026 Example Corp\n#general for questions",
+    expected: "© 2026 Example Corp\n#general for questions"
+  ),
 ]
 
 var failures = 0

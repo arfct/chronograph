@@ -30,6 +30,11 @@ let inputs: [String] = [
   "Trailing chrome\nvideo call: https://example.com/x",
   "----( Video Call )----\nnothing above this",
   "Offsite\n\nJoin meeting now\nhttps://teams.microsoft.com/l/meetup-join/xyz",
+  "📹 Zoom Meeting Info:\nhttps://example.zoom.us/j/1234567890?pwd=abc\n☎️ Telephone:\n+1 669 900 6833 (US)\nMeeting ID: 123 456 7890",
+  "Walk through the prototype first.\n📹 Zoom Meeting Info:\nhttps://example.zoom.us/j/1234567890?pwd=abc\n☎️ Telephone:\n+1 669 900 6833 (US)",
+  "Bring snacks 🍕 for everyone.\n☎️ Telephone: +1 669 900 6833",
+  "🎉 Launch party\n  ✅ RSVP by Friday",
+  "© 2026 Example Corp\n#general for questions",
 ]
 
 func esc(_ s: String) -> String {

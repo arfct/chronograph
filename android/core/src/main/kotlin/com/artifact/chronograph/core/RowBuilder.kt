@@ -130,6 +130,8 @@ object RowBuilder {
                     val locations = splitAndTrim(item.location)
                     val urls = locations.filter { it.startsWith("http://") || it.startsWith("https://") }
                     entry.meetingUrl = urls.firstOrNull()
+                    // iOS titles a location link up front ("Zoom"), notes or not.
+                    entry.meetingTitle = entry.meetingUrl?.let(::titleFromUrl)
                     entry.locations = locations.filterNot { it in urls }.map(::cleanLocation)
                 }
                 if (fetchDetails && !item.description.isNullOrEmpty()) {

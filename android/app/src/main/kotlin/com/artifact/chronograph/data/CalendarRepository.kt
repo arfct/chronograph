@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.CalendarContract
 import com.artifact.chronograph.core.CalendarItem
+import com.artifact.chronograph.core.attendeeDisplayName
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -43,6 +44,7 @@ object CalendarRepository {
             CalendarContract.Instances.CALENDAR_DISPLAY_NAME,
             CalendarContract.Instances.EVENT_LOCATION,
             CalendarContract.Instances.DESCRIPTION,
+            CalendarContract.Instances.OWNER_ACCOUNT,
         )
 
         val defaultCalendarId = defaultCalendarId(context)
@@ -62,6 +64,15 @@ object CalendarRepository {
                     end = end.atZone(ZoneOffset.UTC).toLocalDate()
                         .atStartOfDay(zone).toInstant().minusSeconds(1)
                 }
+                // Attendees only matter where the detail block can draw them,
+                // the same four-hour window the row builder fetches details in.
+                val eventId = cursor.getLong(0)
+                val (attendeeNames, attendeeCount) =
+                    if (!allDay && start < now.plus(4, ChronoUnit.HOURS)) {
+                        attendees(context, eventId, owner = cursor.getString(9))
+                    } else {
+                        emptyList<String>() to 0
+                    }
                 items.add(
                     CalendarItem(
                         id = cursor.getLong(0).toString(),
@@ -75,11 +86,35 @@ object CalendarRepository {
                         description = cursor.getString(8),
                         isDefaultCalendar = defaultCalendarId == null ||
                             cursor.getLong(5).toString() == defaultCalendarId,
+                        attendeeNames = attendeeNames,
+                        attendeeCount = attendeeCount,
                     )
                 )
             }
         }
         return items.sortedBy { it.start }
+    }
+
+    /**
+     * FacePile's data: short names of everyone but the calendar's owner (iOS
+     * `isCurrentUser`), and the total count including them.
+     */
+    private fun attendees(context: Context, eventId: Long, owner: String?): Pair<List<String>, Int> {
+        val projection = arrayOf(
+            CalendarContract.Attendees.ATTENDEE_NAME,
+            CalendarContract.Attendees.ATTENDEE_EMAIL,
+        )
+        val names = mutableListOf<String>()
+        var count = 0
+        CalendarContract.Attendees.query(context.contentResolver, eventId, projection)?.use { cursor ->
+            while (cursor.moveToNext()) {
+                count++
+                val email = cursor.getString(1)
+                if (owner != null && email.equals(owner, ignoreCase = true)) continue
+                names += attendeeDisplayName(cursor.getString(0), email)
+            }
+        }
+        return names to count
     }
 
     /** iOS defaultCalendarForNewEvents analogue: the primary calendar, else the first. */
