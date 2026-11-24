@@ -27,6 +27,8 @@ struct Keys {
   static let obfuscation = "obfuscation"
   static let hideIntroduction = "hideIntroduction"
   static let defaultFontSize = "defaultFontSize"
+  /// Prefix for the per-kind widget defaults, e.g. `widgetDefaults.calendar`.
+  static let widgetDefaultsPrefix = "widgetDefaults."
 
   static let fullBleed = "fullBleed"
   static let selectedTab = "selectedTab"

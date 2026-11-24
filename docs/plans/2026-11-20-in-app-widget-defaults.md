@@ -102,7 +102,7 @@ happen.
 
 | Mechanism | Outcome |
 |---|---|
-| Rely on the declared `@Parameter` default for the missing value | WidgetKit fills a parameter missing from a stored intent with the declared default. That is the same value a brand-new widget gets, so one constant cannot be `true` for new widgets and `false` for old ones |
+| Rely on the declared `@Parameter` default for the missing value | WidgetKit is expected to fill a parameter missing from a stored intent with the declared default (not observed, see below). That is the same value a brand-new widget gets, so one constant cannot be `true` for new widgets and `false` for old ones |
 | A version marker parameter on the intent | same problem: the marker is also missing on old widgets and also takes its declared default, which is what a new widget gets |
 | An optional `Bool?` with `nil` meaning "placed before" | a new widget is `nil` too |
 | Treat "toggle on, but some other parameter differs from its built-in default" as an old customized widget | tells old from new, but the same stored state is also "turned off, customized, turned on again", so the toggle could never bring a customized widget back to the defaults, and the sheet would show On for a widget using its own values |
@@ -186,7 +186,7 @@ fallback for an empty widget selection.
   preview on top; Default Size and Obfuscation in a Display section; the
   permission buttons in an Access section;
 - the four "App Defaults" watch presets;
-- DEBUG launch arguments for screenshots (`-openWidgetDefaults <kind>`,
+- DEBUG launch arguments for screenshots (`-openWidgetDefaults <kind>`, `-widgetDefaultsSelection YES`,
   `-widgetDefaultsAnchor <section>`, `-widgetDefaultsPatch <json>`) and a DEBUG
   resolver self-check (`-checkWidgetDefaults`), since there is no test target.
 

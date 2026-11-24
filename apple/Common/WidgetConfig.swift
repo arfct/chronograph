@@ -18,6 +18,9 @@ struct WidgetConfig {
   var backgroundColor: String = ""
   var accentColor: String = ""
   var pageOffset: Int = 0
+  /// When set, every other field is replaced by the app's stored defaults
+  /// for `content`; see `resolved(with:)` in WidgetDefaults.swift.
+  var useDefaults: Bool = false
 }
 
 // Presets — replaces the static configs on ConfigurationIntent.
