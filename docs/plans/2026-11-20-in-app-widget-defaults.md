@@ -166,7 +166,7 @@ again, with the same options. It is open question 1.
 |---|---|---|
 | `apple/Common/WidgetDefaults.swift` | the struct, built-in values, `WidgetDefaultsStore`, `WidgetConfig.resolved(with:)`, the colour presets, the DEBUG self-check | none |
 | `apple/Common/Settings/WidgetDefaultsView.swift` | `WidgetDefaultsForm` (one kind) with its selection pickers, and `WidgetKindLabel` | `#if os(watchOS)` only for picker style, the fixed preview height and hiding the options the watch never draws |
-| `apple/Watch/ContentView.swift` | the Watch home: wordmark, the four kinds, Display (Default Size, Obfuscation), Access | watch only |
+| `apple/Watch/ContentView.swift` | the Watch root: vertical pages, one per kind showing its App Defaults widget with an options button that pushes the form (the Watch counterpart of the iOS tabs), then a Settings page with the wordmark, Display (Default Size, Obfuscation) and Access | watch only |
 
 Both shared files compile into the iOS and Mac apps in this PR, unused, so the
 build proves they are portable. iOS adoption is then: push `WidgetDefaultsForm`
@@ -182,9 +182,11 @@ fallback for an empty widget selection.
 **Now (this PR):**
 - `useDefaults` on the four intents with the conditional `parameterSummary`,
   the model, store and resolver, on all Apple platforms;
-- the Watch app home listing the four kinds, each pushing its form with a live
-  preview on top; Default Size and Obfuscation in a Display section; the
-  permission buttons in an Access section;
+- the Watch app root as vertical pages, like the iOS tabs: one page per kind
+  showing that kind's App Defaults widget full screen, with a toolbar options
+  button that pushes its form (live preview on top); a last Settings page with
+  Default Size and Obfuscation in a Display section and the permission buttons
+  in an Access section;
 - the four "App Defaults" watch presets;
 - DEBUG launch arguments for screenshots (`-openWidgetDefaults <kind>`, `-widgetDefaultsSelection YES`,
   `-widgetDefaultsAnchor <section>`, `-widgetDefaultsPatch <json>`) and a DEBUG
@@ -241,6 +243,5 @@ fallback for an empty widget selection.
 6. **Where the editor lives on iOS.** Proposed: behind each tab's existing
    settings button, replacing the per-tab sheets. Alternative: one Widgets
    screen like the watch's.
-7. **Watch home previews.** The two always-on previews on the Watch home move
-   into the Calendar and Reminders forms. Proposed: keep it that way; the home
-   becomes a short list.
+7. **Watch home previews.** Decided (Nicholas): the Watch root is a paged
+   view with the widget on each page, like the iOS tabs, rather than a list.
