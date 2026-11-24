@@ -198,6 +198,10 @@ struct ChronographWidgetView : View {
     }
     
       .containerBackground(.clear, for: .widget)
+#if os(watchOS)
+      // Tapping a watch widget opens the app on that widget kind's page.
+      .widgetURL(WatchPageLink.url(for: entry.config.content))
+#endif
   }
 
   // MARK: row packing

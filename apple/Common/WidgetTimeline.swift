@@ -447,7 +447,11 @@ struct TimelineEngine {
     return calendarEntries
   }
 
-  func timeline(config: WidgetConfig, context: TimelineProviderContext? = nil) async -> Timeline<CalendarTimelineEntry> {
+  func timeline(config unresolved: WidgetConfig, context: TimelineProviderContext? = nil) async -> Timeline<CalendarTimelineEntry> {
+
+    // A widget on "Use App Defaults" takes its options from the app's stored
+    // defaults here, so everything below and every view sees plain values.
+    let config = unresolved.resolved()
 
     let now = Date()
 
