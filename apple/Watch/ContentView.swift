@@ -25,8 +25,9 @@ struct ContentView: View {
   /// The widget kinds pushed onto the stack; DEBUG launch arguments can
   /// start on one.
   @State private var path: [DisplayedContent] = WatchLaunchOptions.initialPath
-  /// The visible page: a widget kind's raw value, or `settingsTab`.
-  @State private var selectedTab: String = WatchLaunchOptions.initialTab
+  /// The visible page: a widget kind's raw value, or `settingsTab`. Kept
+  /// across launches; a widget tap or a DEBUG `-watchTab` replaces it.
+  @AppStorage(Keys.watchSelectedPage) private var selectedTab: String = DisplayedContent.calendar.rawValue
 
   private static let settingsTab = "settings"
 
@@ -49,6 +50,14 @@ struct ContentView: View {
           .tag(Self.settingsTab)
       }
       .tabViewStyle(.verticalPage)
+      .onOpenURL { url in
+        guard let kind = WatchPageLink.kind(from: url) else { return }
+        path = []
+        selectedTab = kind.rawValue
+      }
+      .onAppear {
+        if let tab = WatchLaunchOptions.initialTab { selectedTab = tab }
+      }
       .navigationDestination(for: DisplayedContent.self) { kind in
         WidgetDefaultsForm(kind: kind,
                            scrollAnchor: WatchLaunchOptions.scrollAnchor,
@@ -78,6 +87,14 @@ struct ContentView: View {
     }
     .navigationTitle(kind.displayName)
     .toolbar {
+      // The page indicator is dots only, so the page's icon sits in the bar,
+      // in the filled variant the iOS app uses for the selected tab.
+      ToolbarItem(placement: .topBarLeading) {
+        Image(systemName: kind.systemImage)
+          .symbolVariant(.fill)
+          .foregroundStyle(.secondary)
+          .accessibilityHidden(true)
+      }
       ToolbarItem(placement: .topBarTrailing) {
         NavigationLink(value: kind) {
           Image(systemName: "slider.horizontal.3")
@@ -165,6 +182,13 @@ struct ContentView: View {
       }
     }
     .navigationTitle("Settings")
+    .toolbar {
+      ToolbarItem(placement: .topBarLeading) {
+        Image(systemName: "gearshape.fill")
+          .foregroundStyle(.secondary)
+          .accessibilityHidden(true)
+      }
+    }
   }
 }
 
@@ -189,8 +213,8 @@ enum WatchLaunchOptions {
     arguments.string(forKey: "openWidgetDefaults").flatMap(DisplayedContent.init(rawValue:))
   }
   static var initialPath: [DisplayedContent] { openKind.map { [$0] } ?? [] }
-  static var initialTab: String {
-    arguments.string(forKey: "watchTab") ?? openKind?.rawValue ?? DisplayedContent.calendar.rawValue
+  static var initialTab: String? {
+    arguments.string(forKey: "watchTab") ?? openKind?.rawValue
   }
   static var scrollAnchor: String? { arguments.string(forKey: "widgetDefaultsAnchor") }
   static var opensSelection: Bool { arguments.bool(forKey: "widgetDefaultsSelection") }
@@ -215,7 +239,7 @@ enum WatchLaunchOptions {
   }
 #else
   static let initialPath: [DisplayedContent] = []
-  static let initialTab: String = DisplayedContent.calendar.rawValue
+  static let initialTab: String? = nil
   static let scrollAnchor: String? = nil
   static let opensSelection = false
   static func applyAtLaunch() {}

@@ -1,3 +1,4 @@
+import Foundation
 #if os(macOS)
 import Security
 #endif
@@ -32,6 +33,8 @@ struct Keys {
 
   static let fullBleed = "fullBleed"
   static let selectedTab = "selectedTab"
+  /// The Watch app's last visible page, kept in the app's own defaults.
+  static let watchSelectedPage = "watchSelectedPage"
   
   static let enabledCalendars = "enabledCalendars"
   static let enabledReminders = "enabledReminders"
@@ -54,4 +57,18 @@ struct Values {
   static let timezoneTab = "timezone"
   static let weatherTab = "weather"
   
+}
+
+/// `chronograph://page/<kind>`: the Watch app page a widget tap opens.
+enum WatchPageLink {
+  static let scheme = "chronograph"
+
+  static func url(for kind: DisplayedContent) -> URL? {
+    URL(string: "\(scheme)://page/\(kind.rawValue)")
+  }
+
+  static func kind(from url: URL) -> DisplayedContent? {
+    guard url.scheme == scheme, url.host() == "page" else { return nil }
+    return DisplayedContent(rawValue: url.lastPathComponent)
+  }
 }

@@ -18,9 +18,10 @@ extension DisplayedContent {
 
   var systemImage: String {
     switch self {
-    case .calendar: return "calendar"
-    case .reminders: return "checklist"
-    case .timezones: return "globe"
+    // The same symbols as the iOS app's tabs.
+    case .calendar: return "31.square"
+    case .reminders: return "checkmark.circle"
+    case .timezones: return "globe.americas"
     case .weather: return "cloud.sun"
     }
   }
